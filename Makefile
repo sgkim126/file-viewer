@@ -18,7 +18,12 @@ ENV: ./requirements.txt
 ./node_modules/: ./package.json
 	npm install
 
-lint: | ./ENV/
+lint: | tslint pylint
+
+tslint: | ./node_modules/
+	./node_modules/.bin/tslint -c tslint.json $(TS_SRC)
+
+pylint: | ./ENV/
 	./ENV/bin/pep8 $(PY_SRC)
 
 clean:
