@@ -1,6 +1,10 @@
+TS_SRC := $(shell ls ts/*.ts ts/*.tsx)
 PY_SRC := $(shell ls py/*.py ./viewer.py)
 
-all:
+all: ./html/viewer.js
+
+./html/viewer.js: ./ts/main.ts $(TS_SRC) | ./typings/browser.d.ts
+	./node_modules/.bin/webpack --entry ./$< --output-path $(@D) --output-filename $(@F)
 
 ENV: ./requirements.txt
 	virtualenv -p python3 $@
@@ -17,7 +21,10 @@ ENV: ./requirements.txt
 lint: | ./ENV/
 	./ENV/bin/pep8 $(PY_SRC)
 
-distclean:
+clean:
+	rm -f ./html/viewer.js
+
+distclean: | clean
 	rm -rf ./node_modules/
 	rm -rf ./typings/
 	rm -rf ./ENV/
