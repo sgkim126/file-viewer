@@ -1,0 +1,12 @@
+sudo: required
+language: python
+python:
+  - "3.4"
+  - "3.5"
+env:
+  - COMMAND=tslint
+  - COMMAND=pylint
+install:
+  - nvm install 4.0
+script:
+  - make $COMMAND
