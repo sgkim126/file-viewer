@@ -8,8 +8,16 @@ ENV: ./requirements.txt
 	./ENV/bin/pip install -r $<
 	@touch $@
 
+./typings/browser.d.ts: ./typings.json | ./node_modules/
+	./node_modules/.bin/typings install
+
+./node_modules/: ./package.json
+	npm install
+
 lint: | ./ENV/
 	./ENV/bin/pep8 $(PY_SRC)
 
 distclean:
+	rm -rf ./node_modules/
+	rm -rf ./typings/
 	rm -rf ./ENV/
