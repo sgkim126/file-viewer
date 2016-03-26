@@ -1,9 +1,10 @@
 TS_SRC := $(shell ls ts/*.ts ts/*.tsx)
+STYL_SRC := $(shell ls styl/*.styl)
 PY_SRC := $(shell ls py/*.py ./viewer.py)
 
 all: ./html/viewer.js
 
-./html/viewer.js: ./ts/main.ts $(TS_SRC) | ./typings/browser.d.ts
+./html/viewer.js: ./ts/main.ts $(TS_SRC) $(STYL_SRC) | ./typings/browser.d.ts
 	./node_modules/.bin/webpack --entry ./$< --output-path $(@D) --output-filename $(@F)
 
 ENV: ./requirements.txt
@@ -28,6 +29,7 @@ pylint: | ./ENV/
 
 clean:
 	rm -f ./html/viewer.js
+	rm -f ./html/viewer.css
 
 distclean: | clean
 	rm -rf ./node_modules/

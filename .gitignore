@@ -122,3 +122,4 @@ ENV/
 /typings/
 
 /html/viewer.js
+/html/viewer.css
