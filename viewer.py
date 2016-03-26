@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import os
-import py.config
+import src.config
 import sys
 import tornado.ioloop
 import tornado.web
@@ -11,7 +11,7 @@ def static_path():
     return os.path.join(dir, 'html')
 
 if __name__ == '__main__':
-    config = py.config.parse(sys.argv[1:])
+    config = src.config.parse(sys.argv[1:])
     mode = config.debug and "debug" or "release"
     print('Run server localhost:%d with %s mode' % (config.port, mode))
     port = config.port

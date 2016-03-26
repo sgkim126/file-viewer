@@ -1,5 +1,5 @@
 import render from './render.tsx';
-import '../styl/viewer.styl';
+import './viewer.styl';
 
 ((document: Document): void => {
   const main: HTMLDivElement = document.getElementById('main') as HTMLDivElement;
