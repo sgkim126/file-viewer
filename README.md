@@ -3,6 +3,6 @@
     * tornado
     * webpack
 * Node 4.x
-* typescript
-* stylus
-* babel
+    * typescript
+    * stylus
+    * babel
