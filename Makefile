@@ -2,7 +2,12 @@ TS_SRC := $(shell ls src/*.ts src/*.tsx)
 STYL_SRC := $(shell ls src/*.styl)
 PY_SRC := $(shell ls src/*.py ./viewer.py)
 
+PORT := 12389
+
 all: ./html/viewer.js
+
+run: all | ENV
+	./ENV/bin/python3 ./viewer.py --debug True $(PORT)
 
 ./html/viewer.js: ./src/main.ts $(TS_SRC) $(STYL_SRC) | ./typings/browser.d.ts
 	./node_modules/.bin/webpack --entry ./$< --output-path $(@D) --output-filename $(@F)

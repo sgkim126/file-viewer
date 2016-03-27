@@ -6,3 +6,12 @@
     * typescript
     * stylus
     * babel
+
+## Run
+```
+make run
+```
+or
+```
+make run PORT={port}
+```
