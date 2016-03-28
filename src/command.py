@@ -8,6 +8,7 @@ import json
 
 class Command(Enum):
     NEW = 1
+    PWD = 2
 
     @staticmethod
     def get(message: str) -> Promise:
@@ -18,6 +19,10 @@ class Command(Enum):
         if (command == Command.NEW):
             return Promise.apply(lambda: _handle_new(*argv)).map(
                 lambda key: json.dumps({'key': key})
+            )
+        elif command == Command.PWD:
+            return Promise.apply(lambda: _handle_pwd(*argv)).map(
+                lambda path: json.dumps({'pwd': path})
             )
         else:
             return Promise.failed(LookupError('invalid command'))
@@ -35,3 +40,7 @@ def _handle_new(*argv: List[str]) -> str:
         return Connection.instance().get_or_new(argv[0])
     else:
         raise LookupError()
+
+
+def _handle_pwd(key: str) -> str:
+    return Connection.instance()[key]['path']
