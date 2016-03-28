@@ -1,6 +1,7 @@
 TS_SRC := $(shell ls src/*.ts src/*.tsx)
 STYL_SRC := $(shell ls src/*.styl)
 PY_SRC := $(shell ls src/*.py ./viewer.py)
+PY_TEST := $(shell ls src/*_test.py)
 
 PORT := 12389
 
@@ -23,6 +24,9 @@ ENV: ./requirements.txt
 
 ./node_modules/: ./package.json
 	npm install
+
+test: | ./ENV/
+	./ENV/bin/python3 -m unittest $(PY_TEST)
 
 lint: | tslint pylint
 

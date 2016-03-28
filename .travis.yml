@@ -6,6 +6,7 @@ python:
 env:
   - COMMAND=tslint
   - COMMAND=pylint
+  - COMMAND=test
 install:
   - nvm install 4.0
 script:
