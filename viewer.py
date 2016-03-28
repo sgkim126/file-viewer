@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
+from src.command_handler import CommandHandler
 import os
-import src.command
 import src.config
 import sys
 import tornado.ioloop
@@ -21,7 +21,7 @@ if __name__ == '__main__':
     }
 
     handlers = [
-        (r'/c', src.command.CommandHandler),
+        (r'/c', CommandHandler),
         (r'/(.*)', tornado.web.StaticFileHandler,
          {'path': static_path(), 'default_filename': 'index.html'}),
     ]
