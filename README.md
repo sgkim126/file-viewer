@@ -1,5 +1,5 @@
 ## Dependencies
-* Python 3.x
+* Python 3.5
     * tornado
     * webpack
 * Node 4.x
