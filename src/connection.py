@@ -3,9 +3,14 @@ import os
 import threading
 
 
+__count = 0
+
+
 def new_key() -> str:
     timestamp = int(datetime.datetime.now().timestamp())
-    return hex(timestamp)[2:].rjust(16, '0')
+    global __count
+    __count += 1
+    return (hex(__count)[2:] + hex(timestamp)[2:]).rjust(16, '0')
 
 
 def default_path() -> str:

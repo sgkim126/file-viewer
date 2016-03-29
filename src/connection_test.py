@@ -9,6 +9,11 @@ class ConnectionTest(unittest.TestCase):
         key = new_key()
         self.assertEqual(16, len(key))
 
+    def test_new_key_must_return_unique(self):
+        key1 = new_key()
+        key2 = new_key()
+        self.assertNotEqual(key1, key2)
+
     def test_in(self):
         connection = Connection()
         key = connection.new()
