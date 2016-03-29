@@ -1,46 +1,54 @@
 from .connection import Connection
 from .promise import Promise
-from enum import Enum
-from typing import List
-from typing import Tuple
+from typing import Any
+from typing import Dict
 import json
 
 
-class Command(Enum):
-    NEW = 1
-    PWD = 2
-
+class Command(object):
     @staticmethod
     def get(message: str) -> Promise:
         return Promise.apply(lambda: _get_command(message))
 
     @staticmethod
-    def handle(command: 'command.Command', argv: List[str]) -> Promise:
-        if (command == Command.NEW):
-            return Promise.apply(lambda: _handle_new(*argv)).map(
-                lambda key: json.dumps({'key': key})
+    def handle(command: Dict[str, Any]) -> Promise:
+        seq = command.get('seq')
+        key = command.get('key')
+        if command['type'] == 'new':
+            return Promise.apply(lambda: _handle_new(command)).map(
+                lambda key: json.dumps({'key': key, 'seq': seq})
             )
-        elif command == Command.PWD:
-            return Promise.apply(lambda: _handle_pwd(*argv)).map(
-                lambda path: json.dumps({'pwd': path})
+        elif command['type'] == 'pwd':
+            return Promise.apply(lambda: _handle_pwd(command)).map(
+                lambda path: json.dumps({'pwd': path, 'seq': seq})
             )
-        else:
-            return Promise.failed(LookupError('invalid command'))
+        return Promise.failed(LookupError('invalid command'))
 
 
-def _get_command(message: str) -> Tuple[Command, List[str]]:
-    command, argv = message.split(':', 1)
-    return (Command[command], argv.split(':'))
+def _get_command(message: str) -> Dict[str, Any]:
+    VALID_COMMANDS = ['new', 'pwd']
+    command = json.loads(message)
+    command_type = command.get('type')
+    assert command_type is not None
+    assert command_type in VALID_COMMANDS
+    seq = command.get('seq')
+    assert seq is not None
+    assert type(seq) is int
+    key = command.get('key')
+    assert command_type == 'new' or key is not None
+    assert key is None or (type(key) is str and len(key) == 16)
+
+    return command
 
 
-def _handle_new(*argv: List[str]) -> str:
-    if len(argv) == 0:
-        return Connection.instance().new()
-    elif len(argv) == 1:
-        return Connection.instance().get_or_new(argv[0])
+def _handle_new(command: Dict[str, Any]) -> str:
+    key = command.get('key')
+    if key is None:
+        key = Connection.instance().new()
     else:
-        raise LookupError()
+        key = Connection.instance().get_or_new(key)
+    return key
 
 
-def _handle_pwd(key: str) -> str:
-    return Connection.instance()[key]['path']
+def _handle_pwd(command: Dict[str, Any]) -> str:
+    return Connection.instance()[command['key']]['path']

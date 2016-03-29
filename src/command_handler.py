@@ -3,6 +3,7 @@ from tornado.ioloop import IOLoop
 import json
 import tornado.concurrent
 import tornado.websocket
+import traceback
 
 
 class CommandHandler(tornado.websocket.WebSocketHandler):
@@ -11,8 +12,7 @@ class CommandHandler(tornado.websocket.WebSocketHandler):
 
     def on_message(self, message):
         p = Command.get(message)
-        x = p.f.result()
-        result = p.flatMap(_handle_command)
+        result = p.flatMap(Command.handle)
         IOLoop.instance().add_future(
             result.f, lambda result: self.send_response(result))
 
@@ -25,10 +25,5 @@ class CommandHandler(tornado.websocket.WebSocketHandler):
             print('RESPONSE:' + response)
             self.write_message(response)
         except Exception as e:
-            print('ERROR:' + str(e))
-            self.write_message(e)
-
-
-def _handle_command(commands):
-    command, args = commands
-    return Command.handle(command, args)
+            traceback.print_exc()
+            self.write_message('error')
