@@ -46,4 +46,8 @@ export default class Connection {
   onError(e: Event): void {
     this.onerror(e);
   }
+
+  get key(): string {
+    return this._key;
+  }
 }
