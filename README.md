@@ -1,3 +1,5 @@
+# file-viewer [![Build Status](https://travis-ci.org/sgkim126/file-viewer.svg?branch=master)](https://travis-ci.org/sgkim126/file-viewer)
+
 ## Dependencies
 * Python 3.5
     * tornado
