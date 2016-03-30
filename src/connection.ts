@@ -7,8 +7,8 @@ export default class Connection {
   private _resolvers: Map<number, (value: any) => void>;
   private _rejecters: Map<number, (reason: any) => void>;
 
-  public onerror: (e: Event) => void;
-  public onclose: (e: CloseEvent) => void;
+  private _onerror: (e: Event) => void;
+  private _onclose: (e: CloseEvent) => void;
 
   constructor(key: string, socket: WebSocket) {
     socket.onmessage = this.onMessage.bind(this);
@@ -60,17 +60,24 @@ export default class Connection {
     this._rejecters.delete(SEQ);
   }
 
-  onClose(e: CloseEvent): void {
+  private onClose(e: CloseEvent): void {
     this.clear(e);
-    this.onclose(e);
+    this._onclose(e);
   }
-  onError(e: Event): void {
+  private onError(e: Event): void {
     this.clear(e);
-    this.onerror(e);
+    this._onerror(e);
   }
 
   get key(): string {
     return this._key;
+  }
+
+  set onerror(onerror: (e: Event) => any) {
+    this._onerror = onerror;
+  }
+  set onclose(onclose: (e: CloseEvent) => any) {
+    this._onclose = onclose;
   }
 
   private clear(e: Event): void {
