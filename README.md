@@ -8,6 +8,8 @@
     * typescript
     * stylus
     * babel
+    * react
+    * react-bootstrap
 
 ## Run
 ```
