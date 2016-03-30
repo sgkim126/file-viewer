@@ -17,7 +17,7 @@ export default class Connection {
       const socket = new WebSocket(`ws://${location.host}/c`);
       socket.onopen = (e) => {
         socket.onmessage = (e: MessageEvent) => {
-          const { key }   = JSON.parse(e.data);
+          const { key } = JSON.parse(e.data);
           resolve(new Connection(key, socket));
         };
         socket.onclose = (e) => {
@@ -26,13 +26,7 @@ export default class Connection {
         socket.onerror = (e) => {
           reject(e);
         };
-        const type = 'new';
-        const seq = 0;
-        const command = { type, seq };
-        if (key) {
-          command['key'] = key;
-        }
-        socket.send(JSON.stringify(command));
+        socket.send(JSON.stringify(new_command(key)));
       };
     });
   }
@@ -50,4 +44,13 @@ export default class Connection {
   get key(): string {
     return this._key;
   }
+}
+
+function new_command(key?: string): Object {
+  const type = 'new';
+  const command = { type };
+  if (key) {
+    command['key'] = key;
+  }
+  return command;
 }

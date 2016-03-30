@@ -16,7 +16,7 @@ class Command(object):
         key = command.get('key')
         if command['type'] == 'new':
             return Promise.apply(lambda: _handle_new(command)).map(
-                lambda key: json.dumps({'key': key, 'seq': seq})
+                lambda key: json.dumps({'key': key})
             )
         elif command['type'] == 'pwd':
             return Promise.apply(lambda: _handle_pwd(command)).map(
@@ -32,12 +32,14 @@ def _get_command(message: str) -> Dict[str, Any]:
     assert command_type is not None
     assert command_type in VALID_COMMANDS
     seq = command.get('seq')
-    assert seq is not None
-    assert type(seq) is int
     key = command.get('key')
-    assert command_type == 'new' or key is not None
-    assert key is None or (type(key) is str and len(key) == 16)
-
+    if command_type == 'new':
+        assert seq is None
+    else:
+        assert seq is not None and type(seq) is int
+        assert key is not None
+    if key is not None:
+        assert type(key) is str and len(key) == 16
     return command
 
 
