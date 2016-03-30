@@ -26,4 +26,5 @@ class CommandHandler(tornado.websocket.WebSocketHandler):
             self.write_message(response)
         except Exception as e:
             traceback.print_exc()
-            self.write_message('error')
+            # TODO: should send seq.
+            self.write_message(json.dumps({'error': True}))
