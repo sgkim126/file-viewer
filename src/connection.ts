@@ -1,6 +1,12 @@
+import {Command} from './command.ts';
+
 export default class Connection {
   private _socket: WebSocket;
   private _key: string;
+
+  private _resolvers: Map<number, (value: any) => void>;
+  private _rejecters: Map<number, (reason: any) => void>;
+
   public onerror: (e: Event) => void;
   public onclose: (e: CloseEvent) => void;
 
@@ -10,6 +16,8 @@ export default class Connection {
     socket.onclose = this.onClose.bind(this);
     this._socket = socket;
     this._key = key;
+    this._resolvers = new Map();
+    this._rejecters = new Map();
   }
 
   static open(key?: string): Promise<Connection> {
@@ -31,18 +39,46 @@ export default class Connection {
     });
   }
 
-  onMessage(e: MessageEvent): void {
+  send(command: Command): Promise<any> {
+    const SEQ = command.seq;
+    return new Promise((resolve, reject) => {
+      this._resolvers.set(SEQ, resolve);
+      this._resolvers.set(SEQ, reject);
+      this._socket.send(command);
+    });
+  }
+
+  private onMessage(e: MessageEvent): void {
+    const SEQ = e.data.seq;
+    const isError = e.data.error;
+    if (isError) {
+      this._rejecters.get(SEQ)(e.data);
+    } else {
+      this._resolvers.get(SEQ)(e.data);
+    }
+    this._resolvers.delete(SEQ);
+    this._rejecters.delete(SEQ);
   }
 
   onClose(e: CloseEvent): void {
+    this.clear(e);
     this.onclose(e);
   }
   onError(e: Event): void {
+    this.clear(e);
     this.onerror(e);
   }
 
   get key(): string {
     return this._key;
+  }
+
+  private clear(e: Event): void {
+    for (const [_, rejecter] of this._rejecters) {
+      rejecter(e);
+    }
+    this._resolvers.clear();
+    this._rejecters.clear();
   }
 }
 
