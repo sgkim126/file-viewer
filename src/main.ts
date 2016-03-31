@@ -9,6 +9,6 @@ import './viewer.styl';
   const connection = Connection.open(localStorage.getItem(USER_KEY));
   connection.then((connection) => {
     localStorage.setItem(USER_KEY, connection.key);
+    render(main, connection);
   });
-  render(main);
 })(window, window.document);
