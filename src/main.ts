@@ -1,6 +1,7 @@
-import render from './render.tsx';
-import Connection from './connection.ts';
 import './viewer.styl';
+import 'babel-polyfill';
+import Connection from './connection.ts';
+import render from './render.tsx';
 
 ((window: Window, document: Document): void => {
   const main: HTMLDivElement = document.getElementById('main') as HTMLDivElement;
