@@ -18,7 +18,7 @@ class PromiseTest(unittest.TestCase):
 
     @unittest.expectedFailure
     def test_apply_returns_failed_promise_when_exception_raised(self):
-        Promise.apply(raise_exception).result()
+        Promise.apply(raise_exception).f.result()
 
 
 def raise_exception():
