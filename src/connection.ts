@@ -44,17 +44,18 @@ export default class Connection {
     return new Promise((resolve, reject) => {
       this._resolvers.set(SEQ, resolve);
       this._rejecters.set(SEQ, reject);
-      this._socket.send(command);
+      this._socket.send(JSON.stringify(command));
     });
   }
 
   private onMessage(e: MessageEvent): void {
-    const SEQ = e.data.seq;
-    const isError = e.data.error;
+    const data = JSON.parse(e.data);
+    const SEQ = data.seq;
+    const isError = data.error;
     if (isError) {
-      this._rejecters.get(SEQ)(e.data);
+      this._rejecters.get(SEQ)(data);
     } else {
-      this._resolvers.get(SEQ)(e.data);
+      this._resolvers.get(SEQ)(data);
     }
     this._resolvers.delete(SEQ);
     this._rejecters.delete(SEQ);
