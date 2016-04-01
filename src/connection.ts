@@ -43,7 +43,7 @@ export default class Connection {
     const SEQ = command.seq;
     return new Promise((resolve, reject) => {
       this._resolvers.set(SEQ, resolve);
-      this._resolvers.set(SEQ, reject);
+      this._rejecters.set(SEQ, reject);
       this._socket.send(command);
     });
   }
