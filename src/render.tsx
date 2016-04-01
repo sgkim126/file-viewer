@@ -4,10 +4,12 @@ import Connection from './connection.ts';
 import FileBrowser from './file-browser.tsx';
 import History from './history.tsx';
 import Preview from './preview.tsx';
+import SeqGenerator from './seq-generator.ts';
 import { Grid, Row, Col } from 'react-bootstrap';
 
 interface IMainProps {
   connection: Connection;
+  seq: IterableIterator<number>;
 }
 
 class Main extends React.Component<IMainProps, {}> {
@@ -20,7 +22,7 @@ class Main extends React.Component<IMainProps, {}> {
       <Grid className='full-width full-height'>
       <Row className='full-width half-height'>
         <Col xs={12}>
-          <FileBrowser />
+          <FileBrowser connection={this.props.connection} seq={this.props.seq}/>
         </Col>
       </Row>
       <Row className='full-width half-height'>
@@ -37,5 +39,5 @@ class Main extends React.Component<IMainProps, {}> {
 }
 
 export default function render(target: HTMLDivElement, connection: Connection): void {
-  ReactDOM.render(<Main connection={connection}/>, target);
+  ReactDOM.render(<Main connection={connection} seq={SeqGenerator()}/>, target);
 }
