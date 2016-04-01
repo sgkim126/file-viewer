@@ -22,7 +22,7 @@ class CommandHandler(tornado.websocket.WebSocketHandler):
     def send_response(self, result):
         try:
             response = result.result()
-            print('RESPONSE:' + response)
+            print('RESPONSE:' + response[:40])
             self.write_message(response)
         except Exception as e:
             traceback.print_exc()
