@@ -14,15 +14,17 @@ class Command(object):
     def handle(command: Dict[str, Any]) -> Promise:
         seq = command.get('seq')
         key = command.get('key')
-        if command['type'] == 'new':
-            return Promise.apply(lambda: _handle_new(command)).map(
-                lambda key: json.dumps({'key': key})
-            )
-        elif command['type'] == 'pwd':
-            return Promise.apply(lambda: _handle_pwd(command)).map(
-                lambda path: json.dumps({'pwd': path, 'seq': seq})
-            )
-        return Promise.failed(LookupError('invalid command'))
+        handlers = {
+            'new': _handle_new,
+            'pwd': _handle_pwd,
+        }
+        return Promise.successful(
+            command
+        ).map(
+            handlers[command['type']]
+        ).map(
+            json.dumps
+        )
 
 
 def _get_command(message: str) -> Dict[str, Any]:
@@ -43,14 +45,16 @@ def _get_command(message: str) -> Dict[str, Any]:
     return command
 
 
-def _handle_new(command: Dict[str, Any]) -> str:
+def _handle_new(command: Dict[str, Any]) -> Dict[str, str]:
     key = command.get('key')
     if key is None:
         key = Connection.instance().new()
     else:
         key = Connection.instance().get_or_new(key)
-    return key
+    return {'key': key}
 
 
-def _handle_pwd(command: Dict[str, Any]) -> str:
-    return Connection.instance()[command['key']]['path']
+def _handle_pwd(command: Dict[str, Any]) -> Dict[str, Any]:
+    path = Connection.instance()[command['key']]['path']
+    seq = command['seq']
+    return {'pwd': path, 'seq': seq}
