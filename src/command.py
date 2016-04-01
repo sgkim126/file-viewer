@@ -1,4 +1,5 @@
 from .connection import Connection
+from .ls_command import handle_ls_command
 from .promise import Promise
 from typing import Any
 from typing import Dict
@@ -17,6 +18,7 @@ class Command(object):
         handlers = {
             'new': _handle_new,
             'pwd': _handle_pwd,
+            'ls': handle_ls_command,
         }
         return Promise.successful(
             command
@@ -28,7 +30,7 @@ class Command(object):
 
 
 def _get_command(message: str) -> Dict[str, Any]:
-    VALID_COMMANDS = ['new', 'pwd']
+    VALID_COMMANDS = ['new', 'pwd', 'ls']
     command = json.loads(message)
     command_type = command.get('type')
     assert command_type is not None
@@ -42,6 +44,8 @@ def _get_command(message: str) -> Dict[str, Any]:
         assert key is not None
     if key is not None:
         assert type(key) is str and len(key) == 16
+    if command_type == 'ls':
+        assert type(command['path']) is str
     return command
 
 
