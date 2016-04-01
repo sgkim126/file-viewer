@@ -18,6 +18,8 @@ export default class Connection {
     this._key = key;
     this._resolvers = new Map();
     this._rejecters = new Map();
+    this._onclose = (e) => e;
+    this._onerror = (e) => e;
   }
 
   static open(key?: string): Promise<Connection> {
