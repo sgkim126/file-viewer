@@ -8,4 +8,9 @@ interface IPwd extends ICommand {
   type: 'pwd';
 }
 
-export type Command = IPwd;
+interface ILs extends ICommand {
+  type: 'ls';
+  path: string;
+}
+
+export type Command = IPwd | ILs;
