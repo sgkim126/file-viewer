@@ -41,7 +41,6 @@ class File extends React.Component<IFile, {}> {
   }
 
   public render(): JSX.Element {
-    const overlay = <Popover id={this.props.name} title={this.props.name}><span>size: {this.props.size}</span></Popover>;
     const iconClass = ['glyphicon'];
     if (this.props.is_file) {
       iconClass.push('glyphicon-file');
