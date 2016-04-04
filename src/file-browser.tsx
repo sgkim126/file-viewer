@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Connection from './connection.ts';
-import { Input, Popover } from 'react-bootstrap';
+import FileInfo from './file-info.tsx';
+import { Col, Input } from 'react-bootstrap';
 
 class Path extends React.Component<{}, {}> {
   constructor(props: {}) {
@@ -86,8 +87,12 @@ export default class FileBrowser extends React.Component<IProps, IState> {
 
   public render(): JSX.Element {
     let files = <div>'Loading...'</div> as any;
+    let selectedFile = { } as any;
     if (this.state.files) {
       files = this.state.files.map((file: IFile, key: number) => {
+        if (key === this.state.selected) {
+          selectedFile = file;
+        }
         const selected = key === this.state.selected;
         return <File
           selected={selected}
@@ -100,7 +105,12 @@ export default class FileBrowser extends React.Component<IProps, IState> {
     return (
       <div className='file-browser'>
       <Path>{this.state.path}</Path>
-      {files}
+      <Col xs={8}>
+        {files}
+      </Col>
+      <Col xs={4}>
+        <FileInfo {...selectedFile} />
+      </Col>
       </div>
     );
   }
