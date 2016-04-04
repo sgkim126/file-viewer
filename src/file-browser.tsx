@@ -33,10 +33,16 @@ interface IFile {
 interface IState {
   path?: string;
   files?: IFile[];
+  selected?: number;
 }
 
-class File extends React.Component<IFile, {}> {
-  constructor(props: IFile) {
+interface IFileProps extends IFile {
+  selected: boolean;
+  onClick: React.MouseEventHandler;
+}
+
+class File extends React.Component<IFileProps , {}> {
+  constructor(props: IFileProps) {
     super(props);
   }
 
@@ -48,7 +54,11 @@ class File extends React.Component<IFile, {}> {
     if (this.props.is_dir) {
       iconClass.push('glyphicon-folder-open');
     }
-    return <div className='icon text-center'>
+    const outerClasses = ['icon', 'text-center'];
+    if (this.props.selected) {
+      outerClasses.push('selected');
+    }
+    return <div className={outerClasses.join(' ')} onClick={this.props.onClick}>
       <div><span className={iconClass.join(' ')}></span></div>
       <span title={this.props.name}>{this.props.name}</span>
     </div>;
@@ -77,7 +87,15 @@ export default class FileBrowser extends React.Component<IProps, IState> {
   public render(): JSX.Element {
     let files = <div>'Loading...'</div> as any;
     if (this.state.files) {
-      files = this.state.files.map((file: IFile, key: number) => <File key={key} {...file} />);
+      files = this.state.files.map((file: IFile, key: number) => {
+        const selected = key === this.state.selected;
+        return <File
+          selected={selected}
+          key={key}
+          {...file}
+          onClick={(e: React.MouseEvent) => { this.setState({ selected: key }); }}
+        />;
+      });
     }
     return (
       <div className='file-browser'>
