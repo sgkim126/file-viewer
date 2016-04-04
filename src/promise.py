@@ -43,3 +43,27 @@ class Promise(object):
         except BaseException as e:
             target_future.set_exception(e)
         return target_future
+
+    def recover(self, callback):
+        return self.recoverWith(
+            lambda value: Promise.successful(callback(value))
+        )
+
+    def recoverWith(self, callback):
+        f = Future()
+        self.f.add_done_callback(
+            lambda future: Promise._recoverWith(f, future, callback))
+        return Promise(f)
+
+    def _recoverWith(target_future, result_future, callback):
+        assert target_future.running()
+        try:
+            e = result_future.exception()
+            if e is None:
+                result = result_future.result()
+            else:
+                result = callback(e).f.result()
+            target_future.set_result(result)
+        except BaseException as e:
+            target_future.set_exception(e)
+        return target_future
