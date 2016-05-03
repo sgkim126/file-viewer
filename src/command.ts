@@ -13,4 +13,9 @@ interface ILs extends ICommand {
   path: string;
 }
 
-export type Command = IPwd | ILs;
+interface ICat extends ICommand {
+  type: 'cat';
+  path: string;
+}
+
+export type Command = IPwd | ILs | ICat;
