@@ -28,7 +28,10 @@ class Main extends React.Component<IMainProps, IState> {
       <Grid className='full-width full-height'>
       <Row className='full-width half-height'>
         <Col xs={12}>
-          <FileBrowser connection={this.props.connection} seq={this.props.seq} onClick={(e: React.MouseEvent, path: string) => {
+          <FileBrowser connection={this.props.connection} seq={this.props.seq} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
+            if (!isFile) {
+              return;
+            }
             const seq = this.props.seq.next().value;
             const key = this.props.connection.key;
             const catResult = this.props.connection.send({
