@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Connection from './connection.ts';
+import File from './file.tsx';
 import FileInfo from './file-info.tsx';
 import { Col, Input } from 'react-bootstrap';
 
@@ -36,36 +37,6 @@ interface IState {
   files?: IFile[];
   selected?: number;
 }
-
-interface IFileProps extends IFile {
-  selected: boolean;
-  onClick: React.MouseEventHandler;
-}
-
-class File extends React.Component<IFileProps , {}> {
-  constructor(props: IFileProps) {
-    super(props);
-  }
-
-  public render(): JSX.Element {
-    const iconClass = ['glyphicon'];
-    if (this.props.is_file) {
-      iconClass.push('glyphicon-file');
-    }
-    if (this.props.is_dir) {
-      iconClass.push('glyphicon-folder-open');
-    }
-    const outerClasses = ['icon', 'text-center'];
-    if (this.props.selected) {
-      outerClasses.push('selected');
-    }
-    return <div className={outerClasses.join(' ')} onClick={this.props.onClick}>
-      <div><span className={iconClass.join(' ')}></span></div>
-      <span title={this.props.name}>{this.props.name}</span>
-    </div>;
-  }
-}
-
 
 export default class FileBrowser extends React.Component<IProps, IState> {
   constructor(props: IProps) {
