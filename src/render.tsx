@@ -12,9 +12,15 @@ interface IMainProps {
   seq: IterableIterator<number>;
 }
 
-class Main extends React.Component<IMainProps, {}> {
+interface IState {
+  lines: string[];
+}
+
+class Main extends React.Component<IMainProps, IState> {
   constructor(props: IMainProps) {
     super(props);
+
+    this.state = { lines: [] };
   }
 
   public render(): JSX.Element {
@@ -22,12 +28,24 @@ class Main extends React.Component<IMainProps, {}> {
       <Grid className='full-width full-height'>
       <Row className='full-width half-height'>
         <Col xs={12}>
-          <FileBrowser connection={this.props.connection} seq={this.props.seq}/>
+          <FileBrowser connection={this.props.connection} seq={this.props.seq} onClick={(e: React.MouseEvent, path: string) => {
+            const seq = this.props.seq.next().value;
+            const key = this.props.connection.key;
+            const catResult = this.props.connection.send({
+              seq,
+              key,
+              type: 'cat',
+              path: path,
+            });
+            catResult.then((result: { lines: string[] }) => {
+              this.setState({ lines: result.lines });
+            });
+          }}/>
         </Col>
       </Row>
       <Row className='full-width half-height'>
         <Col xs={8}>
-          <Preview />
+          <Preview lines={this.state.lines} />
         </Col>
         <Col xs={4}>
           <History />
