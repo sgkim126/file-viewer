@@ -17,7 +17,7 @@ class Path extends React.Component<{}, {}> {
 interface IProps {
   connection: Connection;
   seq: IterableIterator<number>;
-  onClick: (e: React.MouseEvent, path: string) => void;
+  onClick: (e: React.MouseEvent, path: string, isFIle: boolean) => void;
 }
 
 interface IFile {
@@ -70,7 +70,7 @@ export default class FileBrowser extends React.Component<IProps, IState> {
           selected={selected}
           key={key}
           {...file}
-          onClick={(e: React.MouseEvent) => this.props.onClick(e, `${this.state.path}/${file.name}`)}
+          onClick={(e: React.MouseEvent) => this.props.onClick(e, `${this.state.path}/${file.name}`, file.is_file)}
         />;
       });
     }
