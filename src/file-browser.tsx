@@ -16,8 +16,8 @@ class Path extends React.Component<{}, {}> {
 }
 
 interface IProps {
-  connection: Connection;
-  seq: IterableIterator<number>;
+  path: string;
+  files: IFile[];
   onClick: (e: React.MouseEvent, path: string, isFIle: boolean) => void;
 }
 
@@ -35,8 +35,6 @@ interface IFile {
 }
 
 interface IState {
-  path?: string;
-  files?: IFile[];
   selected?: number;
 }
 
@@ -44,25 +42,13 @@ export default class FileBrowser extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {};
-    const seq = this.props.seq.next().value;
-    const key = this.props.connection.key;
-    props.connection.send({seq, key, type: 'pwd'}).then((result: {pwd: string}) => {
-      const path = result.pwd;
-      this.setState({ path });
-      return path;
-    }).then((path: string) => {
-      const seq = this.props.seq.next().value;
-      return props.connection.send({seq, key, path, type: 'ls'}).then((result: {files: IFile[]}) => {
-        this.setState({files: result.files});
-      });
-    });
   }
 
   public render(): JSX.Element {
     let files = <div>'Loading...'</div> as any;
     let selectedFile = { } as any;
-    if (this.state.files) {
-      files = this.state.files.map((file: IFile, key: number) => {
+    if (this.props.files) {
+      files = this.props.files.map((file: IFile, key: number) => {
         if (key === this.state.selected) {
           selectedFile = file;
         }
@@ -71,14 +57,14 @@ export default class FileBrowser extends React.Component<IProps, IState> {
           selected={selected}
           key={key}
           {...file}
-          onClick={(e: React.MouseEvent) => this.props.onClick(e, `${this.state.path}/${file.name}`, file.is_file)}
+          onClick={(e: React.MouseEvent) => this.props.onClick(e, `${this.props.path}/${file.name}`, file.is_file)}
         />;
       });
     }
     return <Draggable handle='.handle'>
       <div className='file-browser'>
       <Col xs={12} className='handle'>TITLE BAR</Col>
-      <Path>{this.state.path}</Path>
+      <Path>{this.props.path}</Path>
       <Col xs={8}>
         {files}
       </Col>
