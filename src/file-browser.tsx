@@ -3,6 +3,7 @@ import Connection from './connection.ts';
 import File from './file.tsx';
 import FileInfo from './file-info.tsx';
 import { Col, Input } from 'react-bootstrap';
+const Draggable = require('react-draggable');
 
 class Path extends React.Component<{}, {}> {
   constructor(props: {}) {
@@ -74,8 +75,9 @@ export default class FileBrowser extends React.Component<IProps, IState> {
         />;
       });
     }
-    return (
+    return <Draggable handle='.handle'>
       <div className='file-browser'>
+      <Col xs={12} className='handle'>TITLE BAR</Col>
       <Path>{this.state.path}</Path>
       <Col xs={8}>
         {files}
@@ -84,6 +86,6 @@ export default class FileBrowser extends React.Component<IProps, IState> {
         <FileInfo {...selectedFile} />
       </Col>
       </div>
-    );
+    </Draggable>;
   }
 }

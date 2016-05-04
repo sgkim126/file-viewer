@@ -23,35 +23,25 @@ class Main extends React.Component<IMainProps, IState> {
   }
 
   public render(): JSX.Element {
-    return (
-      <Grid className='full-width full-height'>
-      <Row className='full-width half-height'>
-        <Col xs={12}>
-          <FileBrowser connection={this.props.connection} seq={this.props.seq} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
-            if (!isFile) {
-              return;
-            }
-            const seq = this.props.seq.next().value;
-            const key = this.props.connection.key;
-            const catResult = this.props.connection.send({
-              seq,
-              key,
-              type: 'cat',
-              path: path,
-            });
-            catResult.then((result: { lines: string[] }) => {
-              this.setState({ lines: result.lines });
-            });
-          }}/>
-        </Col>
-      </Row>
-      <Row className='full-width half-height'>
-        <Col xs={12}>
-          <Preview lines={this.state.lines} />
-        </Col>
-      </Row>
-      </Grid>
-    );
+    return <div>
+      <FileBrowser connection={this.props.connection} seq={this.props.seq} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
+        if (!isFile) {
+          return;
+        }
+        const seq = this.props.seq.next().value;
+        const key = this.props.connection.key;
+        const catResult = this.props.connection.send({
+          seq,
+          key,
+          type: 'cat',
+          path: path,
+        });
+        catResult.then((result: { lines: string[] }) => {
+          this.setState({ lines: result.lines });
+        });
+      }}/>
+      <Preview lines={this.state.lines} />
+    </div>;
   }
 }
 
