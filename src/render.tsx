@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Connection from './connection.ts';
 import FileBrowser from './file-browser.tsx';
-import History from './history.tsx';
 import Preview from './preview.tsx';
 import SeqGenerator from './seq-generator.ts';
 import { Grid, Row, Col } from 'react-bootstrap';
@@ -47,11 +46,8 @@ class Main extends React.Component<IMainProps, IState> {
         </Col>
       </Row>
       <Row className='full-width half-height'>
-        <Col xs={8}>
+        <Col xs={12}>
           <Preview lines={this.state.lines} />
-        </Col>
-        <Col xs={4}>
-          <History />
         </Col>
       </Row>
       </Grid>
