@@ -57,21 +57,20 @@ class Main extends React.Component<IMainProps, IState> {
     if (this.state.browser) {
       const path = this.state.browser.path;
       const files = this.state.browser.files;
-      panels.push(<FileBrowser files={files} path={path} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
-        if (!isFile) {
-          return;
-        }
+      const cat = (filepath: string) => {
         const seq = this.props.seq.next().value;
         const key = this.props.connection.key;
         const catResult = this.props.connection.send({
           seq,
           key,
           type: 'cat',
-          path: path,
+          path: filepath,
         });
         catResult.then((result: { lines: string[] }) => {
           this.setState({ lines: result.lines });
         });
+      };
+      panels.push(<FileBrowser files={files} path={path} cat={cat} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
       }}></FileBrowser>);
     }
     if (this.state.lines) {

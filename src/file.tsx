@@ -1,6 +1,6 @@
 import './file.styl';
 import * as React from 'react';
-import { Overlay } from 'react-bootstrap';
+import { Button, ButtonToolbar, Glyphicon, Overlay } from 'react-bootstrap';
 
 interface IFile {
   name: string;
@@ -18,6 +18,8 @@ interface IFile {
 interface IProps extends IFile {
   selected: boolean;
   onClick: React.MouseEventHandler;
+  cat: (filepath: string) => void;
+  dirpath: string;
 }
 
 interface IState {
@@ -32,8 +34,10 @@ export default class File extends React.Component<IProps , IState> {
 
   public render(): JSX.Element {
     const iconClass = ['glyphicon'];
+    const buttons: JSX.Element[] = [];
     if (this.props.is_file) {
       iconClass.push('glyphicon-file');
+      buttons.push(<Button onClick={this.cat.bind(this)}><Glyphicon glyph='eye-open' /></Button>);
     }
     if (this.props.is_dir) {
       iconClass.push('glyphicon-folder-open');
@@ -45,8 +49,10 @@ export default class File extends React.Component<IProps , IState> {
     return <div className={outerClasses.join(' ')} onClick={this.props.onClick} onContextMenu={this.onContextMenu.bind(this)}>
       <div><span className={iconClass.join(' ')}></span></div>
       <span className='filename' title={this.props.name}>{this.props.name}</span>
-      <Overlay show={this.state.menu} container={this} onHide={()=>{this.setState({menu: false})}} rootClose>
-        <div className='menu'>MENU</div>
+      <Overlay show={this.state.menu} container={this} onHide={() => this.setState({menu: false}) } rootClose>
+        <ButtonToolbar>
+        {buttons}
+        </ButtonToolbar>
       </Overlay>
     </div>;
   }
@@ -54,6 +60,13 @@ export default class File extends React.Component<IProps , IState> {
   private onContextMenu(e: MouseEvent): void {
     e.preventDefault();
     this.setState({ menu: true });
+  }
+
+  private cat(): void {
+    const path = `${this.props.dirpath}/${this.props.name}`;
+    const type = 'cat';
+    this.props.cat(path);
+    this.setState({menu: false});
   }
 }
 

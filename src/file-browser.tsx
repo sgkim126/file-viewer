@@ -20,6 +20,7 @@ interface IProps {
   path: string;
   files: IFile[];
   onClick: (e: React.MouseEvent, path: string, isFIle: boolean) => void;
+  cat: (filepath: string) => void;
 }
 
 interface IFile {
@@ -55,9 +56,11 @@ export default class FileBrowser extends React.Component<IProps, IState> {
         }
         const selected = key === this.state.selected;
         return <File
+          dirpath={this.props.path}
           selected={selected}
           key={key}
           {...file}
+          cat={this.props.cat.bind(this)}
           onClick={(e: React.MouseEvent) => this.props.onClick(e, `${this.props.path}/${file.name}`, file.is_file)}
         />;
       });
