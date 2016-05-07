@@ -28,7 +28,7 @@ interface IState {
   browser?: {
     path: string,
     files: IFile[],
-  },
+  };
   lines?: string[];
 }
 

@@ -13,7 +13,7 @@ export default class Panel extends React.Component<IProps, {}> {
     title: '',
     width: '30%',
     height: '50%',
-  }
+  };
 
   constructor(props: IProps) {
     super(props);
