@@ -52,7 +52,6 @@ class Main extends React.Component<IMainProps, IState> {
   public render(): JSX.Element {
     if (this.state.path && this.state.files) {
       return <div>
-      <Preview lines={this.state.lines} />
       <FileBrowser files={this.state.files} path={this.state.path} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
         if (!isFile) {
           return;
@@ -68,7 +67,7 @@ class Main extends React.Component<IMainProps, IState> {
         catResult.then((result: { lines: string[] }) => {
           this.setState({ lines: result.lines });
         });
-      }}/>
+      }}></FileBrowser>
       <Preview lines={this.state.lines} />
       </div>;
     } else {

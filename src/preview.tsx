@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Panel from './panel.tsx';
 import { Col } from 'react-bootstrap';
 const Draggable = require('react-draggable');
 
@@ -12,11 +13,8 @@ export default class Preview extends React.Component<IProps, {}> {
   }
 
   public render(): JSX.Element {
-    return <Draggable handle='.handle'>
-      <div className='preview'>
-      <Col xs={12} className='handle'>TITLE BAR</Col>
-      <Col xs={12}>{this.props.lines.join('<br />')}</Col>
-      </div>
-    </Draggable>;
+    return <Panel title='TITLE BAR'>
+      <Col xs={12}>{this.props.lines.join("\n")}</Col>
+    </Panel>;
   }
 }
