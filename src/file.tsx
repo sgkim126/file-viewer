@@ -1,4 +1,6 @@
+import './file.styl';
 import * as React from 'react';
+import { Overlay } from 'react-bootstrap';
 
 interface IFile {
   name: string;
@@ -13,14 +15,19 @@ interface IFile {
   mode: number;
 }
 
-interface IFileProps extends IFile {
+interface IProps extends IFile {
   selected: boolean;
   onClick: React.MouseEventHandler;
 }
 
-export default class File extends React.Component<IFileProps , {}> {
-  constructor(props: IFileProps) {
+interface IState {
+  menu: boolean;
+}
+
+export default class File extends React.Component<IProps , IState> {
+  constructor(props: IProps) {
     super(props);
+    this.state = { menu: false };
   }
 
   public render(): JSX.Element {
@@ -35,10 +42,18 @@ export default class File extends React.Component<IFileProps , {}> {
     if (this.props.selected) {
       outerClasses.push('selected');
     }
-    return <div className={outerClasses.join(' ')} onClick={this.props.onClick}>
+    return <div className={outerClasses.join(' ')} onClick={this.props.onClick} onContextMenu={this.onContextMenu.bind(this)}>
       <div><span className={iconClass.join(' ')}></span></div>
-      <span title={this.props.name}>{this.props.name}</span>
+      <span className='filename' title={this.props.name}>{this.props.name}</span>
+      <Overlay show={this.state.menu} container={this} onHide={()=>{this.setState({menu: false})}} rootClose>
+        <div className='menu'>MENU</div>
+      </Overlay>
     </div>;
+  }
+
+  private onContextMenu(e: MouseEvent): void {
+    e.preventDefault();
+    this.setState({ menu: true });
   }
 }
 
