@@ -36,7 +36,7 @@ class Main extends React.Component<IMainProps, IState> {
   constructor(props: IMainProps) {
     super(props);
 
-    this.state = { lines: [] };
+    this.state = { };
 
     const seq = this.props.seq.next().value;
     const key = this.props.connection.key;
@@ -53,11 +53,11 @@ class Main extends React.Component<IMainProps, IState> {
   }
 
   public render(): JSX.Element {
+    const panels: JSX.Element[] = [];
     if (this.state.browser) {
       const path = this.state.browser.path;
       const files = this.state.browser.files;
-      return <div>
-      <FileBrowser files={files} path={path} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
+      panels.push(<FileBrowser files={files} path={path} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
         if (!isFile) {
           return;
         }
@@ -72,14 +72,14 @@ class Main extends React.Component<IMainProps, IState> {
         catResult.then((result: { lines: string[] }) => {
           this.setState({ lines: result.lines });
         });
-      }}></FileBrowser>
-      <Preview lines={this.state.lines} />
-      </div>;
-    } else {
-      return <div>
-      <Preview lines={this.state.lines} />
-      </div>;
+      }}></FileBrowser>);
     }
+    if (this.state.lines) {
+      panels.push(<Preview lines={this.state.lines} />);
+    }
+    return <div>
+    {panels}
+    </div>;
   }
 }
 
