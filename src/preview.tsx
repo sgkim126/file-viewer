@@ -14,7 +14,7 @@ export default class Preview extends React.Component<IProps, {}> {
 
   public render(): JSX.Element {
     return <Panel title='TITLE BAR'>
-      <Col xs={12}>{this.props.lines.join("\n")}</Col>
+    <pre>{this.props.lines.join('\n')}</pre>
     </Panel>;
   }
 }
