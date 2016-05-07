@@ -25,8 +25,10 @@ interface IFile {
 }
 
 interface IState {
-  path?: string;
-  files?: IFile[];
+  browser?: {
+    path: string,
+    files: IFile[],
+  },
   lines?: string[];
 }
 
@@ -44,15 +46,18 @@ class Main extends React.Component<IMainProps, IState> {
     }).then((path: string) => {
       const seq = this.props.seq.next().value;
       return props.connection.send({seq, key, path, type: 'ls'}).then((result: {files: IFile[]}) => {
-        this.setState({ path, files: result.files });
+        const browser = { path, files: result.files };
+        this.setState({ browser });
       });
     });
   }
 
   public render(): JSX.Element {
-    if (this.state.path && this.state.files) {
+    if (this.state.browser) {
+      const path = this.state.browser.path;
+      const files = this.state.browser.files;
       return <div>
-      <FileBrowser files={this.state.files} path={this.state.path} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
+      <FileBrowser files={files} path={path} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
         if (!isFile) {
           return;
         }
