@@ -33,21 +33,16 @@ export default class File extends React.Component<IProps , IState> {
   }
 
   public render(): JSX.Element {
-    const iconClass = ['glyphicon'];
     const buttons: JSX.Element[] = [];
     if (this.props.is_file) {
-      iconClass.push('glyphicon-file');
       buttons.push(<Button onClick={this.cat.bind(this)}><Glyphicon glyph='eye-open' /></Button>);
-    }
-    if (this.props.is_dir) {
-      iconClass.push('glyphicon-folder-open');
     }
     const outerClasses = ['icon', 'text-center'];
     if (this.props.selected) {
       outerClasses.push('selected');
     }
     return <div className={outerClasses.join(' ')} onClick={this.props.onClick} onContextMenu={this.onContextMenu.bind(this)}>
-      <div><span className={iconClass.join(' ')}></span></div>
+      {icon(this.props)}
       <span className='filename' title={this.props.name}>{this.props.name}</span>
       <Overlay show={this.state.menu} container={this} onHide={() => this.setState({menu: false}) } rootClose>
         <ButtonToolbar>
@@ -70,3 +65,13 @@ export default class File extends React.Component<IProps , IState> {
   }
 }
 
+function icon(file: IFile): JSX.Element {
+  let glyph = 'remove';
+  if (file.is_file) {
+    glyph = 'file';
+  }
+  if (file.is_dir) {
+    glyph = 'folder-open';
+  }
+  return <div><Glyphicon glyph={glyph} /></div>;
+}
