@@ -19,6 +19,7 @@ interface IProps extends IFile {
   selected: boolean;
   onClick: React.MouseEventHandler;
   cat: (filepath: string) => void;
+  changeDir: (path: string) => void;
   dirpath: string;
 }
 
@@ -36,6 +37,10 @@ export default class File extends React.Component<IProps , IState> {
     const buttons: JSX.Element[] = [];
     if (this.props.is_file) {
       buttons.push(<Button onClick={this.cat.bind(this)}><Glyphicon glyph='eye-open' /></Button>);
+    }
+    if (this.props.is_dir) {
+      const path = `${this.props.dirpath}/${this.props.name}`;
+      buttons.push(<Button onClick={() => { this.props.changeDir(path); }}><Glyphicon glyph='share-alt' /></Button>);
     }
     const outerClasses = ['icon', 'text-center'];
     if (this.props.selected) {

@@ -24,11 +24,12 @@ interface IFile {
   mode: number;
 }
 
+interface IBrowser {
+  path: string;
+  files: IFile[];
+}
 interface IState {
-  browser?: {
-    path: string,
-    files: IFile[],
-  };
+  browser?: IBrowser;
   lines?: string[];
 }
 
@@ -38,17 +39,11 @@ class Main extends React.Component<IMainProps, IState> {
 
     this.state = { };
 
-    const seq = this.props.seq.next().value;
-    const key = this.props.connection.key;
-
-    this.props.connection.send({seq, key, type: 'pwd'}).then((result: {pwd: string}) => {
-      return result.pwd;
-    }).then((path: string) => {
-      const seq = this.props.seq.next().value;
-      return props.connection.send({seq, key, path, type: 'ls'}).then((result: {files: IFile[]}) => {
-        const browser = { path, files: result.files };
-        this.setState({ browser });
-      });
+    this.pwd()
+    .then((path: string) => {
+      return this.ls(path);
+    }).then((browser: IBrowser) => {
+      this.setState({ browser });
     });
   }
 
@@ -70,7 +65,13 @@ class Main extends React.Component<IMainProps, IState> {
           this.setState({ lines: result.lines });
         });
       };
-      panels.push(<FileBrowser files={files} path={path} cat={cat} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
+      const changeDir = (path: string) => {
+        this.ls(path)
+        .then((browser: IBrowser) => {
+          this.setState({ browser });
+        });
+      };
+      panels.push(<FileBrowser files={files} path={path} cat={cat} changeDir={changeDir} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
       }}></FileBrowser>);
     }
     if (this.state.lines) {
@@ -80,8 +81,36 @@ class Main extends React.Component<IMainProps, IState> {
     {panels}
     </div>;
   }
+
+  private pwd(): Promise<string> {
+    return pwd(this.props.connection, this.props.seq);
+  }
+
+  private ls(path: string): Promise<IBrowser> {
+    return ls(path, this.props.connection, this.props.seq);
+  }
 }
 
 export default function render(target: HTMLDivElement, connection: Connection): void {
   ReactDOM.render(<Main connection={connection} seq={SeqGenerator()}/>, target);
+}
+
+function pwd(connection: Connection, seqGen: IterableIterator<number>): Promise<string> {
+  const seq = seqGen.next().value;
+  const key = connection.key;
+
+  return connection.send({seq, key, type: 'pwd'})
+  .then((result: {pwd: string}): string => {
+    return result.pwd;
+  });
+}
+
+function ls(path: string, connection: Connection, seqGen: IterableIterator<number>): Promise<IBrowser> {
+  const seq = seqGen.next().value;
+  const key = connection.key;
+
+  return connection.send({seq, key, path, type: 'ls'})
+  .then((result: {files: IFile[]}): IBrowser => {
+    return { path, files: result.files };
+  });
 }
