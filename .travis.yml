@@ -1,23 +1,21 @@
 sudo: false
-language: python
-python:
-  - "3.5"
+language: go
+go:
+  - 1.6
 cache:
-  pip: true
   directories:
     - node_modules
-    - ENV
     - "$HOME/.nvm"
     - "$HOME/.npm"
     - typings
+    - $GOPATH
 
-before_cache:
-  - rm -f $HOME/.cache/pip/log/debug.log
 env:
-  - COMMAND=tslint
-  - COMMAND=pylint
-  - COMMAND=test
+    - COMMAND=tslint
+    - COMMAND=./server/server
+
 install:
   - nvm install 4.0
+
 script:
   - make $COMMAND
