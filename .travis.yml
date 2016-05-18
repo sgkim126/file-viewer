@@ -12,6 +12,7 @@ cache:
 
 env:
     - COMMAND=tslint
+    - COMMAND=test
     - COMMAND=./server/server
 
 install:

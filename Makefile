@@ -35,6 +35,9 @@ lint: | tslint
 tslint: | ./node_modules/
 	./node_modules/.bin/tslint -c tslint.json $(TS_SRC)
 
+test: | goget
+	cd ./server/; go test
+
 clean:
 	rm -f ./html/viewer.js
 	rm -f ./html/viewer.css
