@@ -13,6 +13,7 @@ interface IProps {
   onClick: (e: React.MouseEvent, path: string, isFIle: boolean) => void;
   cat: (filepath: string) => void;
   changeDir: (path: string) => void;
+  home: string;
 }
 
 interface IFile {
@@ -59,7 +60,7 @@ export default class FileBrowser extends React.Component<IProps, IState> {
       });
     }
     return <Panel title='files'>
-      <Path changeDir={this.props.changeDir}>{this.props.path}</Path>
+      <Path changeDir={this.props.changeDir} home={this.props.home}>{this.props.path}</Path>
       <Col xs={8} className='file-browser'>
         {files}
       </Col>

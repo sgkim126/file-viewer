@@ -4,6 +4,7 @@ const { FormControl, FormGroup, InputGroup } = require('react-bootstrap');
 
 interface IProps {
   changeDir: (path: string) => void;
+  home: string;
 }
 
 interface IState {
@@ -23,6 +24,7 @@ export default class Path extends React.Component<IProps, IState> {
 
   public render(): JSX.Element {
     return <form onSubmit={this.onSubmit.bind(this)}><FormGroup><InputGroup>
+    <InputGroup.Addon onClick={this.clickHome.bind(this)}><Glyphicon glyph='home' /></InputGroup.Addon>
     <FormControl type='text' readOnly={this.state.changing} placeholder={this.props.children} value={this.state.path} onChange={this.onChange.bind(this)} onBlur={this.onBlur.bind(this)} />
     <InputGroup.Addon onClick={this.clickBack.bind(this)}><Glyphicon glyph='arrow-left' /></InputGroup.Addon>
     </InputGroup></FormGroup></form>;
@@ -67,6 +69,11 @@ export default class Path extends React.Component<IProps, IState> {
     const path = backPath(this.props.children as string);
     this.setState({changing: true});
     this.props.changeDir(path);
+  }
+
+  private clickHome(): void {
+    this.setState({changing: true});
+    this.props.changeDir(this.props.home);
   }
 }
 

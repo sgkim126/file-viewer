@@ -27,6 +27,7 @@ interface IFile {
 interface IBrowser {
   path: string;
   files: IFile[];
+  home?: string;
 }
 interface IState {
   browser?: IBrowser;
@@ -41,17 +42,17 @@ class Main extends React.Component<IMainProps, IState> {
 
     this.home()
     .then((path: string) => {
-      return this.ls(path);
-    }).then((browser: IBrowser) => {
-      this.setState({ browser });
+      return this.ls(path).then((browser: IBrowser) => {
+        browser.home = path;
+        this.setState({ browser });
+      });
     });
   }
 
   public render(): JSX.Element {
     const panels: JSX.Element[] = [];
     if (this.state.browser) {
-      const path = this.state.browser.path;
-      const files = this.state.browser.files;
+      const { path, files, home } = this.state.browser;
       const cat = (filepath: string) => {
         const seq = this.props.seq.next().value;
         const key = this.props.connection.key;
@@ -68,10 +69,11 @@ class Main extends React.Component<IMainProps, IState> {
       const changeDir = (path: string) => {
         this.ls(path)
         .then((browser: IBrowser) => {
+          browser.home = this.state.browser.home;
           this.setState({ browser });
         });
       };
-      panels.push(<FileBrowser files={files} path={path} cat={cat} changeDir={changeDir} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
+      panels.push(<FileBrowser files={files} path={path} home={home} cat={cat} changeDir={changeDir} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
       }}></FileBrowser>);
     }
     if (this.state.lines) {
