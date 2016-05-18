@@ -6,9 +6,10 @@ import Preview from './preview.tsx';
 import SeqGenerator from './seq-generator.ts';
 import { Grid, Row, Col } from 'react-bootstrap';
 
-interface IMainProps {
+interface IProps {
   connection: Connection;
   seq: IterableIterator<number>;
+  home: string;
 }
 
 interface IFile {
@@ -27,32 +28,27 @@ interface IFile {
 interface IBrowser {
   path: string;
   files: IFile[];
-  home?: string;
 }
 interface IState {
   browser?: IBrowser;
   lines?: string[];
 }
 
-class Main extends React.Component<IMainProps, IState> {
-  constructor(props: IMainProps) {
+class Main extends React.Component<IProps, IState> {
+  constructor(props: IProps) {
     super(props);
 
     this.state = { };
 
-    this.home()
-    .then((path: string) => {
-      return this.ls(path).then((browser: IBrowser) => {
-        browser.home = path;
-        this.setState({ browser });
-      });
+    this.ls(this.props.home).then((browser: IBrowser) => {
+      this.setState({ browser });
     });
   }
 
   public render(): JSX.Element {
     const panels: JSX.Element[] = [];
     if (this.state.browser) {
-      const { path, files, home } = this.state.browser;
+      const { path, files } = this.state.browser;
       const cat = (filepath: string) => {
         const seq = this.props.seq.next().value;
         const key = this.props.connection.key;
@@ -69,11 +65,10 @@ class Main extends React.Component<IMainProps, IState> {
       const changeDir = (path: string) => {
         this.ls(path)
         .then((browser: IBrowser) => {
-          browser.home = this.state.browser.home;
           this.setState({ browser });
         });
       };
-      panels.push(<FileBrowser files={files} path={path} home={home} cat={cat} changeDir={changeDir} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
+      panels.push(<FileBrowser files={files} path={path} home={this.props.home} cat={cat} changeDir={changeDir} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
       }}></FileBrowser>);
     }
     if (this.state.lines) {
@@ -84,17 +79,16 @@ class Main extends React.Component<IMainProps, IState> {
     </div>;
   }
 
-  private home(): Promise<string> {
-    return home(this.props.connection, this.props.seq);
-  }
-
   private ls(path: string): Promise<IBrowser> {
     return ls(path, this.props.connection, this.props.seq);
   }
 }
 
 export default function render(target: HTMLDivElement, connection: Connection): void {
-  ReactDOM.render(<Main connection={connection} seq={SeqGenerator()}/>, target);
+  const seqGen = SeqGenerator();
+  home(connection, seqGen).then((homePath: string) => {
+    ReactDOM.render(<Main home={homePath} connection={connection} seq={seqGen}/>, target);
+  });
 }
 
 function home(connection: Connection, seqGen: IterableIterator<number>): Promise<string> {
