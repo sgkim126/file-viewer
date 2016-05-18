@@ -44,57 +44,62 @@ func main() {
 	contentTypes[CSSPath] = "text/css ; charset=utf-8"
 	contentTypes[JSPath] = "application/javascript; charset=utf-8"
 
+	kg := NewKeyGenerator(3)
+
 	http.Handle("/", http.StripPrefix("/", http.HandlerFunc(handleFile(contents, contentTypes))))
-	http.HandleFunc("/c", handleCommand)
+	http.HandleFunc("/c", http.HandlerFunc(handleCommand(kg)))
 	fmt.Println("Listen :%d", *port)
 	http.ListenAndServe(fmt.Sprintf(":%d", *port), nil)
 }
 
-func handleCommand(response http.ResponseWriter, request *http.Request) {
-	upgrader := websocket.Upgrader{}
-	ws, err := upgrader.Upgrade(response, request, nil)
-	if err != nil {
-		fmt.Println("Cannot upgrade:", err)
-	}
-
-	for {
-		messageType, buffers, err := ws.ReadMessage()
-		if messageType != 1 {
-			continue
-		}
-
-		commandType := CommandType{}
-		err = json.Unmarshal(buffers, &commandType)
+func handleCommand(kg KeyGenerator) func(http.ResponseWriter, *http.Request) {
+	return func(response http.ResponseWriter, request *http.Request) {
+		upgrader := websocket.Upgrader{}
+		ws, err := upgrader.Upgrade(response, request, nil)
 		if err != nil {
-			panic(err)
+			fmt.Println("Cannot upgrade:", err)
 		}
 
-		var result *[]byte
-		switch commandType.Type {
-		case "new":
-			new := []byte("{\"key\":\"key\"}")
-			result = &new
-		case "pwd":
-			result, err = handlePwd(&buffers)
-			if err != nil {
-				panic(err)
+		for {
+			messageType, buffers, err := ws.ReadMessage()
+			if messageType != 1 {
+				continue
 			}
-		case "ls":
-			result, err = handleLs(&buffers)
-			if err != nil {
-				panic(err)
-			}
-		case "cat":
-			result, err = handleCat(&buffers)
-			if err != nil {
-				panic(err)
-			}
-		default:
-		}
 
-		err = ws.WriteMessage(messageType, *result)
-		if err != nil {
-			panic(err)
+			commandType := CommandType{}
+			err = json.Unmarshal(buffers, &commandType)
+			if err != nil {
+				panic(err)
+			}
+
+			var result *[]byte
+			switch commandType.Type {
+			case "new":
+				key := <-kg
+				new := []byte(fmt.Sprintf("{\"key\":\"%s\"}", key))
+				result = &new
+			case "pwd":
+				result, err = handlePwd(&buffers)
+				if err != nil {
+					panic(err)
+				}
+			case "ls":
+				result, err = handleLs(&buffers)
+				if err != nil {
+					panic(err)
+				}
+			case "cat":
+				result, err = handleCat(&buffers)
+				if err != nil {
+					panic(err)
+				}
+			default:
+			}
+
+			err = ws.WriteMessage(messageType, *result)
+			if err != nil {
+				panic(err)
+			}
 		}
 	}
 }
