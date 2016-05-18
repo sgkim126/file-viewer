@@ -8,7 +8,7 @@ import (
 	"os/exec"
 )
 
-func handleCat(data *[]byte) (*[]byte, error) {
+func handleCat(data *[]byte) (CommandResult, error) {
 	var command CatCommand
 	err := json.Unmarshal(*data, &command)
 	if err != nil {
@@ -20,7 +20,10 @@ func handleCat(data *[]byte) (*[]byte, error) {
 	stdoutFile, err := ioutil.TempFile("", "filew-viewer")
 	defer stdoutFile.Close()
 	if err != nil {
-		return nil, err
+		return CommandError{
+			command.Seq,
+			err.Error(),
+		}, nil
 	}
 
 	cmd := exec.Command("cat", path)
@@ -28,7 +31,10 @@ func handleCat(data *[]byte) (*[]byte, error) {
 
 	err = cmd.Run()
 	if err != nil {
-		return nil, err
+		return CommandError{
+			command.Seq,
+			err.Error(),
+		}, nil
 	}
 
 	var lines []string
@@ -37,18 +43,16 @@ func handleCat(data *[]byte) (*[]byte, error) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		if scanner.Err() != nil {
-			return nil, scanner.Err()
+			return CommandError{
+				command.Seq,
+				scanner.Err().Error(),
+			}, nil
 		}
 		lines = append(lines, scanner.Text())
 	}
 
-	result := make(map[string]interface{})
-	result["seq"] = command.Seq
-	result["lines"] = lines
-
-	encoded, err := json.Marshal(result)
-	if err != nil {
-		return nil, err
-	}
-	return &encoded, nil
+	return CatResult{
+		command.Seq,
+		lines,
+	}, nil
 }

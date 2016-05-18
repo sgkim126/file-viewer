@@ -5,20 +5,20 @@ type CommandType struct {
 	Type string  `json:"type"`
 }
 
-type CommandSeq struct {
+type Seq struct {
 	Seq int `json:"seq"`
 }
 
 type PwdCommand struct {
-	CommandSeq
+	Seq
 }
 
 type LsCommand struct {
-	CommandSeq
+	Seq
 	Path string `json:"path"`
 }
 
 type CatCommand struct {
-	CommandSeq
+	Seq
 	Path string `json:"path"`
 }

@@ -72,12 +72,13 @@ func handleCommand(kg KeyGenerator) func(http.ResponseWriter, *http.Request) {
 				panic(err)
 			}
 
-			var result *[]byte
+			var result CommandResult
 			switch commandType.Type {
 			case "new":
 				key := <-kg
-				new := []byte(fmt.Sprintf("{\"key\":\"%s\"}", key))
-				result = &new
+				result = NewResult{
+					key,
+				}
 			case "pwd":
 				result, err = handlePwd(&buffers)
 				if err != nil {
@@ -98,7 +99,11 @@ func handleCommand(kg KeyGenerator) func(http.ResponseWriter, *http.Request) {
 				continue
 			}
 
-			err = ws.WriteMessage(messageType, *result)
+			if err != nil {
+				fmt.Println("Error in message", messageType, string(buffers), err)
+				continue
+			}
+			err = ws.WriteMessage(messageType, []byte(result.ResultMessage()))
 			if err != nil {
 				panic(err)
 			}

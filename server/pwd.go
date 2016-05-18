@@ -5,19 +5,16 @@ import (
 	"os"
 )
 
-func handlePwd(data *[]byte) (*[]byte, error) {
+func handlePwd(data *[]byte) (CommandResult, error) {
 	var command PwdCommand
 	err := json.Unmarshal(*data, &command)
 	if err != nil {
 		return nil, err
 	}
-	result := make(map[string]interface{})
-	result["seq"] = command.Seq
-	result["pwd"] = os.Getenv("HOME")
 
-	encoded, err := json.Marshal(result)
-	if err != nil {
-		return nil, err
-	}
-	return &encoded, nil
+	return PwdResult{
+		command.Seq,
+		os.Getenv("HOME"),
+	}, nil
+
 }

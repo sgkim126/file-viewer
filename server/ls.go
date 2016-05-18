@@ -7,20 +7,7 @@ import (
 	"syscall"
 )
 
-type FileStat struct {
-	Name             string `json:"name"`
-	IsDir            bool   `json:"is_dir"`
-	IsFile           bool   `json:"is_file"`
-	IsSymlink        bool   `json:"is_symlink"`
-	Size             int64  `json:"size"`
-	NumberOfHardLink int    `json:"number_of_hard_link"`
-	Ctime            int64  `json:"ctime"`
-	Mtime            int64  `json:"mtime"`
-	Atime            int64  `json:"atime"`
-	Mode             uint32 `json:"mode"`
-}
-
-func handleLs(data *[]byte) (*[]byte, error) {
+func handleLs(data *[]byte) (CommandResult, error) {
 	var command LsCommand
 	err := json.Unmarshal(*data, &command)
 	if err != nil {
@@ -31,7 +18,10 @@ func handleLs(data *[]byte) (*[]byte, error) {
 
 	fileInfos, err := ioutil.ReadDir(path)
 	if err != nil {
-		return nil, err
+		return CommandError{
+			command.Seq,
+			err.Error(),
+		}, nil
 	}
 	sizeofFiles := len(fileInfos)
 	files := make([]FileStat, sizeofFiles)
@@ -56,13 +46,8 @@ func handleLs(data *[]byte) (*[]byte, error) {
 		}
 	}
 
-	result := make(map[string]interface{})
-	result["seq"] = command.Seq
-	result["files"] = files
-
-	encoded, err := json.Marshal(result)
-	if err != nil {
-		return nil, err
-	}
-	return &encoded, nil
+	return LsResult{
+		command.Seq,
+		files,
+	}, nil
 }
