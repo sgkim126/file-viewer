@@ -94,6 +94,8 @@ func handleCommand(kg KeyGenerator) func(http.ResponseWriter, *http.Request) {
 					panic(err)
 				}
 			default:
+				fmt.Println("Unhandled message", messageType, string(buffers), err)
+				continue
 			}
 
 			err = ws.WriteMessage(messageType, *result)
