@@ -55,12 +55,12 @@ func (result LsResult) ResultMessage() []byte {
 	return ResultMessage(result)
 }
 
-type PwdResult struct {
+type HomeResult struct {
 	Seq
-	Pwd string `json:"pwd"`
+	Home string `json:"home"`
 }
 
-func (result PwdResult) ResultMessage() []byte {
+func (result HomeResult) ResultMessage() []byte {
 	return ResultMessage(result)
 }
 

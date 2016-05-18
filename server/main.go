@@ -79,8 +79,8 @@ func handleCommand(kg KeyGenerator) func(http.ResponseWriter, *http.Request) {
 				result = NewResult{
 					key,
 				}
-			case "pwd":
-				result, err = handlePwd(&buffers)
+			case "home":
+				result, err = handleHome(&buffers)
 				if err != nil {
 					panic(err)
 				}

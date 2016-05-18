@@ -39,7 +39,7 @@ class Main extends React.Component<IMainProps, IState> {
 
     this.state = { };
 
-    this.pwd()
+    this.home()
     .then((path: string) => {
       return this.ls(path);
     }).then((browser: IBrowser) => {
@@ -82,8 +82,8 @@ class Main extends React.Component<IMainProps, IState> {
     </div>;
   }
 
-  private pwd(): Promise<string> {
-    return pwd(this.props.connection, this.props.seq);
+  private home(): Promise<string> {
+    return home(this.props.connection, this.props.seq);
   }
 
   private ls(path: string): Promise<IBrowser> {
@@ -95,13 +95,13 @@ export default function render(target: HTMLDivElement, connection: Connection): 
   ReactDOM.render(<Main connection={connection} seq={SeqGenerator()}/>, target);
 }
 
-function pwd(connection: Connection, seqGen: IterableIterator<number>): Promise<string> {
+function home(connection: Connection, seqGen: IterableIterator<number>): Promise<string> {
   const seq = seqGen.next().value;
   const key = connection.key;
 
-  return connection.send({seq, key, type: 'pwd'})
-  .then((result: {pwd: string}): string => {
-    return result.pwd;
+  return connection.send({seq, key, type: 'home'})
+  .then((result: {home: string}): string => {
+    return result.home;
   });
 }
 

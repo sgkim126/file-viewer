@@ -9,7 +9,7 @@ type Seq struct {
 	Seq int `json:"seq"`
 }
 
-type PwdCommand struct {
+type HomeCommand struct {
 	Seq
 }
 

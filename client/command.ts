@@ -4,8 +4,8 @@ interface ICommand {
   seq: number;
 }
 
-interface IPwd extends ICommand {
-  type: 'pwd';
+interface IHome extends ICommand {
+  type: 'home';
 }
 
 interface ILs extends ICommand {
@@ -18,4 +18,4 @@ interface ICat extends ICommand {
   path: string;
 }
 
-export type Command = IPwd | ILs | ICat;
+export type Command = IHome | ILs | ICat;

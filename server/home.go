@@ -5,14 +5,14 @@ import (
 	"os"
 )
 
-func handlePwd(data *[]byte) (CommandResult, error) {
-	var command PwdCommand
+func handleHome(data *[]byte) (CommandResult, error) {
+	var command HomeCommand
 	err := json.Unmarshal(*data, &command)
 	if err != nil {
 		return nil, err
 	}
 
-	return PwdResult{
+	return HomeResult{
 		command.Seq,
 		os.Getenv("HOME"),
 	}, nil
