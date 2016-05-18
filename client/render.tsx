@@ -29,9 +29,14 @@ interface IBrowser {
   path: string;
   files: IFile[];
 }
+interface IPreview {
+  command: string;
+  lines: string[];
+}
+
 interface IState {
   browser?: IBrowser;
-  lines?: string[];
+  preview?: IPreview;
 }
 
 class Main extends React.Component<IProps, IState> {
@@ -58,8 +63,11 @@ class Main extends React.Component<IProps, IState> {
           type: 'cat',
           path: filepath,
         });
-        catResult.then((result: { lines: string[] }) => {
-          this.setState({ lines: result.lines });
+        catResult.then((result: { command: string, lines: string[] }) => {
+          const command = result.command;
+          const lines = result.lines;
+          const preview = { command, lines };
+          this.setState({ preview });
         });
       };
       const changeDir = (path: string) => {
@@ -71,8 +79,9 @@ class Main extends React.Component<IProps, IState> {
       panels.push(<FileBrowser files={files} path={path} home={this.props.home} cat={cat} changeDir={changeDir} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
       }}></FileBrowser>);
     }
-    if (this.state.lines) {
-      panels.push(<Preview lines={this.state.lines} />);
+    if (this.state.preview) {
+      const { command, lines } = this.state.preview;
+      panels.push(<Preview command={command} lines={lines} />);
     }
     return <div>
     {panels}

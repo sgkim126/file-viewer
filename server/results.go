@@ -21,6 +21,11 @@ type CommandError struct {
 	Error string `json:"error"`
 }
 
+type ResultWithCommand struct {
+	Seq
+	Command string `json:"command"`
+}
+
 func (result CommandError) ResultMessage() []byte {
 	return ResultMessage(result)
 }
@@ -65,7 +70,7 @@ func (result HomeResult) ResultMessage() []byte {
 }
 
 type CatResult struct {
-	Seq
+	ResultWithCommand
 	Lines []string `json:"lines"`
 }
 

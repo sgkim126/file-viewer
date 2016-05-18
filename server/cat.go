@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -52,7 +53,10 @@ func handleCat(data *[]byte) (CommandResult, error) {
 	}
 
 	return CatResult{
-		command.Seq,
+		ResultWithCommand{
+			command.Seq,
+			fmt.Sprintf("cat %s", path),
+		},
 		lines,
 	}, nil
 }

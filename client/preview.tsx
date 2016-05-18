@@ -4,6 +4,7 @@ import { Col } from 'react-bootstrap';
 const Draggable = require('react-draggable');
 
 interface IProps {
+  command: string;
   lines: string[];
 }
 
@@ -13,7 +14,7 @@ export default class Preview extends React.Component<IProps, {}> {
   }
 
   public render(): JSX.Element {
-    return <Panel title='TITLE BAR'>
+    return <Panel title={this.props.command}>
     <pre>{this.props.lines.join('\n')}</pre>
     </Panel>;
   }
