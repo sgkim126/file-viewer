@@ -1,5 +1,6 @@
 import * as React from 'react';
-const { FormControl, FormGroup } = require('react-bootstrap');
+import { Button, Glyphicon } from 'react-bootstrap';
+const { FormControl, FormGroup, InputGroup } = require('react-bootstrap');
 
 interface IProps {
   changeDir: (path: string) => void;
@@ -21,9 +22,10 @@ export default class Path extends React.Component<IProps, IState> {
   }
 
   public render(): JSX.Element {
-    return <form onSubmit={this.onSubmit.bind(this)}>
-    <FormGroup><FormControl type='text' readOnly={this.state.changing} placeholder={this.props.children} value={this.state.path} onChange={this.onChange.bind(this)} onBlur={this.onBlur.bind(this)} />
-    </FormGroup></form>;
+    return <form onSubmit={this.onSubmit.bind(this)}><FormGroup><InputGroup>
+    <FormControl type='text' readOnly={this.state.changing} placeholder={this.props.children} value={this.state.path} onChange={this.onChange.bind(this)} onBlur={this.onBlur.bind(this)} />
+    <InputGroup.Addon onClick={this.clickBack.bind(this)}><Glyphicon glyph='arrow-left' /></InputGroup.Addon>
+    </InputGroup></FormGroup></form>;
   }
 
   private componentWillReceiveProps(props: IProps) {
@@ -60,4 +62,16 @@ export default class Path extends React.Component<IProps, IState> {
       this.props.changeDir(this.state.path);
     }
   }
+
+  private clickBack(): void {
+    const path = backPath(this.props.children as string);
+    this.setState({changing: true});
+    this.props.changeDir(path);
+  }
+}
+
+function backPath(path: string): string {
+  const dirs = path.split('/');
+  dirs.pop();
+  return dirs.join('/');
 }
