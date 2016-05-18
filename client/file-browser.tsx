@@ -3,18 +3,9 @@ import Connection from './connection.ts';
 import File from './file.tsx';
 import FileInfo from './file-info.tsx';
 import Panel from './panel.tsx';
-import { Col, Input } from 'react-bootstrap';
+import Path from './path.tsx';
+import { Col } from 'react-bootstrap';
 const Draggable = require('react-draggable');
-
-class Path extends React.Component<{}, {}> {
-  constructor(props: {}) {
-    super(props);
-  }
-
-  public render(): JSX.Element {
-    return <Input type='text' value={this.props.children} readOnly />;
-  }
-}
 
 interface IProps {
   path: string;
@@ -68,7 +59,7 @@ export default class FileBrowser extends React.Component<IProps, IState> {
       });
     }
     return <Panel title='files'>
-      <Path>{this.props.path}</Path>
+      <Path changeDir={this.props.changeDir}>{this.props.path}</Path>
       <Col xs={8} className='file-browser'>
         {files}
       </Col>
