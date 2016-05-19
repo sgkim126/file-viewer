@@ -45,7 +45,7 @@ func main() {
 	contentTypes[JSPath] = "application/javascript; charset=utf-8"
 
 	kg := NewKeyGenerator(3)
-	cm := ContextManager{}
+	cm := NewContextManager()
 
 	http.Handle("/", http.StripPrefix("/", http.HandlerFunc(handleFile(contents, contentTypes))))
 	http.HandleFunc("/c", http.HandlerFunc(handleCommand(kg, cm)))

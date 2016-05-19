@@ -7,7 +7,7 @@ import (
 )
 
 func TestContextManagerAddKey(t *testing.T) {
-	cm := ContextManager{}
+	cm := NewContextManager()
 	assert.False(t, cm.HasKey("a"))
 	err := cm.AddKey("a")
 	assert.True(t, cm.HasKey("a"))
@@ -15,7 +15,7 @@ func TestContextManagerAddKey(t *testing.T) {
 }
 
 func TestContextManagerAddKeyReturnErrorOnDuplicated(t *testing.T) {
-	cm := ContextManager{}
+	cm := NewContextManager()
 	assert.False(t, cm.HasKey("a"))
 	err := cm.AddKey("a")
 	assert.True(t, cm.HasKey("a"))
@@ -24,25 +24,25 @@ func TestContextManagerAddKeyReturnErrorOnDuplicated(t *testing.T) {
 	assert.NotNil(t, err)
 }
 
-func TestContextManagerAddPath(t *testing.T) {
-	cm := ContextManager{}
+func TestContextManagerAddContext(t *testing.T) {
+	cm := NewContextManager()
 	assert.False(t, cm.HasKey("a"))
 	err := cm.AddKey("a")
 	assert.True(t, cm.HasKey("a"))
 	assert.Nil(t, err)
-	_, err = cm.AddPath("a", "/tmp/a")
+	_, err = cm.AddContext("a", "/tmp/a", "cat a")
 	assert.Nil(t, err)
 }
 
-func TestContextManagerGetPathReturnErrorIfKeyIsNotExists(t *testing.T) {
-	cm := ContextManager{}
-	_, err := cm.GetPath("a", 1)
+func TestContextManagerGetContextReturnErrorIfKeyIsNotExists(t *testing.T) {
+	cm := NewContextManager()
+	_, err := cm.GetContext("a", 1)
 	assert.NotNil(t, err)
 }
 
-func TestContextManagerGetPathReturnErrorIfIdIsNotExists(t *testing.T) {
-	cm := ContextManager{}
+func TestContextManagerGetContextReturnErrorIfIdIsNotExists(t *testing.T) {
+	cm := NewContextManager()
 	_ = cm.AddKey("a")
-	_, err := cm.GetPath("a", 1)
+	_, err := cm.GetContext("a", 1)
 	assert.NotNil(t, err)
 }
