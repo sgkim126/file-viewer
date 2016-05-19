@@ -9,7 +9,7 @@ import (
 	"os/exec"
 )
 
-func handleCat(data *[]byte) (CommandResult, error) {
+func handleCat(data *[]byte, cm *ContextManager) (CommandResult, error) {
 	var command CatCommand
 	err := json.Unmarshal(*data, &command)
 	if err != nil {
@@ -52,10 +52,20 @@ func handleCat(data *[]byte) (CommandResult, error) {
 		lines = append(lines, scanner.Text())
 	}
 
+	commandString := fmt.Sprintf("cat %s", path)
+	id, err := cm.AddContext(*command.Key, stdoutFile.Name(), commandString)
+	if err != nil {
+		return CommandError{
+			command.Seq,
+			err.Error(),
+		}, nil
+	}
+
 	return CatResult{
 		ResultWithCommand{
 			command.Seq,
-			fmt.Sprintf("cat %s", path),
+			commandString,
+			id,
 		},
 		lines,
 	}, nil

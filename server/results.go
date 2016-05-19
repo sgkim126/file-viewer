@@ -24,6 +24,7 @@ type CommandError struct {
 type ResultWithCommand struct {
 	Seq
 	Command string `json:"command"`
+	Id      int    `json:"id"`
 }
 
 func (result CommandError) ResultMessage() []byte {

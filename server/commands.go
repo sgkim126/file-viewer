@@ -6,6 +6,7 @@ type CommandType struct {
 }
 
 type Seq struct {
+	CommandType
 	Seq int `json:"seq"`
 }
 

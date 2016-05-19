@@ -30,6 +30,7 @@ interface IBrowser {
   files: IFile[];
 }
 interface IPreview {
+  id: number;
   command: string;
   lines: string[];
 }
@@ -63,10 +64,9 @@ class Main extends React.Component<IProps, IState> {
           type: 'cat',
           path: filepath,
         });
-        catResult.then((result: { command: string, lines: string[] }) => {
-          const command = result.command;
-          const lines = result.lines;
-          const preview = { command, lines };
+        catResult.then((result: { id: number, command: string, lines: string[] }) => {
+          const { id, command, lines } = result;
+          const preview = { id, command, lines };
           this.setState({ preview });
         });
       };
@@ -80,8 +80,8 @@ class Main extends React.Component<IProps, IState> {
       }}></FileBrowser>);
     }
     if (this.state.preview) {
-      const { command, lines } = this.state.preview;
-      panels.push(<Preview command={command} lines={lines} />);
+      const { command, lines, id } = this.state.preview;
+      panels.push(<Preview id={id} command={command} lines={lines} />);
     }
     return <div>
     {panels}

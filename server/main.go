@@ -91,7 +91,7 @@ func handleCommand(kg KeyGenerator, cm ContextManager) func(http.ResponseWriter,
 					panic(err)
 				}
 			case "cat":
-				result, err = handleCat(&buffers)
+				result, err = handleCat(&buffers, &cm)
 				if err != nil {
 					panic(err)
 				}

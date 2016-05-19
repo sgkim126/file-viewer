@@ -4,6 +4,7 @@ import { Col } from 'react-bootstrap';
 const Draggable = require('react-draggable');
 
 interface IProps {
+  id: number;
   command: string;
   lines: string[];
 }
