@@ -1,8 +1,8 @@
 package main
 
 type CommandType struct {
-	Key  *string `json:"key"`
-	Type string  `json:"type"`
+	Key  *key   `json:"key"`
+	Type string `json:"type"`
 }
 
 type Seq struct {
