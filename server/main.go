@@ -45,14 +45,15 @@ func main() {
 	contentTypes[JSPath] = "application/javascript; charset=utf-8"
 
 	kg := NewKeyGenerator(3)
+	cm := ContextManager{}
 
 	http.Handle("/", http.StripPrefix("/", http.HandlerFunc(handleFile(contents, contentTypes))))
-	http.HandleFunc("/c", http.HandlerFunc(handleCommand(kg)))
+	http.HandleFunc("/c", http.HandlerFunc(handleCommand(kg, cm)))
 	fmt.Println("Listen :%d", *port)
 	http.ListenAndServe(fmt.Sprintf(":%d", *port), nil)
 }
 
-func handleCommand(kg KeyGenerator) func(http.ResponseWriter, *http.Request) {
+func handleCommand(kg KeyGenerator, cm ContextManager) func(http.ResponseWriter, *http.Request) {
 	return func(response http.ResponseWriter, request *http.Request) {
 		upgrader := websocket.Upgrader{}
 		ws, err := upgrader.Upgrade(response, request, nil)
@@ -75,9 +76,9 @@ func handleCommand(kg KeyGenerator) func(http.ResponseWriter, *http.Request) {
 			var result CommandResult
 			switch commandType.Type {
 			case "new":
-				key := <-kg
-				result = NewResult{
-					key,
+				result, err = handleNew(&buffers, kg, &cm)
+				if err != nil {
+					panic(err)
 				}
 			case "home":
 				result, err = handleHome(&buffers)
