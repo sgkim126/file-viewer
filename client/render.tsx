@@ -37,14 +37,14 @@ interface IPreview {
 
 interface IState {
   browser?: IBrowser;
-  preview?: IPreview;
+  previews?: IPreview[];
 }
 
 class Main extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
 
-    this.state = { };
+    this.state = { previews: [] };
 
     this.ls(this.props.home).then((browser: IBrowser) => {
       this.setState({ browser });
@@ -67,7 +67,9 @@ class Main extends React.Component<IProps, IState> {
         catResult.then((result: { id: number, command: string, lines: string[] }) => {
           const { id, command, lines } = result;
           const preview = { id, command, lines };
-          this.setState({ preview });
+          const previews = this.state.previews.slice();
+          previews.push(preview);
+          this.setState({ previews });
         });
       };
       const changeDir = (path: string) => {
@@ -79,8 +81,8 @@ class Main extends React.Component<IProps, IState> {
       panels.push(<FileBrowser files={files} path={path} home={this.props.home} cat={cat} changeDir={changeDir} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
       }}></FileBrowser>);
     }
-    if (this.state.preview) {
-      const { command, lines, id } = this.state.preview;
+    for (const preview of this.state.previews) {
+      const { command, lines, id } = preview;
       panels.push(<Preview id={id} command={command} lines={lines} />);
     }
     return <div>
