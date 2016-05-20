@@ -16,7 +16,7 @@ export default class Preview extends React.Component<IProps, {}> {
   }
 
   public render(): JSX.Element {
-    return <Panel title={`${this.props.command} ${this.props.id}`} onClose={() => { this.props.onClose(this.props.id); }}>
+    return <Panel title={this.props.command} onClose={() => { this.props.onClose(this.props.id); }}>
     <pre>{this.props.lines.join('\n')}</pre>
     </Panel>;
   }
