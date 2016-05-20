@@ -5,21 +5,21 @@ import (
 	"os"
 )
 
-type CloseCommand struct {
+type CloseRequest struct {
 	Seq
 	Id int `json:"id"`
 }
 
-type CloseResult struct {
+type CloseResponse struct {
 	Seq
 }
 
-func (result CloseResult) ResultMessage() []byte {
-	return ResultMessage(result)
+func (result CloseResponse) ResponseMessage() []byte {
+	return ResponseMessage(result)
 }
 
-func handleClose(data *[]byte, cm *ContextManager) (CommandResult, error) {
-	var command CloseCommand
+func handleClose(data *[]byte, cm *ContextManager) (Response, error) {
+	var command CloseRequest
 	err := json.Unmarshal(*data, &command)
 	if err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func handleClose(data *[]byte, cm *ContextManager) (CommandResult, error) {
 	if err != nil {
 		return nil, err
 	}
-	return CloseResult{
+	return CloseResponse{
 		command.Seq,
 	}, nil
 }

@@ -4,16 +4,16 @@ import (
 	"encoding/json"
 )
 
-type NewResult struct {
+type NewResponse struct {
 	Key key `json:"key"`
 }
 
-func (result NewResult) ResultMessage() []byte {
-	return ResultMessage(result)
+func (result NewResponse) ResponseMessage() []byte {
+	return ResponseMessage(result)
 }
 
-func handleNew(data *[]byte, kg KeyGenerator, cm *ContextManager) (CommandResult, error) {
-	var command CommandType
+func handleNew(data *[]byte, kg KeyGenerator, cm *ContextManager) (Response, error) {
+	var command RequestType
 	err := json.Unmarshal(*data, &command)
 	if err != nil {
 		return nil, err
@@ -21,14 +21,14 @@ func handleNew(data *[]byte, kg KeyGenerator, cm *ContextManager) (CommandResult
 	oldKey := command.Key
 	if oldKey != nil {
 		if cm.HasKey(*oldKey) {
-			return NewResult{
+			return NewResponse{
 				*oldKey,
 			}, nil
 		}
 	}
 	newKey := <-kg
 	cm.AddKey(newKey)
-	return NewResult{
+	return NewResponse{
 		newKey,
 	}, nil
 }

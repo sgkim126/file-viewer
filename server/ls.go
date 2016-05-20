@@ -7,7 +7,7 @@ import (
 	"syscall"
 )
 
-type LsCommand struct {
+type LsRequest struct {
 	Seq
 	Path string `json:"path"`
 }
@@ -25,17 +25,17 @@ type FileStat struct {
 	Mode             uint32 `json:"mode"`
 }
 
-type LsResult struct {
+type LsResponse struct {
 	Seq
 	Files []FileStat `json:"files"`
 }
 
-func (result LsResult) ResultMessage() []byte {
-	return ResultMessage(result)
+func (result LsResponse) ResponseMessage() []byte {
+	return ResponseMessage(result)
 }
 
-func handleLs(data *[]byte) (CommandResult, error) {
-	var command LsCommand
+func handleLs(data *[]byte) (Response, error) {
+	var command LsRequest
 	err := json.Unmarshal(*data, &command)
 	if err != nil {
 		return nil, err
@@ -45,7 +45,7 @@ func handleLs(data *[]byte) (CommandResult, error) {
 
 	fileInfos, err := ioutil.ReadDir(path)
 	if err != nil {
-		return CommandError{
+		return ErrorResponse{
 			command.Seq,
 			err.Error(),
 		}, nil
@@ -73,7 +73,7 @@ func handleLs(data *[]byte) (CommandResult, error) {
 		}
 	}
 
-	return LsResult{
+	return LsResponse{
 		command.Seq,
 		files,
 	}, nil

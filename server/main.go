@@ -48,12 +48,12 @@ func main() {
 	cm := NewContextManager()
 
 	http.Handle("/", http.StripPrefix("/", http.HandlerFunc(handleFile(contents, contentTypes))))
-	http.HandleFunc("/c", http.HandlerFunc(handleCommand(kg, cm)))
+	http.HandleFunc("/c", http.HandlerFunc(handleRequest(kg, cm)))
 	fmt.Println("Listen :%d", *port)
 	http.ListenAndServe(fmt.Sprintf(":%d", *port), nil)
 }
 
-func handleCommand(kg KeyGenerator, cm ContextManager) func(http.ResponseWriter, *http.Request) {
+func handleRequest(kg KeyGenerator, cm ContextManager) func(http.ResponseWriter, *http.Request) {
 	return func(response http.ResponseWriter, request *http.Request) {
 		upgrader := websocket.Upgrader{}
 		ws, err := upgrader.Upgrade(response, request, nil)
@@ -67,13 +67,13 @@ func handleCommand(kg KeyGenerator, cm ContextManager) func(http.ResponseWriter,
 				continue
 			}
 
-			commandType := CommandType{}
+			commandType := RequestType{}
 			err = json.Unmarshal(buffers, &commandType)
 			if err != nil {
 				panic(err)
 			}
 
-			var result CommandResult
+			var result Response
 			switch commandType.Type {
 			case "new":
 				result, err = handleNew(&buffers, kg, &cm)
@@ -109,7 +109,7 @@ func handleCommand(kg KeyGenerator, cm ContextManager) func(http.ResponseWriter,
 				fmt.Println("Error in message", messageType, string(buffers), err)
 				continue
 			}
-			err = ws.WriteMessage(messageType, []byte(result.ResultMessage()))
+			err = ws.WriteMessage(messageType, []byte(result.ResponseMessage()))
 			if err != nil {
 				panic(err)
 			}

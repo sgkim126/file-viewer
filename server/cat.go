@@ -11,22 +11,22 @@ import (
 	"github.com/onsi/gocleanup"
 )
 
-type CatCommand struct {
+type CatRequest struct {
 	Seq
 	Path string `json:"path"`
 }
 
-type CatResult struct {
-	ResultWithCommand
+type CatResponse struct {
+	ResponseWithCommand
 	Lines []string `json:"lines"`
 }
 
-func (result CatResult) ResultMessage() []byte {
-	return ResultMessage(result)
+func (result CatResponse) ResponseMessage() []byte {
+	return ResponseMessage(result)
 }
 
-func handleCat(data *[]byte, cm *ContextManager) (CommandResult, error) {
-	var command CatCommand
+func handleCat(data *[]byte, cm *ContextManager) (Response, error) {
+	var command CatRequest
 	err := json.Unmarshal(*data, &command)
 	if err != nil {
 		return nil, err
@@ -40,7 +40,7 @@ func handleCat(data *[]byte, cm *ContextManager) (CommandResult, error) {
 		os.Remove(stdoutFile.Name())
 	})
 	if err != nil {
-		return CommandError{
+		return ErrorResponse{
 			command.Seq,
 			err.Error(),
 		}, nil
@@ -51,7 +51,7 @@ func handleCat(data *[]byte, cm *ContextManager) (CommandResult, error) {
 
 	err = cmd.Run()
 	if err != nil {
-		return CommandError{
+		return ErrorResponse{
 			command.Seq,
 			err.Error(),
 		}, nil
@@ -63,7 +63,7 @@ func handleCat(data *[]byte, cm *ContextManager) (CommandResult, error) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		if scanner.Err() != nil {
-			return CommandError{
+			return ErrorResponse{
 				command.Seq,
 				scanner.Err().Error(),
 			}, nil
@@ -74,14 +74,14 @@ func handleCat(data *[]byte, cm *ContextManager) (CommandResult, error) {
 	commandString := fmt.Sprintf("cat %s", path)
 	id, err := cm.AddContext(*command.Key, stdoutFile.Name(), commandString)
 	if err != nil {
-		return CommandError{
+		return ErrorResponse{
 			command.Seq,
 			err.Error(),
 		}, nil
 	}
 
-	return CatResult{
-		ResultWithCommand{
+	return CatResponse{
+		ResponseWithCommand{
 			command.Seq,
 			commandString,
 			id,

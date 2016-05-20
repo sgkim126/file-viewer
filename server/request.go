@@ -1,11 +1,11 @@
 package main
 
-type CommandType struct {
+type RequestType struct {
 	Key  *key   `json:"key"`
 	Type string `json:"type"`
 }
 
 type Seq struct {
-	CommandType
+	RequestType
 	Seq int `json:"seq"`
 }

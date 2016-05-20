@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 )
 
-type CommandResult interface {
-	ResultMessage() []byte
+type Response interface {
+	ResponseMessage() []byte
 }
 
-func ResultMessage(v interface{}) []byte {
+func ResponseMessage(v interface{}) []byte {
 	encoded, err := json.Marshal(v)
 	if err != nil {
 		return []byte(err.Error())
@@ -16,17 +16,17 @@ func ResultMessage(v interface{}) []byte {
 	return encoded
 }
 
-type CommandError struct {
+type ErrorResponse struct {
 	Seq
 	Error string `json:"error"`
 }
 
-type ResultWithCommand struct {
+type ResponseWithCommand struct {
 	Seq
 	Command string `json:"command"`
 	Id      int    `json:"id"`
 }
 
-func (result CommandError) ResultMessage() []byte {
-	return ResultMessage(result)
+func (result ErrorResponse) ResponseMessage() []byte {
+	return ResponseMessage(result)
 }
