@@ -23,4 +23,11 @@ interface ICat extends ICommand {
   path: string;
 }
 
-export type Command = IHome | ILs | IClose | ICat;
+interface IHead extends ICommand {
+  type: 'head';
+  path: string;
+  lines?: number;
+  bytes?: number;
+}
+
+export type Command = IHome | ILs | IClose | ICat | IHead;
