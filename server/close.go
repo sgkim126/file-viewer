@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"os"
 )
 
@@ -10,22 +9,8 @@ type CloseRequest struct {
 	Id int `json:"id"`
 }
 
-type CloseResponse struct {
-	Seq
-}
-
-func (result CloseResponse) ResponseMessage() []byte {
-	return ResponseMessage(result)
-}
-
-func handleClose(data *[]byte, cm *ContextManager) (Response, error) {
-	var command CloseRequest
-	err := json.Unmarshal(*data, &command)
-	if err != nil {
-		return nil, err
-	}
-
-	path, err := cm.RemoveContext(*command.Key, command.Id)
+func (request CloseRequest) Handle(kg KeyGenerator, cm *ContextManager) (Response, error) {
+	path, err := cm.RemoveContext(*request.Key, request.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -34,6 +19,14 @@ func handleClose(data *[]byte, cm *ContextManager) (Response, error) {
 		return nil, err
 	}
 	return CloseResponse{
-		command.Seq,
+		request.Seq,
 	}, nil
+}
+
+type CloseResponse struct {
+	Seq
+}
+
+func (response CloseResponse) ResponseMessage() []byte {
+	return ResponseMessage(response)
 }

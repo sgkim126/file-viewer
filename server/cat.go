@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -16,23 +15,8 @@ type CatRequest struct {
 	Path string `json:"path"`
 }
 
-type CatResponse struct {
-	ResponseWithCommand
-	Lines []string `json:"lines"`
-}
-
-func (result CatResponse) ResponseMessage() []byte {
-	return ResponseMessage(result)
-}
-
-func handleCat(data *[]byte, cm *ContextManager) (Response, error) {
-	var command CatRequest
-	err := json.Unmarshal(*data, &command)
-	if err != nil {
-		return nil, err
-	}
-
-	path := command.Path
+func (request CatRequest) Handle(kg KeyGenerator, cm *ContextManager) (Response, error) {
+	path := request.Path
 
 	stdoutFile, err := ioutil.TempFile("", "filew-viewer")
 	defer stdoutFile.Close()
@@ -41,7 +25,7 @@ func handleCat(data *[]byte, cm *ContextManager) (Response, error) {
 	})
 	if err != nil {
 		return ErrorResponse{
-			command.Seq,
+			request.Seq,
 			err.Error(),
 		}, nil
 	}
@@ -52,7 +36,7 @@ func handleCat(data *[]byte, cm *ContextManager) (Response, error) {
 	err = cmd.Run()
 	if err != nil {
 		return ErrorResponse{
-			command.Seq,
+			request.Seq,
 			err.Error(),
 		}, nil
 	}
@@ -64,28 +48,26 @@ func handleCat(data *[]byte, cm *ContextManager) (Response, error) {
 	for scanner.Scan() {
 		if scanner.Err() != nil {
 			return ErrorResponse{
-				command.Seq,
+				request.Seq,
 				scanner.Err().Error(),
 			}, nil
 		}
 		lines = append(lines, scanner.Text())
 	}
 
-	commandString := fmt.Sprintf("cat %s", path)
-	id, err := cm.AddContext(*command.Key, stdoutFile.Name(), commandString)
+	command := fmt.Sprintf("cat %s", path)
+	id, err := cm.AddContext(*request.Key, stdoutFile.Name(), command)
 	if err != nil {
 		return ErrorResponse{
-			command.Seq,
+			request.Seq,
 			err.Error(),
 		}, nil
 	}
 
-	return CatResponse{
-		ResponseWithCommand{
-			command.Seq,
-			commandString,
-			id,
-		},
+	return CommandResponse{
+		request.Seq,
+		command,
+		id,
 		lines,
 	}, nil
 }

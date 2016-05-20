@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"io/ioutil"
 	"os"
 	"syscall"
@@ -12,41 +11,13 @@ type LsRequest struct {
 	Path string `json:"path"`
 }
 
-type FileStat struct {
-	Name             string `json:"name"`
-	IsDir            bool   `json:"is_dir"`
-	IsFile           bool   `json:"is_file"`
-	IsSymlink        bool   `json:"is_symlink"`
-	Size             int64  `json:"size"`
-	NumberOfHardLink int    `json:"number_of_hard_link"`
-	Ctime            int64  `json:"ctime"`
-	Mtime            int64  `json:"mtime"`
-	Atime            int64  `json:"atime"`
-	Mode             uint32 `json:"mode"`
-}
-
-type LsResponse struct {
-	Seq
-	Files []FileStat `json:"files"`
-}
-
-func (result LsResponse) ResponseMessage() []byte {
-	return ResponseMessage(result)
-}
-
-func handleLs(data *[]byte) (Response, error) {
-	var command LsRequest
-	err := json.Unmarshal(*data, &command)
-	if err != nil {
-		return nil, err
-	}
-
-	path := command.Path
+func (request LsRequest) Handle(kg KeyGenerator, cm *ContextManager) (Response, error) {
+	path := request.Path
 
 	fileInfos, err := ioutil.ReadDir(path)
 	if err != nil {
 		return ErrorResponse{
-			command.Seq,
+			request.Seq,
 			err.Error(),
 		}, nil
 	}
@@ -74,7 +45,29 @@ func handleLs(data *[]byte) (Response, error) {
 	}
 
 	return LsResponse{
-		command.Seq,
+		request.Seq,
 		files,
 	}, nil
+}
+
+type FileStat struct {
+	Name             string `json:"name"`
+	IsDir            bool   `json:"is_dir"`
+	IsFile           bool   `json:"is_file"`
+	IsSymlink        bool   `json:"is_symlink"`
+	Size             int64  `json:"size"`
+	NumberOfHardLink int    `json:"number_of_hard_link"`
+	Ctime            int64  `json:"ctime"`
+	Mtime            int64  `json:"mtime"`
+	Atime            int64  `json:"atime"`
+	Mode             uint32 `json:"mode"`
+}
+
+type LsResponse struct {
+	Seq
+	Files []FileStat `json:"files"`
+}
+
+func (response LsResponse) ResponseMessage() []byte {
+	return ResponseMessage(response)
 }

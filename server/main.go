@@ -54,9 +54,9 @@ func main() {
 }
 
 func handleRequest(kg KeyGenerator, cm ContextManager) func(http.ResponseWriter, *http.Request) {
-	return func(response http.ResponseWriter, request *http.Request) {
+	return func(response http.ResponseWriter, httpRequest *http.Request) {
 		upgrader := websocket.Upgrader{}
-		ws, err := upgrader.Upgrade(response, request, nil)
+		ws, err := upgrader.Upgrade(response, httpRequest, nil)
 		if err != nil {
 			fmt.Println("Cannot upgrade:", err)
 		}
@@ -67,49 +67,23 @@ func handleRequest(kg KeyGenerator, cm ContextManager) func(http.ResponseWriter,
 				continue
 			}
 
-			commandType := RequestType{}
-			err = json.Unmarshal(buffers, &commandType)
+			requestType := RequestType{}
+			err = json.Unmarshal(buffers, &requestType)
 			if err != nil {
 				panic(err)
 			}
 
-			var result Response
-			switch commandType.Type {
-			case "new":
-				result, err = handleNew(&buffers, kg, &cm)
-				if err != nil {
-					panic(err)
-				}
-			case "home":
-				result, err = handleHome(&buffers)
-				if err != nil {
-					panic(err)
-				}
-			case "ls":
-				result, err = handleLs(&buffers)
-				if err != nil {
-					panic(err)
-				}
-			case "close":
-				result, err = handleClose(&buffers, &cm)
-				if err != nil {
-					panic(err)
-				}
-			case "cat":
-				result, err = handleCat(&buffers, &cm)
-				if err != nil {
-					panic(err)
-				}
-			default:
-				fmt.Println("Unhandled message", messageType, string(buffers), err)
-				continue
+			request, err := requestType.Request(buffers)
+			if err != nil {
+				panic(err)
 			}
+			response, err := request.Handle(kg, &cm)
 
 			if err != nil {
 				fmt.Println("Error in message", messageType, string(buffers), err)
 				continue
 			}
-			err = ws.WriteMessage(messageType, []byte(result.ResponseMessage()))
+			err = ws.WriteMessage(messageType, []byte(response.ResponseMessage()))
 			if err != nil {
 				panic(err)
 			}

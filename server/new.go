@@ -1,24 +1,11 @@
 package main
 
-import (
-	"encoding/json"
-)
-
-type NewResponse struct {
-	Key key `json:"key"`
+type NewRequest struct {
+	RequestKey
 }
 
-func (result NewResponse) ResponseMessage() []byte {
-	return ResponseMessage(result)
-}
-
-func handleNew(data *[]byte, kg KeyGenerator, cm *ContextManager) (Response, error) {
-	var command RequestType
-	err := json.Unmarshal(*data, &command)
-	if err != nil {
-		return nil, err
-	}
-	oldKey := command.Key
+func (request NewRequest) Handle(kg KeyGenerator, cm *ContextManager) (Response, error) {
+	oldKey := request.Key
 	if oldKey != nil {
 		if cm.HasKey(*oldKey) {
 			return NewResponse{
@@ -31,4 +18,12 @@ func handleNew(data *[]byte, kg KeyGenerator, cm *ContextManager) (Response, err
 	return NewResponse{
 		newKey,
 	}, nil
+}
+
+type NewResponse struct {
+	Key key `json:"key"`
+}
+
+func (response NewResponse) ResponseMessage() []byte {
+	return ResponseMessage(response)
 }
