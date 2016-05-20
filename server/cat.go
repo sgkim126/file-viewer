@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+
+	"github.com/onsi/gocleanup"
 )
 
 func handleCat(data *[]byte, cm *ContextManager) (CommandResult, error) {
@@ -20,6 +22,9 @@ func handleCat(data *[]byte, cm *ContextManager) (CommandResult, error) {
 
 	stdoutFile, err := ioutil.TempFile("", "filew-viewer")
 	defer stdoutFile.Close()
+	gocleanup.Register(func() {
+		os.Remove(stdoutFile.Name())
+	})
 	if err != nil {
 		return CommandError{
 			command.Seq,
