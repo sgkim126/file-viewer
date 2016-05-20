@@ -7,6 +7,33 @@ import (
 	"syscall"
 )
 
+type LsCommand struct {
+	Seq
+	Path string `json:"path"`
+}
+
+type FileStat struct {
+	Name             string `json:"name"`
+	IsDir            bool   `json:"is_dir"`
+	IsFile           bool   `json:"is_file"`
+	IsSymlink        bool   `json:"is_symlink"`
+	Size             int64  `json:"size"`
+	NumberOfHardLink int    `json:"number_of_hard_link"`
+	Ctime            int64  `json:"ctime"`
+	Mtime            int64  `json:"mtime"`
+	Atime            int64  `json:"atime"`
+	Mode             uint32 `json:"mode"`
+}
+
+type LsResult struct {
+	Seq
+	Files []FileStat `json:"files"`
+}
+
+func (result LsResult) ResultMessage() []byte {
+	return ResultMessage(result)
+}
+
 func handleLs(data *[]byte) (CommandResult, error) {
 	var command LsCommand
 	err := json.Unmarshal(*data, &command)

@@ -5,6 +5,19 @@ import (
 	"os"
 )
 
+type HomeCommand struct {
+	Seq
+}
+
+type HomeResult struct {
+	Seq
+	Home string `json:"home"`
+}
+
+func (result HomeResult) ResultMessage() []byte {
+	return ResultMessage(result)
+}
+
 func handleHome(data *[]byte) (CommandResult, error) {
 	var command HomeCommand
 	err := json.Unmarshal(*data, &command)

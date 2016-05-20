@@ -4,6 +4,14 @@ import (
 	"encoding/json"
 )
 
+type NewResult struct {
+	Key key `json:"key"`
+}
+
+func (result NewResult) ResultMessage() []byte {
+	return ResultMessage(result)
+}
+
 func handleNew(data *[]byte, kg KeyGenerator, cm *ContextManager) (CommandResult, error) {
 	var command CommandType
 	err := json.Unmarshal(*data, &command)

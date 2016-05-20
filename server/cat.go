@@ -11,6 +11,20 @@ import (
 	"github.com/onsi/gocleanup"
 )
 
+type CatCommand struct {
+	Seq
+	Path string `json:"path"`
+}
+
+type CatResult struct {
+	ResultWithCommand
+	Lines []string `json:"lines"`
+}
+
+func (result CatResult) ResultMessage() []byte {
+	return ResultMessage(result)
+}
+
 func handleCat(data *[]byte, cm *ContextManager) (CommandResult, error) {
 	var command CatCommand
 	err := json.Unmarshal(*data, &command)
