@@ -79,3 +79,18 @@ func (cm ContextManager) GetContext(key key, id int) (context Context, err error
 	}
 	return
 }
+
+func (cm *ContextManager) RemoveContext(key key, id int) (path string, err error) {
+	if !cm.HasKey(key) {
+		err = errors.New(fmt.Sprintf("\"%s\" is not exists", key))
+		return
+	}
+	context, ok := cm.contexts[id]
+	if !ok {
+		err = errors.New(fmt.Sprintf("\"%s\"[%d] is not exists", key, id))
+		return
+	}
+	path = context.path
+	delete(cm.contexts, id)
+	return
+}
