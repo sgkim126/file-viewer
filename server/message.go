@@ -56,6 +56,13 @@ func (requestType RequestType) Request(data []byte) (Request, error) {
 			return nil, err
 		}
 		return request, nil
+	case "head":
+		var request HeadRequest
+		err := json.Unmarshal(data, &request)
+		if err != nil {
+			return nil, err
+		}
+		return request, nil
 	default:
 		return nil, errors.New(fmt.Sprintf("Unhandled message: %s", string(data)))
 	}
