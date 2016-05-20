@@ -70,6 +70,14 @@ func (result HomeResult) ResultMessage() []byte {
 	return ResultMessage(result)
 }
 
+type CloseResult struct {
+	Seq
+}
+
+func (result CloseResult) ResultMessage() []byte {
+	return ResultMessage(result)
+}
+
 type CatResult struct {
 	ResultWithCommand
 	Lines []string `json:"lines"`

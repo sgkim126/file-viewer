@@ -19,6 +19,11 @@ type LsCommand struct {
 	Path string `json:"path"`
 }
 
+type CloseCommand struct {
+	Seq
+	Id int `json:"id"`
+}
+
 type CatCommand struct {
 	Seq
 	Path string `json:"path"`

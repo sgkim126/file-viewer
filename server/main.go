@@ -90,6 +90,11 @@ func handleCommand(kg KeyGenerator, cm ContextManager) func(http.ResponseWriter,
 				if err != nil {
 					panic(err)
 				}
+			case "close":
+				result, err = handleClose(&buffers, &cm)
+				if err != nil {
+					panic(err)
+				}
 			case "cat":
 				result, err = handleCat(&buffers, &cm)
 				if err != nil {

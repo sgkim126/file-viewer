@@ -93,6 +93,9 @@ class Main extends React.Component<IProps, IState> {
   private onClose(id: number): void {
     const previews = this.state.previews.slice().filter((preview: IPreview) => preview.id !== id);
     this.setState({ previews });
+    const seq = this.props.seq.next().value;
+    const key = this.props.connection.key;
+    this.props.connection.send({ type: 'close', seq, key, id });
   }
 
   private ls(path: string): Promise<IBrowser> {

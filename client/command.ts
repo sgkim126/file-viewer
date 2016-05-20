@@ -13,9 +13,14 @@ interface ILs extends ICommand {
   path: string;
 }
 
+interface IClose extends ICommand {
+  type: 'close';
+  id: number;
+}
+
 interface ICat extends ICommand {
   type: 'cat';
   path: string;
 }
 
-export type Command = IHome | ILs | ICat;
+export type Command = IHome | ILs | IClose | ICat;
