@@ -83,11 +83,16 @@ class Main extends React.Component<IProps, IState> {
     }
     for (const preview of this.state.previews) {
       const { command, lines, id } = preview;
-      panels.push(<Preview id={id} command={command} lines={lines} />);
+      panels.push(<Preview id={id} command={command} lines={lines} onClose={this.onClose.bind(this)} />);
     }
     return <div>
     {panels}
     </div>;
+  }
+
+  private onClose(id: number): void {
+    const previews = this.state.previews.slice().filter((preview: IPreview) => preview.id !== id);
+    this.setState({ previews });
   }
 
   private ls(path: string): Promise<IBrowser> {
