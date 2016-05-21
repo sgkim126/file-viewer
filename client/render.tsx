@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 import Connection from './connection.ts';
 import FileBrowser from './file-browser.tsx';
 import IFile from './ifile.ts';
+import IPreview from './ipreview.ts';
 import Preview from './preview.tsx';
 import SeqGenerator from './seq-generator.ts';
 import { Grid, Row, Col } from 'react-bootstrap';
@@ -16,11 +17,6 @@ interface IProps {
 interface IBrowser {
   path: string;
   files: IFile[];
-}
-interface IPreview {
-  id: number;
-  command: string;
-  lines: string[];
 }
 
 interface IState {

@@ -1,12 +1,10 @@
 import * as React from 'react';
+import IPreview from './ipreview.ts';
 import Panel from './panel.tsx';
 import { Col } from 'react-bootstrap';
 const Draggable = require('react-draggable');
 
-interface IProps {
-  id: number;
-  command: string;
-  lines: string[];
+interface IProps extends IPreview {
   onClose: (id: number) => {};
 }
 
