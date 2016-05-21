@@ -56,13 +56,28 @@ class Main extends React.Component<IProps, IState> {
           this.setState({ previews });
         });
       };
+      const head = (filepath: string, lines: number) => {
+        const seq = this.props.seq.next().value;
+        const key = this.props.connection.key;
+        const result = this.props.connection.send({
+          seq,
+          key,
+          type: 'head',
+          lines,
+          path: filepath,
+        }).then((preview: IPreview) => {
+          const previews = this.state.previews.slice();
+          previews.push(preview);
+          this.setState({ previews });
+        });
+      };
       const changeDir = (path: string) => {
         this.ls(path)
         .then((browser: IBrowser) => {
           this.setState({ browser });
         });
       };
-      panels.push(<FileBrowser files={files} path={path} home={this.props.home} cat={cat} changeDir={changeDir} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
+      panels.push(<FileBrowser files={files} path={path} home={this.props.home} cat={cat} head={head} changeDir={changeDir} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
       }}></FileBrowser>);
     }
     for (const preview of this.state.previews) {

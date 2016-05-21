@@ -13,6 +13,7 @@ interface IProps {
   files: IFile[];
   onClick: (e: React.MouseEvent, path: string, isFIle: boolean) => void;
   cat: (path: string) => void;
+  head: (path: string, lines: number) => void;
   changeDir: (path: string) => void;
   home: string;
 }
@@ -79,6 +80,7 @@ export default class FileBrowser extends React.Component<IProps, IState> {
   private menu(): JSX.Element {
     return <Menu {...this.state.menu}
       cat={(filename: string) => this.cat(this.path(filename))}
+      head={(filename: string, lines: number) => this.head(this.path(filename), lines)}
       changeDir={(filename: string) => this.changeDir(this.path(filename))}
     />;
   }
@@ -91,6 +93,11 @@ export default class FileBrowser extends React.Component<IProps, IState> {
   private cat(path: string): void {
     this.setState({ menu: null });
     this.props.cat(path);
+  }
+
+  private head(path: string, lines: number): void {
+    this.setState({ menu: null });
+    this.props.head(path, lines);
   }
 
   private path(filename: string): string {
