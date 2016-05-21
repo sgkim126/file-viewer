@@ -16,7 +16,32 @@ type RequestKey struct {
 
 type RequestType struct {
 	RequestKey
-	Type string `json:"type"`
+	Type    string  `json:"type"`
+	Command *string `json:"command"`
+}
+
+type CommandInput struct {
+	File *string `json:"file"`
+	Pipe *int    `json:"pipe"`
+}
+
+func (input CommandInput) Path(key key, cm ContextManager) (path string, err error) {
+	if input.File != nil {
+		path = *input.File
+		return
+	}
+	if input.Pipe != nil {
+		var c Context
+		c, err = cm.GetContext(key, *input.Pipe)
+		if err != nil {
+			return
+		}
+		path = c.path
+		return
+	}
+
+	err = errors.New("Cannot make path")
+	return
 }
 
 func (requestType RequestType) Request(data []byte) (Request, error) {
@@ -49,20 +74,26 @@ func (requestType RequestType) Request(data []byte) (Request, error) {
 			return nil, err
 		}
 		return request, nil
-	case "cat":
-		var request CatRequest
-		err := json.Unmarshal(data, &request)
-		if err != nil {
-			return nil, err
+	case "command":
+		if requestType.Command != nil {
+			switch *requestType.Command {
+			case "cat":
+				var request CatRequest
+				err := json.Unmarshal(data, &request)
+				if err != nil {
+					return nil, err
+				}
+				return request, nil
+			case "head":
+				var request HeadRequest
+				err := json.Unmarshal(data, &request)
+				if err != nil {
+					return nil, err
+				}
+				return request, nil
+			}
 		}
-		return request, nil
-	case "head":
-		var request HeadRequest
-		err := json.Unmarshal(data, &request)
-		if err != nil {
-			return nil, err
-		}
-		return request, nil
+		return nil, errors.New(fmt.Sprintf("Unhandled command: %s", string(data)))
 	default:
 		return nil, errors.New(fmt.Sprintf("Unhandled message: %s", string(data)))
 	}

@@ -11,15 +11,25 @@ import (
 	"github.com/onsi/gocleanup"
 )
 
+type HeadOption struct {
+	Lines *int `json:"lines"`
+	Bytes *int `json:"bytes"`
+}
+
 type HeadRequest struct {
 	Seq
-	Path  string `json:"path"`
-	Lines *int   `json:"lines"`
-	Bytes *int   `json:"bytes"`
+	Input  CommandInput `json:"input"`
+	Option HeadOption   `json:"option"`
 }
 
 func (request HeadRequest) Handle(kg KeyGenerator, cm *ContextManager) (Response, error) {
-	path := request.Path
+	path, err := request.Input.Path(*request.Key, *cm)
+	if err != nil {
+		return ErrorResponse{
+			request.Seq,
+			err.Error(),
+		}, nil
+	}
 
 	stdoutFile, err := ioutil.TempFile("", "filew-viewer")
 	defer stdoutFile.Close()
@@ -34,11 +44,11 @@ func (request HeadRequest) Handle(kg KeyGenerator, cm *ContextManager) (Response
 	}
 
 	options := "-q"
-	if request.Lines != nil {
-		options = fmt.Sprintf("%s -n %d", options, *request.Lines)
+	if request.Option.Lines != nil {
+		options = fmt.Sprintf("%s -n %d", options, *request.Option.Lines)
 	}
-	if request.Bytes != nil {
-		options = fmt.Sprintf("%s -c %d", options, *request.Bytes)
+	if request.Option.Bytes != nil {
+		options = fmt.Sprintf("%s -c %d", options, *request.Option.Bytes)
 	}
 
 	arguments := append(strings.Split(options, " "), path)

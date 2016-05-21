@@ -3,12 +3,14 @@ import './menu.styl';
 import * as React from 'react';
 import IFile from './ifile.ts';
 import IMenu from './imenu.ts';
+import CommandOption from './options.ts';
 import { Button, ButtonGroup, Glyphicon, Modal } from 'react-bootstrap';
+import { ICommandInput } from './messages.ts';
 
 interface IProps extends IMenu {
-  cat: (path: string) => void;
-  head: (path: string, lines: number) => void;
+  onCommand: (command: string, input: ICommandInput, option: CommandOption) => void;
   changeDir: (path: string) => void;
+  currentPath: string;
 }
 
 interface IState {
@@ -38,11 +40,12 @@ export default class Menu extends React.Component<IProps, IState> {
       top: `${y}px`,
     };
 
-    const onHead = (e: any) => {
+    const onHead = (e: React.MouseEvent) => {
       e.preventDefault();
+      const path = this.path(file.name);
       const lines = parseInt((document.getElementById('head-input') as HTMLInputElement).value, 10);
       this.setState({head: false});
-      this.props.head(file.name, lines);
+      this.props.onCommand('head', { file: path }, { lines });
     };
     return <div style={style} className='file-menu'>
       <ButtonGroup vertical>{buttons}</ButtonGroup>
@@ -55,11 +58,22 @@ export default class Menu extends React.Component<IProps, IState> {
 
   private showElement(): JSX.Element[] {
     const file = this.props.file;
+
+    const onCat = (e: React.MouseEvent) => {
+      e.preventDefault();
+      const path = this.path(file.name);
+      this.setState({head: false});
+      this.props.onCommand('cat', { file: path }, {});
+    };
     return [<Button onClick={() => { this.setState({head: true}); } } block>Head</Button>,
-    <Button onClick={() => { this.props.cat(file.name); } } block><Glyphicon glyph='eye-open' /></Button>];
+    <Button onClick={onCat} block><Glyphicon glyph='eye-open' /></Button>];
   }
   private changeDirElement(): JSX.Element {
     const file = this.props.file;
     return <Button onClick={() => { this.props.changeDir(file.name); } } block><Glyphicon glyph='share-alt' /></Button>;
+  }
+
+  private path(filename: string): string {
+    return `${this.props.currentPath}/${filename}`;
   }
 }

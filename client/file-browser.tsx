@@ -4,16 +4,17 @@ import FileInfo from './file-info.tsx';
 import IFile from './ifile.ts';
 import IMenu from './imenu.ts';
 import Menu from './menu.tsx';
+import CommandOption from './options.ts';
 import Panel from './panel.tsx';
 import Path from './path.tsx';
 import { Col } from 'react-bootstrap';
+import { ICommandInput } from './messages.ts';
 
 interface IProps {
   path: string;
   files: IFile[];
   onClick: (e: React.MouseEvent, path: string, isFIle: boolean) => void;
-  cat: (path: string) => void;
-  head: (path: string, lines: number) => void;
+  onCommand: (command: string, input: ICommandInput, option: CommandOption) => void;
   changeDir: (path: string) => void;
   home: string;
 }
@@ -78,9 +79,14 @@ export default class FileBrowser extends React.Component<IProps, IState> {
   }
 
   private menu(): JSX.Element {
+    const onCommand = (command: string, input: ICommandInput, option: CommandOption) => {
+      this.props.onCommand(command, input, option);
+      this.setState({ menu: null });
+    };
+
     return <Menu {...this.state.menu}
-      cat={(filename: string) => this.cat(this.path(filename))}
-      head={(filename: string, lines: number) => this.head(this.path(filename), lines)}
+      currentPath={this.props.path}
+      onCommand={onCommand}
       changeDir={(filename: string) => this.changeDir(this.path(filename))}
     />;
   }
@@ -88,16 +94,6 @@ export default class FileBrowser extends React.Component<IProps, IState> {
   private changeDir(path: string): void {
     this.setState({ menu: null });
     this.props.changeDir(path);
-  }
-
-  private cat(path: string): void {
-    this.setState({ menu: null });
-    this.props.cat(path);
-  }
-
-  private head(path: string, lines: number): void {
-    this.setState({ menu: null });
-    this.props.head(path, lines);
   }
 
   private path(filename: string): string {

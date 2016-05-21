@@ -12,11 +12,17 @@ import (
 
 type CatRequest struct {
 	Seq
-	Path string `json:"path"`
+	Input CommandInput `json:"input"`
 }
 
 func (request CatRequest) Handle(kg KeyGenerator, cm *ContextManager) (Response, error) {
-	path := request.Path
+	path, err := request.Input.Path(*request.Key, *cm)
+	if err != nil {
+		return ErrorResponse{
+			request.Seq,
+			err.Error(),
+		}, nil
+	}
 
 	stdoutFile, err := ioutil.TempFile("", "filew-viewer")
 	defer stdoutFile.Close()

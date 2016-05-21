@@ -1,4 +1,4 @@
-import {Command} from './command.ts';
+import Message from './messages.ts';
 
 export default class Connection {
   private _socket: WebSocket;
@@ -41,7 +41,7 @@ export default class Connection {
     });
   }
 
-  send(command: Command): Promise<any> {
+  send(command: Message): Promise<any> {
     const SEQ = command.seq;
     return new Promise((resolve, reject) => {
       this._resolvers.set(SEQ, resolve);

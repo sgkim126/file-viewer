@@ -1,12 +1,15 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import CommandOption from './options.ts';
 import Connection from './connection.ts';
 import FileBrowser from './file-browser.tsx';
 import IFile from './ifile.ts';
 import IPreview from './ipreview.ts';
+import Message from './messages.ts';
 import Preview from './preview.tsx';
 import SeqGenerator from './seq-generator.ts';
 import { Grid, Row, Col } from 'react-bootstrap';
+import { ICommandInput } from './messages.ts';
 
 interface IProps {
   connection: Connection;
@@ -39,33 +42,11 @@ class Main extends React.Component<IProps, IState> {
     const panels: JSX.Element[] = [];
     if (this.state.browser) {
       const { path, files } = this.state.browser;
-      const cat = (filepath: string) => {
+      const onCommand = (command: string, input: ICommandInput, option: CommandOption) => {
         const seq = this.props.seq.next().value;
         const key = this.props.connection.key;
-        const catResult = this.props.connection.send({
-          seq,
-          key,
-          type: 'cat',
-          path: filepath,
-        });
-        catResult.then((result: { id: number, command: string, lines: string[] }) => {
-          const { id, command, lines } = result;
-          const preview = { id, command, lines };
-          const previews = this.state.previews.slice();
-          previews.push(preview);
-          this.setState({ previews });
-        });
-      };
-      const head = (filepath: string, lines: number) => {
-        const seq = this.props.seq.next().value;
-        const key = this.props.connection.key;
-        const result = this.props.connection.send({
-          seq,
-          key,
-          type: 'head',
-          lines,
-          path: filepath,
-        }).then((preview: IPreview) => {
+        const message: Message = { seq, key, type: 'command', command, input, option };
+        const result = this.props.connection.send(message).then((preview: IPreview) => {
           const previews = this.state.previews.slice();
           previews.push(preview);
           this.setState({ previews });
@@ -77,7 +58,7 @@ class Main extends React.Component<IProps, IState> {
           this.setState({ browser });
         });
       };
-      panels.push(<FileBrowser files={files} path={path} home={this.props.home} cat={cat} head={head} changeDir={changeDir} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
+      panels.push(<FileBrowser files={files} path={path} home={this.props.home} onCommand={onCommand} changeDir={changeDir} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
       }}></FileBrowser>);
     }
     for (const preview of this.state.previews) {
