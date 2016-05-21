@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Connection from './connection.ts';
 import FileBrowser from './file-browser.tsx';
+import IFile from './ifile.ts';
 import Preview from './preview.tsx';
 import SeqGenerator from './seq-generator.ts';
 import { Grid, Row, Col } from 'react-bootstrap';
@@ -10,19 +11,6 @@ interface IProps {
   connection: Connection;
   seq: IterableIterator<number>;
   home: string;
-}
-
-interface IFile {
-  name: string;
-  is_dir: boolean;
-  is_file: boolean;
-  is_symlink: boolean;
-  size: number;
-  number_of_hard_link: number;
-  ctime: number;
-  mtime: number;
-  atime: number;
-  mode: number;
 }
 
 interface IBrowser {

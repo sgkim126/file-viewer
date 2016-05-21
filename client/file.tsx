@@ -1,19 +1,7 @@
 import './file.styl';
 import * as React from 'react';
+import IFile from './ifile.ts';
 import { Button, ButtonToolbar, Glyphicon, Overlay } from 'react-bootstrap';
-
-interface IFile {
-  name: string;
-  is_dir: boolean;
-  is_file: boolean;
-  is_symlink: boolean;
-  size: number;
-  number_of_hard_link: number;
-  ctime: number;
-  mtime: number;
-  atime: number;
-  mode: number;
-}
 
 interface IProps extends IFile {
   selected: boolean;
