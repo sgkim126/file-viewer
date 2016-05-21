@@ -1,35 +1,52 @@
 import * as React from 'react';
-import Connection from './connection.ts';
 import File from './file.tsx';
 import FileInfo from './file-info.tsx';
 import IFile from './ifile.ts';
+import IMenu from './imenu.ts';
+import Menu from './menu.tsx';
 import Panel from './panel.tsx';
 import Path from './path.tsx';
 import { Col } from 'react-bootstrap';
-const Draggable = require('react-draggable');
 
 interface IProps {
   path: string;
   files: IFile[];
   onClick: (e: React.MouseEvent, path: string, isFIle: boolean) => void;
-  cat: (filepath: string) => void;
+  cat: (path: string) => void;
   changeDir: (path: string) => void;
   home: string;
 }
 
 interface IState {
   selected?: number;
+  position?: {
+    x?: number,
+    y?: number,
+  };
+  menu?: IMenu;
 }
 
 export default class FileBrowser extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
-    this.state = {};
+    this.state = {
+      position: {
+        x: 0,
+        y: 0,
+      },
+      menu: null,
+    };
   }
 
   public render(): JSX.Element {
     let files = <div>'Loading...'</div> as any;
     let selectedFile = { } as any;
+    const onContextMenu = (eventX: number, eventY: number, file: IFile) => {
+      const x = eventX - this.state.position.x;
+      const y = eventY - this.state.position.y;
+      const menu = {x, y, file};
+      this.setState({ menu });
+    };
     if (this.props.files) {
       files = this.props.files.map((file: IFile, key: number) => {
         if (key === this.state.selected) {
@@ -41,20 +58,46 @@ export default class FileBrowser extends React.Component<IProps, IState> {
           selected={selected}
           key={key}
           {...file}
-          cat={this.props.cat.bind(this)}
-          changeDir={this.props.changeDir.bind(this)}
+          onContextMenu={onContextMenu}
           onClick={(e: React.MouseEvent) => this.props.onClick(e, `${this.props.path}/${file.name}`, file.is_file)}
         />;
       });
     }
-    return <Panel title='files'>
-      <Path changeDir={this.props.changeDir} home={this.props.home}>{this.props.path}</Path>
+    const menu = this.state.menu ? this.menu() : <div></div>;
+    return <Panel title='files' onStop={this.onStop.bind(this)}>
+      <Path changeDir={this.changeDir.bind(this)} home={this.props.home}>{this.props.path}</Path>
       <Col xs={8} className='file-browser'>
         {files}
       </Col>
       <Col xs={4}>
         <FileInfo {...selectedFile} />
       </Col>
+      {menu}
     </Panel>;
+  }
+
+  private menu(): JSX.Element {
+    return <Menu {...this.state.menu}
+      cat={(filename: string) => this.cat(this.path(filename))}
+      changeDir={(filename: string) => this.changeDir(this.path(filename))}
+    />;
+  }
+
+  private changeDir(path: string): void {
+    this.setState({ menu: null });
+    this.props.changeDir(path);
+  }
+
+  private cat(path: string): void {
+    this.setState({ menu: null });
+    this.props.cat(path);
+  }
+
+  private path(filename: string): string {
+    return `${this.props.path}/${filename}`;
+  }
+
+  private onStop(e: React.MouseEvent, position: { x: number, y: number }): void {
+    this.setState({ position });
   }
 }

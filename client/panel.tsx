@@ -8,6 +8,7 @@ interface IProps {
   width?: string;
   height?: string;
   onClose?: () => void;
+  onStop?: (e: React.MouseEvent, position: { x: number, y: number }) => void;
 }
 
 export default class Panel extends React.Component<IProps, {}> {
@@ -15,6 +16,7 @@ export default class Panel extends React.Component<IProps, {}> {
     title: '',
     width: '30%',
     height: '50%',
+    onStop: (e: React.MouseEvent, position: { x: number, y: number }) => { },
   };
 
   constructor(props: IProps) {
@@ -27,7 +29,7 @@ export default class Panel extends React.Component<IProps, {}> {
     if (this.props.onClose) {
       buttons.push(<Button onClick={this.props.onClose} bsClass='pull-right'><Glyphicon glyph='remove' /></Button>);
     }
-    return <Draggable handle='.handle'>
+    return <Draggable handle='.handle' onStop={this.props.onStop}>
     <div className='panel' style={style}>
     <div className='handle'><span className='handle'>{this.props.title}</span>{buttons}</div>
     <div className='panel-inner'>{this.props.children}</div>

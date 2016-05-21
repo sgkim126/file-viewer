@@ -11,4 +11,4 @@ interface IFile {
   mode: number;
 }
 
-export default IFile
+export default IFile;
