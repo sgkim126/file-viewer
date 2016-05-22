@@ -14,6 +14,7 @@ interface IProps extends IPreview {
 
 interface IState {
   head?: boolean;
+  tail?: boolean;
 }
 
 export default class Preview extends React.Component<IProps, IState> {
@@ -22,6 +23,7 @@ export default class Preview extends React.Component<IProps, IState> {
 
     this.state = {
       head: false,
+      tail: false,
     };
   }
 
@@ -32,15 +34,26 @@ export default class Preview extends React.Component<IProps, IState> {
       this.setState({head: false});
       this.props.onCommand('head', { pipe: this.props.id }, { lines });
     };
+    const onTail = (e: React.MouseEvent) => {
+      e.preventDefault();
+      const lines = parseInt((document.getElementById('tail-input') as HTMLInputElement).value, 10);
+      this.setState({tail: false});
+      this.props.onCommand('tail', { pipe: this.props.id }, { lines });
+    };
 
     return <Panel title={this.props.command} onClose={() => { this.props.onClose(this.props.id); }}>
     <ButtonToolbar>
       <Button onClick={() => { this.setState({ head: true }); }}>Head</Button>
+      <Button onClick={() => { this.setState({ tail: true }); }}>Tail</Button>
     </ButtonToolbar>
     <pre>{this.props.lines.join('\n')}</pre>
     <Modal bsSize='small' show={this.state.head} onHide={() => this.setState({head: false}) }>
       <Modal.Header>head</Modal.Header>
       <Modal.Body><Form onSubmit={onHead}><FormControl type='number' placeholder='--lines' defaultValue={10} id='head-input' autoFocus /></Form></Modal.Body>
+    </Modal>
+    <Modal bsSize='small' show={this.state.tail} onHide={() => this.setState({tail: false}) }>
+      <Modal.Header>tail</Modal.Header>
+      <Modal.Body><Form onSubmit={onTail}><FormControl type='number' placeholder='--lines' defaultValue={10} id='tail-input' autoFocus /></Form></Modal.Body>
     </Modal>
     </Panel>;
   }

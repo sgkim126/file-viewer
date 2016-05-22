@@ -91,6 +91,13 @@ func (requestType RequestType) Request(data []byte) (Request, error) {
 					return nil, err
 				}
 				return request, nil
+			case "tail":
+				var request TailRequest
+				err := json.Unmarshal(data, &request)
+				if err != nil {
+					return nil, err
+				}
+				return request, nil
 			}
 		}
 		return nil, errors.New(fmt.Sprintf("Unhandled command: %s", string(data)))

@@ -6,5 +6,10 @@ export interface IHeadOption {
   bytes?: number;
 }
 
-type CommandOption = ICatOption | IHeadOption;
+export interface ITailOption {
+  lines?: number;
+  bytes?: number;
+}
+
+type CommandOption = ICatOption | IHeadOption | ITailOption;
 export default CommandOption;

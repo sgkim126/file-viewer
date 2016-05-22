@@ -1,5 +1,5 @@
 import CommandOption from './options.ts';
-import { ICatOption, IHeadOption } from './options.ts';
+import * as Option from './options.ts';
 
 export interface IMessage {
   type: string;
@@ -36,13 +36,19 @@ export interface ICommandInput {
 export interface ICat extends ICommand {
   command: 'cat';
   input: ICommandInput;
-  option: ICatOption;
+  option: Option.ICatOption;
 }
 
 export interface IHead extends ICommand {
   command: 'head';
   input: ICommandInput;
-  option: IHeadOption;
+  option: Option.IHeadOption;
+}
+
+export interface ITail extends ICommand {
+  command: 'tail';
+  input: ICommandInput;
+  option: Option.ITailOption;
 }
 
 type Message = IHome | ILs | IClose | ICommand;

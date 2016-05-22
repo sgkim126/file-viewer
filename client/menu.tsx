@@ -15,6 +15,7 @@ interface IProps extends IMenu {
 
 interface IState {
   head?: boolean;
+  tail?: boolean;
 }
 
 export default class Menu extends React.Component<IProps, IState> {
@@ -22,6 +23,7 @@ export default class Menu extends React.Component<IProps, IState> {
     super(props);
     this.state = {
       head: false,
+      tail: false,
     };
   }
 
@@ -47,11 +49,22 @@ export default class Menu extends React.Component<IProps, IState> {
       this.setState({head: false});
       this.props.onCommand('head', { file: path }, { lines });
     };
+    const onTail = (e: React.MouseEvent) => {
+      e.preventDefault();
+      const path = this.path(file.name);
+      const lines = parseInt((document.getElementById('tail-input') as HTMLInputElement).value, 10);
+      this.setState({tail: false});
+      this.props.onCommand('tail', { file: path }, { lines });
+    };
     return <div style={style} className='file-menu'>
       <ButtonGroup vertical>{buttons}</ButtonGroup>
       <Modal bsSize='small' show={this.state.head} onHide={() => this.setState({head: false}) }>
         <Modal.Header>head</Modal.Header>
         <Modal.Body><Form onSubmit={onHead}><FormControl type='number' placeholder='--lines' defaultValue={10} id='head-input' autoFocus /></Form></Modal.Body>
+      </Modal>
+      <Modal bsSize='small' show={this.state.tail} onHide={() => this.setState({tail: false}) }>
+        <Modal.Header>tail</Modal.Header>
+        <Modal.Body><Form onSubmit={onTail}><FormControl type='number' placeholder='--lines' defaultValue={10} id='tail-input' autoFocus /></Form></Modal.Body>
       </Modal>
     </div>;
   }
@@ -62,10 +75,11 @@ export default class Menu extends React.Component<IProps, IState> {
     const onCat = (e: React.MouseEvent) => {
       e.preventDefault();
       const path = this.path(file.name);
-      this.setState({head: false});
+      this.setState({head: false, tail: false});
       this.props.onCommand('cat', { file: path }, {});
     };
     return [<Button onClick={() => { this.setState({head: true}); } } block>Head</Button>,
+      <Button onClick={() => { this.setState({tail: true}); } } block>Tail</Button>,
     <Button onClick={onCat} block><Glyphicon glyph='eye-open' /></Button>];
   }
   private changeDirElement(): JSX.Element {
