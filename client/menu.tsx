@@ -51,7 +51,7 @@ export default class Menu extends React.Component<IProps, IState> {
       <ButtonGroup vertical>{buttons}</ButtonGroup>
       <Modal bsSize='small' show={this.state.head} onHide={() => this.setState({head: false}) }>
         <Modal.Header>head</Modal.Header>
-        <Modal.Body><Form onSubmit={onHead}><FormControl type='number' placeholder='--lines' defaultValue={10} id='head-input'/></Form></Modal.Body>
+        <Modal.Body><Form onSubmit={onHead}><FormControl type='number' placeholder='--lines' defaultValue={10} id='head-input' autoFocus /></Form></Modal.Body>
       </Modal>
     </div>;
   }
