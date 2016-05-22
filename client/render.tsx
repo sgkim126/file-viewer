@@ -39,19 +39,19 @@ class Main extends React.Component<IProps, IState> {
   }
 
   public render(): JSX.Element {
+    const onCommand = (command: string, input: ICommandInput, option: CommandOption) => {
+      const seq = this.props.seq.next().value;
+      const key = this.props.connection.key;
+      const message: Message = { seq, key, type: 'command', command, input, option };
+      const result = this.props.connection.send(message).then((preview: IPreview) => {
+        const previews = this.state.previews.slice();
+        previews.push(preview);
+        this.setState({ previews });
+      });
+    };
     const panels: JSX.Element[] = [];
     if (this.state.browser) {
       const { path, files } = this.state.browser;
-      const onCommand = (command: string, input: ICommandInput, option: CommandOption) => {
-        const seq = this.props.seq.next().value;
-        const key = this.props.connection.key;
-        const message: Message = { seq, key, type: 'command', command, input, option };
-        const result = this.props.connection.send(message).then((preview: IPreview) => {
-          const previews = this.state.previews.slice();
-          previews.push(preview);
-          this.setState({ previews });
-        });
-      };
       const changeDir = (path: string) => {
         this.ls(path)
         .then((browser: IBrowser) => {
@@ -63,7 +63,7 @@ class Main extends React.Component<IProps, IState> {
     }
     for (const preview of this.state.previews) {
       const { command, lines, id } = preview;
-      panels.push(<Preview id={id} command={command} lines={lines} onClose={this.onClose.bind(this)} />);
+      panels.push(<Preview id={id} command={command} lines={lines} onClose={this.onClose.bind(this)} onCommand={onCommand} />);
     }
     return <div>
     {panels}

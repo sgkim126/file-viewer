@@ -1,21 +1,47 @@
+const Draggable = require('react-draggable');
+const { Form, FormControl } = require('react-bootstrap');
 import * as React from 'react';
+import CommandOption from './options.ts';
 import IPreview from './ipreview.ts';
 import Panel from './panel.tsx';
-import { Col } from 'react-bootstrap';
-const Draggable = require('react-draggable');
+import { Button, ButtonToolbar, Col, Modal, Nav, NavItem } from 'react-bootstrap';
+import { ICommandInput } from './messages.ts';
 
 interface IProps extends IPreview {
   onClose: (id: number) => {};
+  onCommand: (command: string, input: ICommandInput, option: CommandOption) => void;
 }
 
-export default class Preview extends React.Component<IProps, {}> {
+interface IState {
+  head?: boolean;
+}
+
+export default class Preview extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
+
+    this.state = {
+      head: false,
+    };
   }
 
   public render(): JSX.Element {
+    const onHead = (e: React.MouseEvent) => {
+      e.preventDefault();
+      const lines = parseInt((document.getElementById('head-input') as HTMLInputElement).value, 10);
+      this.setState({head: false});
+      this.props.onCommand('head', { pipe: this.props.id }, { lines });
+    };
+
     return <Panel title={this.props.command} onClose={() => { this.props.onClose(this.props.id); }}>
+    <ButtonToolbar>
+      <Button onClick={() => { this.setState({ head: true }); }}>Head</Button>
+    </ButtonToolbar>
     <pre>{this.props.lines.join('\n')}</pre>
+    <Modal bsSize='small' show={this.state.head} onHide={() => this.setState({head: false}) }>
+      <Modal.Header>head</Modal.Header>
+      <Modal.Body><Form onSubmit={onHead}><FormControl type='number' placeholder='--lines' defaultValue={10} id='head-input' autoFocus /></Form></Modal.Body>
+    </Modal>
     </Panel>;
   }
 }
