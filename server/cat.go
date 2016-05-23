@@ -6,7 +6,7 @@ type CatRequest struct {
 }
 
 func (request CatRequest) Name() string {
-	return "head"
+	return "cat"
 }
 
 func (request CatRequest) Commands(key key, cm ContextManager) string {
