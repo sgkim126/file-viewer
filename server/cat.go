@@ -1,79 +1,35 @@
 package main
 
-import (
-	"bufio"
-	"fmt"
-	"io/ioutil"
-	"os"
-	"os/exec"
-
-	"github.com/onsi/gocleanup"
-)
-
 type CatRequest struct {
 	Seq
 	Input CommandInput `json:"input"`
 }
 
+func (request CatRequest) Name() string {
+	return "head"
+}
+
+func (request CatRequest) Commands(key key, cm ContextManager) (command string, err error) {
+	command, err = Commands(request, key, cm)
+	return
+}
+
 func (request CatRequest) Handle(kg KeyGenerator, cm *ContextManager) (Response, error) {
-	path, err := request.Input.Path(*request.Key, *cm)
-	if err != nil {
-		return ErrorResponse{
-			request.Seq,
-			err.Error(),
-		}, nil
-	}
+	return RunCommand(request, kg, cm)
+}
 
-	stdoutFile, err := ioutil.TempFile("", "filew-viewer")
-	defer stdoutFile.Close()
-	gocleanup.Register(func() {
-		os.Remove(stdoutFile.Name())
-	})
-	if err != nil {
-		return ErrorResponse{
-			request.Seq,
-			err.Error(),
-		}, nil
-	}
+func (request CatRequest) input() CommandInput {
+	return request.Input
+}
 
-	cmd := exec.Command("cat", path)
-	cmd.Stdout = stdoutFile
+func (request CatRequest) options() []string {
+	return []string{}
+}
 
-	err = cmd.Run()
-	if err != nil {
-		return ErrorResponse{
-			request.Seq,
-			err.Error(),
-		}, nil
-	}
+func (request CatRequest) key() key {
+	return *request.Key
+}
 
-	var lines []string
-	file, err := os.Open(stdoutFile.Name())
-	defer file.Close()
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		if scanner.Err() != nil {
-			return ErrorResponse{
-				request.Seq,
-				scanner.Err().Error(),
-			}, nil
-		}
-		lines = append(lines, scanner.Text())
-	}
-
-	command := fmt.Sprintf("cat %s", path)
-	id, err := cm.AddContext(*request.Key, stdoutFile.Name(), command)
-	if err != nil {
-		return ErrorResponse{
-			request.Seq,
-			err.Error(),
-		}, nil
-	}
-
-	return CommandResponse{
-		request.Seq,
-		command,
-		id,
-		lines,
-	}, nil
+func (request CatRequest) seq() Seq {
+	return request.Seq
 }

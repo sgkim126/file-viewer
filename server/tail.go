@@ -1,14 +1,10 @@
 package main
 
 import (
-	"bufio"
+	"errors"
 	"fmt"
-	"io/ioutil"
-	"os"
-	"os/exec"
+	"strconv"
 	"strings"
-
-	"github.com/onsi/gocleanup"
 )
 
 type TailOption struct {
@@ -22,74 +18,53 @@ type TailRequest struct {
 	Option TailOption   `json:"option"`
 }
 
+func (request TailRequest) Name() string {
+	return "tail"
+}
+
+func (request TailRequest) Commands(key key, cm ContextManager) (command string, err error) {
+	options := strings.Join(request.options(), " ")
+	if request.Input.File != nil {
+		command = fmt.Sprintf("%s %s %s", request.Name(), options, *request.Input.File)
+		return
+	}
+	if request.Input.Pipe != nil {
+		var c Context
+		c, err = cm.GetContext(key, *request.Input.Pipe)
+		if err != nil {
+			return
+		}
+		command = fmt.Sprintf("%s | %s %s", c.command, request.Name(), options)
+		return
+	}
+
+	err = errors.New("Cannot make command. Invalid input")
+	return
+}
+
 func (request TailRequest) Handle(kg KeyGenerator, cm *ContextManager) (Response, error) {
-	path, err := request.Input.Path(*request.Key, *cm)
-	if err != nil {
-		return ErrorResponse{
-			request.Seq,
-			err.Error(),
-		}, nil
-	}
+	return RunCommand(request, kg, cm)
+}
 
-	stdoutFile, err := ioutil.TempFile("", "filew-viewer")
-	defer stdoutFile.Close()
-	gocleanup.Register(func() {
-		os.Remove(stdoutFile.Name())
-	})
-	if err != nil {
-		return ErrorResponse{
-			request.Seq,
-			err.Error(),
-		}, nil
-	}
+func (request TailRequest) input() CommandInput {
+	return request.Input
+}
 
-	options := "-q"
+func (request TailRequest) options() []string {
+	options := []string{}
 	if request.Option.Lines != nil {
-		options = fmt.Sprintf("%s -n %d", options, *request.Option.Lines)
+		options = append(options, "-n", strconv.Itoa(*request.Option.Lines))
 	}
 	if request.Option.Bytes != nil {
-		options = fmt.Sprintf("%s -c %d", options, *request.Option.Bytes)
+		options = append(options, "-c", strconv.Itoa(*request.Option.Bytes))
 	}
+	return options
+}
 
-	arguments := append(strings.Split(options, " "), path)
-	cmd := exec.Command("tail", arguments...)
-	cmd.Stdout = stdoutFile
+func (request TailRequest) key() key {
+	return *request.Key
+}
 
-	err = cmd.Run()
-	if err != nil {
-		return ErrorResponse{
-			request.Seq,
-			err.Error(),
-		}, nil
-	}
-
-	var lines []string
-	file, err := os.Open(stdoutFile.Name())
-	defer file.Close()
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		if scanner.Err() != nil {
-			return ErrorResponse{
-				request.Seq,
-				scanner.Err().Error(),
-			}, nil
-		}
-		lines = append(lines, scanner.Text())
-	}
-
-	command := fmt.Sprintf("tail %s %s", options, path)
-	id, err := cm.AddContext(*request.Key, stdoutFile.Name(), command)
-	if err != nil {
-		return ErrorResponse{
-			request.Seq,
-			err.Error(),
-		}, nil
-	}
-
-	return CommandResponse{
-		request.Seq,
-		command,
-		id,
-		lines,
-	}, nil
+func (request TailRequest) seq() Seq {
+	return request.Seq
 }
