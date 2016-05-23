@@ -66,27 +66,28 @@ func handleRequest(kg KeyGenerator, cm ContextManager) func(http.ResponseWriter,
 			if messageType != 1 {
 				continue
 			}
+			go func(messageType int, buffers []byte, ws *websocket.Conn) {
+				requestType := RequestType{}
+				err = json.Unmarshal(buffers, &requestType)
+				if err != nil {
+					panic(err)
+				}
 
-			requestType := RequestType{}
-			err = json.Unmarshal(buffers, &requestType)
-			if err != nil {
-				panic(err)
-			}
+				request, err := requestType.Request(buffers)
+				if err != nil {
+					panic(err)
+				}
+				response, err := request.Handle(kg, &cm)
 
-			request, err := requestType.Request(buffers)
-			if err != nil {
-				panic(err)
-			}
-			response, err := request.Handle(kg, &cm)
-
-			if err != nil {
-				fmt.Println("Error in message", messageType, string(buffers), err)
-				continue
-			}
-			err = ws.WriteMessage(messageType, []byte(response.ResponseMessage()))
-			if err != nil {
-				panic(err)
-			}
+				if err != nil {
+					fmt.Println("Error in message", messageType, string(buffers), err)
+					return
+				}
+				err = ws.WriteMessage(messageType, []byte(response.ResponseMessage()))
+				if err != nil {
+					panic(err)
+				}
+			}(messageType, buffers, ws)
 		}
 	}
 }
