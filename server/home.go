@@ -8,11 +8,11 @@ type HomeRequest struct {
 	Seq
 }
 
-func (request HomeRequest) Handle(kg KeyGenerator, cm *ContextManager) (Response, error) {
+func (request HomeRequest) Handle(kg KeyGenerator, cm *ContextManager) Response {
 	return HomeResponse{
 		request.Seq,
 		os.Getenv("HOME"),
-	}, nil
+	}
 
 }
 

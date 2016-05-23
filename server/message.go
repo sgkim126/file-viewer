@@ -7,7 +7,7 @@ import (
 )
 
 type Request interface {
-	Handle(kg KeyGenerator, cm *ContextManager) (Response, error)
+	Handle(kg KeyGenerator, cm *ContextManager) Response
 }
 
 type RequestKey struct {
@@ -20,36 +20,36 @@ type RequestType struct {
 	Command *string `json:"command"`
 }
 
-func (requestType RequestType) Request(data []byte) (Request, error) {
+func (requestType RequestType) Request(data []byte) Request {
 	switch requestType.Type {
 	case "new":
 		var request NewRequest
 		err := json.Unmarshal(data, &request)
 		if err != nil {
-			return nil, err
+			panic(err)
 		}
-		return request, nil
+		return request
 	case "home":
 		var request HomeRequest
 		err := json.Unmarshal(data, &request)
 		if err != nil {
-			return nil, err
+			panic(err)
 		}
-		return request, nil
+		return request
 	case "ls":
 		var request LsRequest
 		err := json.Unmarshal(data, &request)
 		if err != nil {
-			return nil, err
+			panic(err)
 		}
-		return request, nil
+		return request
 	case "close":
 		var request CloseRequest
 		err := json.Unmarshal(data, &request)
 		if err != nil {
-			return nil, err
+			panic(err)
 		}
-		return request, nil
+		return request
 	case "command":
 		if requestType.Command != nil {
 			switch *requestType.Command {
@@ -57,28 +57,28 @@ func (requestType RequestType) Request(data []byte) (Request, error) {
 				var request CatRequest
 				err := json.Unmarshal(data, &request)
 				if err != nil {
-					return nil, err
+					panic(err)
 				}
-				return request, nil
+				return request
 			case "head":
 				var request HeadRequest
 				err := json.Unmarshal(data, &request)
 				if err != nil {
-					return nil, err
+					panic(err)
 				}
-				return request, nil
+				return request
 			case "tail":
 				var request TailRequest
 				err := json.Unmarshal(data, &request)
 				if err != nil {
-					return nil, err
+					panic(err)
 				}
-				return request, nil
+				return request
 			}
 		}
-		return nil, errors.New(fmt.Sprintf("Unhandled command: %s", string(data)))
+		panic(errors.New(fmt.Sprintf("Unhandled command: %s", string(data))))
 	default:
-		return nil, errors.New(fmt.Sprintf("Unhandled message: %s", string(data)))
+		panic(errors.New(fmt.Sprintf("Unhandled message: %s", string(data))))
 	}
 }
 
@@ -99,13 +99,9 @@ type Seq struct {
 	Seq int `json:"seq"`
 }
 
-type ErrorResponse struct {
+type MessageError struct {
 	Seq
 	Error string `json:"error"`
-}
-
-func (response ErrorResponse) ResponseMessage() []byte {
-	return ResponseMessage(response)
 }
 
 type CommandResponse struct {
@@ -116,5 +112,9 @@ type CommandResponse struct {
 }
 
 func (response CommandResponse) ResponseMessage() []byte {
-	return ResponseMessage(response)
+	encoded, err := json.Marshal(response)
+	if err != nil {
+		return []byte(err.Error())
+	}
+	return encoded
 }

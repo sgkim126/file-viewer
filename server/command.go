@@ -13,40 +13,49 @@ import (
 
 type CommandRequest interface {
 	Name() string
-	Commands(key key, cm ContextManager) (string, error)
+	Commands(key key, cm ContextManager) string
 	input() CommandInput
 	options() []string
 	key() key
 	seq() Seq
 }
 
-func Commands(request CommandRequest, key key, cm ContextManager) (command string, err error) {
+func Commands(request CommandRequest, key key, cm ContextManager) string {
 	options := ""
 	input := request.input()
 	if input.File != nil {
-		command = fmt.Sprintf("%s %s %s", request.Name(), options, *input.File)
-		return
+		return fmt.Sprintf("%s %s %s", request.Name(), options, *input.File)
 	}
 	if input.Pipe != nil {
 		var c Context
-		c, err = cm.GetContext(key, *input.Pipe)
+		c, err := cm.GetContext(key, *input.Pipe)
 		if err != nil {
-			return
+			panic(err)
 		}
-		command = fmt.Sprintf("%s | %s %s", c.command, request.Name(), options)
-		return
+		return fmt.Sprintf("%s | %s %s", c.command, request.Name(), options)
 	}
 
-	err = errors.New("Cannot make command. Invalid input")
-	return
+	panic(errors.New("Cannot make command. Invalid input"))
 }
-func RunCommand(request CommandRequest, kg KeyGenerator, cm *ContextManager) (Response, error) {
-	inputPath, err := request.input().Path(request.key(), *cm)
-	if err != nil {
-		return ErrorResponse{
+func RunCommand(request CommandRequest, kg KeyGenerator, cm *ContextManager) Response {
+	defer func() {
+		r := recover()
+		if r == nil {
+			return
+		}
+		err, ok := r.(error)
+		if !ok {
+			fmt.Println("Error in RunCommand:", r)
+			return
+		}
+		panic(MessageError{
 			request.seq(),
 			err.Error(),
-		}, nil
+		})
+	}()
+	inputPath, err := request.input().Path(request.key(), *cm)
+	if err != nil {
+		panic(err)
 	}
 
 	stdoutFile, err := ioutil.TempFile("", "filew-viewer")
@@ -55,10 +64,7 @@ func RunCommand(request CommandRequest, kg KeyGenerator, cm *ContextManager) (Re
 		os.Remove(stdoutFile.Name())
 	})
 	if err != nil {
-		return ErrorResponse{
-			request.seq(),
-			err.Error(),
-		}, nil
+		panic(err)
 	}
 
 	arguments := append(request.options(), inputPath)
@@ -67,10 +73,7 @@ func RunCommand(request CommandRequest, kg KeyGenerator, cm *ContextManager) (Re
 
 	err = cmd.Run()
 	if err != nil {
-		return ErrorResponse{
-			request.seq(),
-			err.Error(),
-		}, nil
+		panic(err)
 	}
 
 	var lines []string
@@ -79,28 +82,16 @@ func RunCommand(request CommandRequest, kg KeyGenerator, cm *ContextManager) (Re
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		if scanner.Err() != nil {
-			return ErrorResponse{
-				request.seq(),
-				scanner.Err().Error(),
-			}, nil
+			panic(scanner.Err())
 		}
 		lines = append(lines, scanner.Text())
 	}
 
 	var command string
-	command, err = request.Commands(request.key(), *cm)
-	if err != nil {
-		return ErrorResponse{
-			request.seq(),
-			err.Error(),
-		}, nil
-	}
+	command = request.Commands(request.key(), *cm)
 	id, err := cm.AddContext(request.key(), stdoutFile.Name(), command)
 	if err != nil {
-		return ErrorResponse{
-			request.seq(),
-			err.Error(),
-		}, nil
+		panic(err)
 	}
 
 	return CommandResponse{
@@ -108,5 +99,5 @@ func RunCommand(request CommandRequest, kg KeyGenerator, cm *ContextManager) (Re
 		command,
 		id,
 		lines,
-	}, nil
+	}
 }

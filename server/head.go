@@ -19,11 +19,11 @@ func (request HeadRequest) Name() string {
 	return "head"
 }
 
-func (request HeadRequest) Commands(key key, cm ContextManager) (string, error) {
+func (request HeadRequest) Commands(key key, cm ContextManager) string {
 	return Commands(request, key, cm)
 }
 
-func (request HeadRequest) Handle(kg KeyGenerator, cm *ContextManager) (Response, error) {
+func (request HeadRequest) Handle(kg KeyGenerator, cm *ContextManager) Response {
 	return RunCommand(request, kg, cm)
 }
 

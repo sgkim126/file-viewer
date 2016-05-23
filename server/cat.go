@@ -9,12 +9,11 @@ func (request CatRequest) Name() string {
 	return "head"
 }
 
-func (request CatRequest) Commands(key key, cm ContextManager) (command string, err error) {
-	command, err = Commands(request, key, cm)
-	return
+func (request CatRequest) Commands(key key, cm ContextManager) string {
+	return Commands(request, key, cm)
 }
 
-func (request CatRequest) Handle(kg KeyGenerator, cm *ContextManager) (Response, error) {
+func (request CatRequest) Handle(kg KeyGenerator, cm *ContextManager) Response {
 	return RunCommand(request, kg, cm)
 }
 

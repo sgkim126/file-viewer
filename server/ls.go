@@ -11,15 +11,15 @@ type LsRequest struct {
 	Path string `json:"path"`
 }
 
-func (request LsRequest) Handle(kg KeyGenerator, cm *ContextManager) (Response, error) {
+func (request LsRequest) Handle(kg KeyGenerator, cm *ContextManager) Response {
 	path := request.Path
 
 	fileInfos, err := ioutil.ReadDir(path)
 	if err != nil {
-		return ErrorResponse{
+		panic(MessageError{
 			request.Seq,
 			err.Error(),
-		}, nil
+		})
 	}
 	sizeofFiles := len(fileInfos)
 	files := make([]FileStat, sizeofFiles)
@@ -47,7 +47,7 @@ func (request LsRequest) Handle(kg KeyGenerator, cm *ContextManager) (Response, 
 	return LsResponse{
 		request.Seq,
 		files,
-	}, nil
+	}
 }
 
 type FileStat struct {

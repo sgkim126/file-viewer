@@ -67,22 +67,43 @@ func handleRequest(kg KeyGenerator, cm ContextManager) func(http.ResponseWriter,
 				continue
 			}
 			go func(messageType int, buffers []byte, ws *websocket.Conn) {
+				defer func(ws *websocket.Conn) {
+					defer func() {
+						r := recover()
+						if r == nil {
+							return
+						}
+						fmt.Println("Error in message handler.")
+						fmt.Println("               Message :", string(buffers))
+						fmt.Println("                 Error :", r)
+						return
+					}()
+					r := recover()
+					if r == nil {
+						return
+					}
+					errorResponse, ok := r.(MessageError)
+					if !ok {
+						panic(r)
+					}
+					encoded, err := json.Marshal(errorResponse)
+					if err != nil {
+						panic(err)
+					}
+					err = ws.WriteMessage(messageType, encoded)
+					if err != nil {
+						panic(err)
+					}
+				}(ws)
 				requestType := RequestType{}
 				err = json.Unmarshal(buffers, &requestType)
 				if err != nil {
 					panic(err)
 				}
 
-				request, err := requestType.Request(buffers)
-				if err != nil {
-					panic(err)
-				}
-				response, err := request.Handle(kg, &cm)
+				request := requestType.Request(buffers)
+				response := request.Handle(kg, &cm)
 
-				if err != nil {
-					fmt.Println("Error in message", messageType, string(buffers), err)
-					return
-				}
 				err = ws.WriteMessage(messageType, []byte(response.ResponseMessage()))
 				if err != nil {
 					panic(err)
