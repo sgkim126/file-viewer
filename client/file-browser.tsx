@@ -1,14 +1,12 @@
 import * as React from 'react';
 import './file-browser.styl';
 import File from './file.tsx';
-import FileInfo from './file-info.tsx';
 import IFile from './ifile.ts';
 import IMenu from './imenu.ts';
 import Menu from './menu.tsx';
 import CommandOption from './options.ts';
 import Panel from './panel.tsx';
 import Path from './path.tsx';
-import { Col } from 'react-bootstrap';
 import { ICommandInput } from './messages.ts';
 
 interface IProps {
@@ -69,12 +67,9 @@ export default class FileBrowser extends React.Component<IProps, IState> {
     const menu = this.state.menu ? this.menu() : <div></div>;
     return <Panel title='files' onStop={this.onStop.bind(this)}>
       <Path changeDir={this.changeDir.bind(this)} home={this.props.home}>{this.props.path}</Path>
-      <Col xs={8} className='file-browser'>
+      <div className='file-browser'>
         {files}
-      </Col>
-      <Col xs={4}>
-        <FileInfo {...selectedFile} />
-      </Col>
+      </div>
       {menu}
     </Panel>;
   }
