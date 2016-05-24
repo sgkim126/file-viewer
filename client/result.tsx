@@ -1,10 +1,11 @@
 const Draggable = require('react-draggable');
 const { Form, FormControl } = require('react-bootstrap');
+import './result.styl';
 import * as React from 'react';
 import CommandOption from './options.ts';
 import IResult from './iresult.ts';
 import Panel from './panel.tsx';
-import { Button, ButtonToolbar, Col, Modal, Nav, NavItem } from 'react-bootstrap';
+import { Button, ButtonToolbar, Modal, Nav, NavItem } from 'react-bootstrap';
 import { ICommandInput } from './messages.ts';
 
 interface IProps extends IResult {
@@ -47,7 +48,7 @@ export default class Result extends React.Component<IProps, IState> {
       this.props.onCommand('uniq', { pipe: this.props.id }, {});
     };
 
-    return <Panel title={this.props.command} onClose={() => { this.props.onClose(this.props.id); }}>
+    return <Panel title={this.props.command} onClose={() => { this.props.onClose(this.props.id); }} className='result-panel'>
     <ButtonToolbar>
       <Button onClick={() => { this.setState({ head: true }); }}>Head</Button>
       <Button onClick={() => { this.setState({ tail: true }); }}>Tail</Button>
