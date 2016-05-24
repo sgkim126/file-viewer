@@ -74,6 +74,13 @@ func (requestType RequestType) Request(data []byte) Request {
 					panic(err)
 				}
 				return request
+			case "uniq":
+				var request UniqRequest
+				err := json.Unmarshal(data, &request)
+				if err != nil {
+					panic(err)
+				}
+				return request
 			}
 		}
 		panic(errors.New(fmt.Sprintf("Unhandled command: %s", string(data))))
