@@ -15,6 +15,7 @@ interface IProps extends IPreview {
 interface IState {
   head?: boolean;
   tail?: boolean;
+  uniq?: boolean;
 }
 
 export default class Preview extends React.Component<IProps, IState> {
@@ -24,6 +25,7 @@ export default class Preview extends React.Component<IProps, IState> {
     this.state = {
       head: false,
       tail: false,
+      uniq: false,
     };
   }
 
@@ -40,11 +42,16 @@ export default class Preview extends React.Component<IProps, IState> {
       this.setState({tail: false});
       this.props.onCommand('tail', { pipe: this.props.id }, { lines });
     };
+    const onUniq = (e: React.MouseEvent) => {
+      e.preventDefault();
+      this.props.onCommand('uniq', { pipe: this.props.id }, {});
+    };
 
     return <Panel title={this.props.command} onClose={() => { this.props.onClose(this.props.id); }}>
     <ButtonToolbar>
       <Button onClick={() => { this.setState({ head: true }); }}>Head</Button>
       <Button onClick={() => { this.setState({ tail: true }); }}>Tail</Button>
+      <Button onClick={onUniq}>Uniq</Button>
     </ButtonToolbar>
     <pre>{this.props.lines.join('\n')}</pre>
     <Modal bsSize='small' show={this.state.head} onHide={() => this.setState({head: false}) }>
