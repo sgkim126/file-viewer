@@ -4,9 +4,9 @@ import CommandOption from './options.ts';
 import Connection from './connection.ts';
 import FileBrowser from './file-browser.tsx';
 import IFile from './ifile.ts';
-import IPreview from './ipreview.ts';
+import IResult from './iresult.ts';
 import Message from './messages.ts';
-import Preview from './preview.tsx';
+import Result from './result.tsx';
 import SeqGenerator from './seq-generator.ts';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { ICommandInput } from './messages.ts';
@@ -24,7 +24,7 @@ interface IBrowser {
 
 interface IState {
   browser?: IBrowser;
-  previews?: IPreview[];
+  previews?: IResult[];
 }
 
 class Main extends React.Component<IProps, IState> {
@@ -43,7 +43,7 @@ class Main extends React.Component<IProps, IState> {
       const seq = this.props.seq.next().value;
       const key = this.props.connection.key;
       const message: Message = { seq, key, type: 'command', command, input, option };
-      const result = this.props.connection.send(message).then((preview: IPreview) => {
+      const result = this.props.connection.send(message).then((preview: IResult) => {
         const previews = this.state.previews.slice();
         previews.push(preview);
         this.setState({ previews });
@@ -63,7 +63,7 @@ class Main extends React.Component<IProps, IState> {
     }
     for (const preview of this.state.previews) {
       const { command, lines, id } = preview;
-      panels.push(<Preview id={id} command={command} lines={lines} onClose={this.onClose.bind(this)} onCommand={onCommand} />);
+      panels.push(<Result id={id} command={command} lines={lines} onClose={this.onClose.bind(this)} onCommand={onCommand} />);
     }
     return <div>
     {panels}
@@ -71,7 +71,7 @@ class Main extends React.Component<IProps, IState> {
   }
 
   private onClose(id: number): void {
-    const previews = this.state.previews.slice().filter((preview: IPreview) => preview.id !== id);
+    const previews = this.state.previews.slice().filter((preview: IResult) => preview.id !== id);
     this.setState({ previews });
     const seq = this.props.seq.next().value;
     const key = this.props.connection.key;

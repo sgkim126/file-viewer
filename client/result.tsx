@@ -2,12 +2,12 @@ const Draggable = require('react-draggable');
 const { Form, FormControl } = require('react-bootstrap');
 import * as React from 'react';
 import CommandOption from './options.ts';
-import IPreview from './ipreview.ts';
+import IResult from './iresult.ts';
 import Panel from './panel.tsx';
 import { Button, ButtonToolbar, Col, Modal, Nav, NavItem } from 'react-bootstrap';
 import { ICommandInput } from './messages.ts';
 
-interface IProps extends IPreview {
+interface IProps extends IResult {
   onClose: (id: number) => {};
   onCommand: (command: string, input: ICommandInput, option: CommandOption) => void;
 }
@@ -18,7 +18,7 @@ interface IState {
   uniq?: boolean;
 }
 
-export default class Preview extends React.Component<IProps, IState> {
+export default class Result extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
 

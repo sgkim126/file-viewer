@@ -1,7 +1,7 @@
-interface IPreview {
+interface IResult {
   id: number;
   command: string;
   lines: string[];
 }
 
-export default IPreview;
+export default IResult;
