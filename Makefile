@@ -15,7 +15,7 @@ run: ./server/server
 ./server/bindata.go: ./html/index.html ./html/viewer.js ./html/viewer.css | gobindata
 	cd ./server/; go generate
 
-./html/viewer.js: ./client/main.ts $(TS_SRC) $(STYL_SRC) | ./typings/browser.d.ts
+./html/viewer.js: ./client/viewer.ts $(TS_SRC) $(STYL_SRC) | ./typings/browser.d.ts
 	./node_modules/.bin/webpack --entry ./$< --output-path $(@D) --output-filename $(@F)
 
 ./typings/browser.d.ts: ./typings.json | ./node_modules/

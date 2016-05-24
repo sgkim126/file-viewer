@@ -1,4 +1,5 @@
 import * as React from 'react';
+import './file-browser.styl';
 import File from './file.tsx';
 import FileInfo from './file-info.tsx';
 import IFile from './ifile.ts';
