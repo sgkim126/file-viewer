@@ -3,6 +3,7 @@ package main
 import (
 	"io/ioutil"
 	"os"
+	"path"
 	"syscall"
 )
 
@@ -12,9 +13,9 @@ type LsRequest struct {
 }
 
 func (request LsRequest) Handle(kg KeyGenerator, cm *ContextManager) Response {
-	path := request.Path
+	targetDirPath := request.Path
 
-	fileInfos, err := ioutil.ReadDir(path)
+	fileInfos, err := ioutil.ReadDir(targetDirPath)
 	if err != nil {
 		panic(MessageError{
 			request.Seq,
@@ -25,16 +26,25 @@ func (request LsRequest) Handle(kg KeyGenerator, cm *ContextManager) Response {
 	files := make([]FileStat, sizeofFiles)
 	for i := 0; i < sizeofFiles; i += 1 {
 		file := fileInfos[i]
+		isSymlink := file.Mode()&os.ModeSymlink != 0
+		if isSymlink {
+			targetFilePath := path.Join(targetDirPath, file.Name())
+			file, err = os.Stat(targetFilePath)
+			if err != nil {
+				panic(err)
+			}
+		}
 		stat := file.Sys().(*syscall.Stat_t)
 		atime := stat.Atim.Sec
 		ctime := stat.Ctim.Sec
 		mtime := stat.Mtim.Sec
 		numberOfHardLink := int(stat.Nlink)
+
 		files[i] = FileStat{
 			Name:             file.Name(),
 			IsDir:            file.IsDir(),
 			IsFile:           !file.IsDir(),
-			IsSymlink:        file.Mode()&os.ModeSymlink != 0,
+			IsSymlink:        isSymlink,
 			Size:             file.Size(),
 			NumberOfHardLink: numberOfHardLink,
 			Ctime:            ctime,
