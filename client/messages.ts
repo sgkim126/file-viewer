@@ -21,6 +21,13 @@ export interface IClose extends IMessage {
   id: number;
 }
 
+export interface IMore extends IMessage {
+  type: 'more';
+  id: number;
+  start: number;
+  lines: number;
+}
+
 interface ICommand extends IMessage {
   type: 'command';
   command: string;
@@ -51,5 +58,5 @@ export interface ITail extends ICommand {
   option: Option.ITailOption;
 }
 
-type Message = IHome | ILs | IClose | ICommand;
+type Message = IHome | ILs | IClose | IMore | ICommand;
 export default Message;

@@ -4,6 +4,7 @@ import CommandOption from './options.ts';
 import Connection from './connection.ts';
 import FileBrowser from './file-browser.tsx';
 import IFile from './ifile.ts';
+import IMoreResult from './imoreresult.ts';
 import IResult from './iresult.ts';
 import Message from './messages.ts';
 import Result from './result.tsx';
@@ -66,7 +67,8 @@ export default class Main extends React.Component<IProps, IState> {
       panels.push(
         <Result id={id} command={command}
           bytes={bytes} chars={chars} words={words} lines={lines} max_line_length={max_line_length}
-          onClose={this.onClose.bind(this)} onCommand={onCommand} />);
+          onClose={this.onClose.bind(this)} onCommand={onCommand}
+          readMore={this.readMore.bind(this)} />);
     }
     return <div className='full-width full-height'>
     {panels}
@@ -84,6 +86,10 @@ export default class Main extends React.Component<IProps, IState> {
   private ls(path: string): Promise<IBrowser> {
     return ls(path, this.props.connection, this.props.seq);
   }
+
+  private readMore(id: number, start: number, lines: number): Promise<IMoreResult> {
+    return readMore(id, start, lines, this.props.connection, this.props.seq);
+  }
 }
 
 function ls(path: string, connection: Connection, seqGen: IterableIterator<number>): Promise<IBrowser> {
@@ -94,4 +100,11 @@ function ls(path: string, connection: Connection, seqGen: IterableIterator<numbe
   .then((result: {files: IFile[]}): IBrowser => {
     return { path, files: result.files };
   });
+}
+
+function readMore(id: number, start: number, lines: number, connection: Connection, seqGen: IterableIterator<number>): Promise<IMoreResult> {
+  const seq = seqGen.next().value;
+  const key = connection.key;
+
+  return connection.send({seq, key, id, start, lines, type: 'more'});
 }

@@ -50,6 +50,13 @@ func (requestType RequestType) Request(data []byte) Request {
 			panic(err)
 		}
 		return request
+	case "more":
+		var request MoreRequest
+		err := json.Unmarshal(data, &request)
+		if err != nil {
+			panic(err)
+		}
+		return request
 	case "command":
 		if requestType.Command != nil {
 			switch *requestType.Command {
