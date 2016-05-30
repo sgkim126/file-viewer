@@ -1,7 +1,11 @@
 interface IResult {
   id: number;
   command: string;
-  lines: string[];
+  bytes: number;
+  chars: number;
+  words: number;
+  lines: number;
+  max_line_length: number;
 }
 
 export default IResult;

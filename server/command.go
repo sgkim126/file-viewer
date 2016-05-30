@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -76,17 +75,6 @@ func RunCommand(request CommandRequest, kg KeyGenerator, cm *ContextManager) Res
 		panic(err)
 	}
 
-	var lines []string
-	file, err := os.Open(stdoutFile.Name())
-	defer file.Close()
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		if scanner.Err() != nil {
-			panic(scanner.Err())
-		}
-		lines = append(lines, scanner.Text())
-	}
-
 	var command string
 	command = request.Commands(request.key(), *cm)
 	id, err := cm.AddContext(request.key(), stdoutFile.Name(), command)
@@ -94,10 +82,16 @@ func RunCommand(request CommandRequest, kg KeyGenerator, cm *ContextManager) Res
 		panic(err)
 	}
 
+	bytes, chars, words, lines, max_line_length := wc(stdoutFile.Name())
+
 	return CommandResponse{
 		request.seq(),
 		command,
 		id,
+		bytes,
+		chars,
+		words,
 		lines,
+		max_line_length,
 	}
 }

@@ -62,8 +62,11 @@ export default class Main extends React.Component<IProps, IState> {
       }}></FileBrowser>);
     }
     for (const preview of this.state.previews) {
-      const { command, lines, id } = preview;
-      panels.push(<Result id={id} command={command} lines={lines} onClose={this.onClose.bind(this)} onCommand={onCommand} />);
+      const { command, bytes, chars, words, lines, max_line_length, id } = preview;
+      panels.push(
+        <Result id={id} command={command}
+          bytes={bytes} chars={chars} words={words} lines={lines} max_line_length={max_line_length}
+          onClose={this.onClose.bind(this)} onCommand={onCommand} />);
     }
     return <div className='full-width full-height'>
     {panels}

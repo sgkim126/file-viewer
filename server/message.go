@@ -113,9 +113,13 @@ type MessageError struct {
 
 type CommandResponse struct {
 	Seq
-	Command string   `json:"command"`
-	Id      int      `json:"id"`
-	Lines   []string `json:"lines"`
+	Command       string `json:"command"`
+	Id            int    `json:"id"`
+	Bytes         int    `json:"bytes"`
+	Chars         int    `json:"chars"`
+	Words         int    `json:"words"`
+	Lines         int    `json:"lines"`
+	MaxLineLength int    `json:"max_line_length"`
 }
 
 func (response CommandResponse) ResponseMessage() []byte {

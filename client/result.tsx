@@ -54,7 +54,13 @@ export default class Result extends React.Component<IProps, IState> {
       <Button onClick={() => { this.setState({ tail: true }); }}>Tail</Button>
       <Button onClick={onUniq}>Uniq</Button>
     </ButtonToolbar>
-    <pre>{this.props.lines.join('\n')}</pre>
+    <pre>WIP</pre>
+    <div>
+      <span>0/{this.props.bytes} bytes</span>
+      <span>0/{this.props.chars} chars</span>
+      <span>0/{this.props.words} words</span>
+      <span>0/{this.props.lines} lines</span>
+    </div>
     <Modal bsSize='small' show={this.state.head} onHide={() => this.setState({head: false}) }>
       <Modal.Header>head</Modal.Header>
       <Modal.Body><Form onSubmit={onHead}><FormControl type='number' placeholder='--lines' defaultValue={10} id='head-input' autoFocus /></Form></Modal.Body>
