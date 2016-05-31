@@ -34,21 +34,15 @@ func (request MoreRequest) Handle(kg KeyGenerator, cm *ContextManager) Response 
 	}()
 
 	c, err := cm.GetContext(*request.Key, request.Id)
-	if err != nil {
-		panic(err)
-	}
+	shouldNot(err)
 	path := c.path
 
 	file, err := os.Open(path)
-	if err != nil {
-		panic(err)
-	}
+	shouldNot(err)
 	defer file.Close()
 
 	resultFile, err := ioutil.TempFile("", "filew-viewer")
-	if err != nil {
-		panic(err)
-	}
+	shouldNot(err)
 	resultFileName := resultFile.Name()
 	defer func() {
 		resultFile.Close()
@@ -67,17 +61,13 @@ func (request MoreRequest) Handle(kg KeyGenerator, cm *ContextManager) Response 
 		if !scanner.Scan() {
 			break
 		}
-		if scanner.Err() != nil {
-			panic(scanner.Err())
-		}
+		shouldNot(scanner.Err())
 		line := scanner.Text()
 		contents = append(contents, line)
 		writer.WriteString(fmt.Sprintf("%s\n", line))
 	}
 	err = writer.Flush()
-	if err != nil {
-		panic(err)
-	}
+	shouldNot(err)
 	bytes, chars, words, lines, _ := wc(resultFileName)
 
 	return MoreResponse{

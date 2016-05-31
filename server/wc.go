@@ -16,25 +16,15 @@ func wc(filename string) (bytes int, chars int, words int, lines int, max_line_l
 		filename}
 	cmd := exec.Command("wc", options...)
 	reader, err := cmd.StdoutPipe()
-	if err != nil {
-		panic(err)
-	}
+	shouldNot(err)
 	defer reader.Close()
 	err = cmd.Start()
-	if err != nil {
-		panic(err)
-	}
+	shouldNot(err)
 	result, err := ioutil.ReadAll(reader)
-	if err != nil {
-		panic(err)
-	}
+	shouldNot(err)
 	err = cmd.Wait()
-	if err != nil {
-		panic(err)
-	}
+	shouldNot(err)
 	_, err = fmt.Sscanf(string(result), "%d %d %d %d %d", &lines, &words, &chars, &bytes, &max_line_length)
-	if err != nil {
-		panic(err)
-	}
+	shouldNot(err)
 	return
 }

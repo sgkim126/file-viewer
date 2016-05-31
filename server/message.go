@@ -25,37 +25,27 @@ func (requestType RequestType) Request(data []byte) Request {
 	case "new":
 		var request NewRequest
 		err := json.Unmarshal(data, &request)
-		if err != nil {
-			panic(err)
-		}
+		shouldNot(err)
 		return request
 	case "home":
 		var request HomeRequest
 		err := json.Unmarshal(data, &request)
-		if err != nil {
-			panic(err)
-		}
+		shouldNot(err)
 		return request
 	case "ls":
 		var request LsRequest
 		err := json.Unmarshal(data, &request)
-		if err != nil {
-			panic(err)
-		}
+		shouldNot(err)
 		return request
 	case "close":
 		var request CloseRequest
 		err := json.Unmarshal(data, &request)
-		if err != nil {
-			panic(err)
-		}
+		shouldNot(err)
 		return request
 	case "more":
 		var request MoreRequest
 		err := json.Unmarshal(data, &request)
-		if err != nil {
-			panic(err)
-		}
+		shouldNot(err)
 		return request
 	case "command":
 		if requestType.Command != nil {
@@ -63,30 +53,22 @@ func (requestType RequestType) Request(data []byte) Request {
 			case "cat":
 				var request CatRequest
 				err := json.Unmarshal(data, &request)
-				if err != nil {
-					panic(err)
-				}
+				shouldNot(err)
 				return request
 			case "head":
 				var request HeadRequest
 				err := json.Unmarshal(data, &request)
-				if err != nil {
-					panic(err)
-				}
+				shouldNot(err)
 				return request
 			case "tail":
 				var request TailRequest
 				err := json.Unmarshal(data, &request)
-				if err != nil {
-					panic(err)
-				}
+				shouldNot(err)
 				return request
 			case "uniq":
 				var request UniqRequest
 				err := json.Unmarshal(data, &request)
-				if err != nil {
-					panic(err)
-				}
+				shouldNot(err)
 				return request
 			}
 		}

@@ -30,9 +30,7 @@ func (request LsRequest) Handle(kg KeyGenerator, cm *ContextManager) Response {
 		if isSymlink {
 			targetFilePath := path.Join(targetDirPath, file.Name())
 			file, err = os.Stat(targetFilePath)
-			if err != nil {
-				panic(err)
-			}
+			shouldNot(err)
 		}
 		stat := file.Sys().(*syscall.Stat_t)
 		atime := stat.Atim.Sec

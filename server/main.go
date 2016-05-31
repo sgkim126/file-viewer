@@ -19,17 +19,11 @@ func main() {
 	flag.Parse()
 
 	html, err := Asset("../html/index.html")
-	if err != nil {
-		panic(err)
-	}
+	shouldNot(err)
 	css, err := Asset("../html/viewer.css")
-	if err != nil {
-		panic(err)
-	}
+	shouldNot(err)
 	js, err := Asset("../html/viewer.js")
-	if err != nil {
-		panic(err)
-	}
+	shouldNot(err)
 
 	DefaultPath := ""
 	CSSPath := "viewer.css"
@@ -88,27 +82,19 @@ func handleRequest(kg KeyGenerator, cm ContextManager) func(http.ResponseWriter,
 						panic(r)
 					}
 					encoded, err := json.Marshal(errorResponse)
-					if err != nil {
-						panic(err)
-					}
+					shouldNot(err)
 					err = ws.WriteMessage(messageType, encoded)
-					if err != nil {
-						panic(err)
-					}
+					shouldNot(err)
 				}(ws)
 				requestType := RequestType{}
 				err = json.Unmarshal(buffers, &requestType)
-				if err != nil {
-					panic(err)
-				}
+				shouldNot(err)
 
 				request := requestType.Request(buffers)
 				response := request.Handle(kg, &cm)
 
 				err = ws.WriteMessage(messageType, []byte(response.ResponseMessage()))
-				if err != nil {
-					panic(err)
-				}
+				shouldNot(err)
 			}(messageType, buffers, ws)
 		}
 	}

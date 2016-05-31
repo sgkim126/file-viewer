@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -10,20 +11,26 @@ type CloseRequest struct {
 }
 
 func (request CloseRequest) Handle(kg KeyGenerator, cm *ContextManager) Response {
+	defer func() {
+		r := recover()
+		if r == nil {
+			return
+		}
+		err, ok := r.(error)
+		if !ok {
+			fmt.Println("Error in Close:", r)
+			return
+		}
+		panic(MessageError{
+			request.Seq,
+			err.Error(),
+		})
+	}()
+
 	path, err := cm.RemoveContext(*request.Key, request.Id)
-	if err != nil {
-		panic(MessageError{
-			request.Seq,
-			err.Error(),
-		})
-	}
+	shouldNot(err)
 	err = os.Remove(path)
-	if err != nil {
-		panic(MessageError{
-			request.Seq,
-			err.Error(),
-		})
-	}
+	shouldNot(err)
 	return CloseResponse{
 		request.Seq,
 	}

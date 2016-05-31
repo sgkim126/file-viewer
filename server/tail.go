@@ -30,9 +30,7 @@ func (request TailRequest) Commands(key key, cm ContextManager) string {
 	if request.Input.Pipe != nil {
 		var c Context
 		c, err := cm.GetContext(key, *request.Input.Pipe)
-		if err != nil {
-			panic(err)
-		}
+		shouldNot(err)
 		return fmt.Sprintf("%s | %s %s", c.command, request.Name(), options)
 	}
 

@@ -28,9 +28,7 @@ func Commands(request CommandRequest, key key, cm ContextManager) string {
 	if input.Pipe != nil {
 		var c Context
 		c, err := cm.GetContext(key, *input.Pipe)
-		if err != nil {
-			panic(err)
-		}
+		shouldNot(err)
 		return fmt.Sprintf("%s | %s %s", c.command, request.Name(), options)
 	}
 
@@ -53,34 +51,26 @@ func RunCommand(request CommandRequest, kg KeyGenerator, cm *ContextManager) Res
 		})
 	}()
 	inputPath, err := request.input().Path(request.key(), *cm)
-	if err != nil {
-		panic(err)
-	}
+	shouldNot(err)
 
 	stdoutFile, err := ioutil.TempFile("", "filew-viewer")
 	defer stdoutFile.Close()
 	gocleanup.Register(func() {
 		os.Remove(stdoutFile.Name())
 	})
-	if err != nil {
-		panic(err)
-	}
+	shouldNot(err)
 
 	arguments := append(request.options(), inputPath)
 	cmd := exec.Command(request.Name(), arguments...)
 	cmd.Stdout = stdoutFile
 
 	err = cmd.Run()
-	if err != nil {
-		panic(err)
-	}
+	shouldNot(err)
 
 	var command string
 	command = request.Commands(request.key(), *cm)
 	id, err := cm.AddContext(request.key(), stdoutFile.Name(), command)
-	if err != nil {
-		panic(err)
-	}
+	shouldNot(err)
 
 	bytes, chars, words, lines, max_line_length := wc(stdoutFile.Name())
 
