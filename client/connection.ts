@@ -22,13 +22,13 @@ export default class Connection {
     this._onerror = (e) => e;
   }
 
-  static open(key?: string): Promise<Connection> {
+  static open(key?: string): Promise<[Connection, string]> {
     return new Promise((resolve, reject) => {
       const socket = new WebSocket(`ws://${location.host}/c`);
       socket.onopen = (e) => {
         socket.onmessage = (e: MessageEvent) => {
-          const { key } = JSON.parse(e.data);
-          resolve(new Connection(key, socket));
+          const { key, root } = JSON.parse(e.data);
+          resolve([new Connection(key, socket), root]);
         };
         socket.onclose = (e) => {
           reject(e);

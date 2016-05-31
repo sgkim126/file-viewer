@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/websocket"
 )
@@ -16,6 +17,7 @@ import (
 func main() {
 	port := flag.Int("port", 12389, "port number to open server")
 	bind := flag.String("bind", "127.0.0.1", "bind address")
+	root := flag.String("root", os.Getenv("HOME"), "root path")
 	flag.Parse()
 
 	html, err := Asset("../html/index.html")
@@ -40,15 +42,16 @@ func main() {
 	contentTypes[JSPath] = "application/javascript; charset=utf-8"
 
 	kg := NewKeyGenerator(3)
-	cm := NewContextManager()
+	cm := NewContextManager(*root)
 
 	http.Handle("/", http.StripPrefix("/", http.HandlerFunc(handleFile(contents, contentTypes))))
-	http.HandleFunc("/c", http.HandlerFunc(handleRequest(kg, cm)))
+	http.HandleFunc("/c", http.HandlerFunc(handleRequest(kg, cm, *root)))
+	fmt.Println("  Root %s", *root)
 	fmt.Println("Listen %s:%d", *bind, *port)
 	http.ListenAndServe(fmt.Sprintf("%s:%d", *bind, *port), nil)
 }
 
-func handleRequest(kg KeyGenerator, cm ContextManager) func(http.ResponseWriter, *http.Request) {
+func handleRequest(kg KeyGenerator, cm ContextManager, root string) func(http.ResponseWriter, *http.Request) {
 	return func(response http.ResponseWriter, httpRequest *http.Request) {
 		upgrader := websocket.Upgrader{}
 		ws, err := upgrader.Upgrade(response, httpRequest, nil)

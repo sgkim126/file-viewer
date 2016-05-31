@@ -8,9 +8,9 @@ import render from './render.tsx';
   const USER_KEY = 'user-key';
 
   const connection = Connection.open(localStorage.getItem(USER_KEY));
-  connection.then((connection) => {
+  connection.then(([ connection, root ]: [ Connection, string ]) => {
     localStorage.setItem(USER_KEY, connection.key);
     window['connection'] = connection;
-    render(main, connection);
+    render(main, connection, root);
   });
 })(window, window.document);

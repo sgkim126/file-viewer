@@ -28,11 +28,6 @@ func (requestType RequestType) Request(data []byte) Request {
 		err := json.Unmarshal(data, &request)
 		shouldNot(err)
 		return request
-	case "home":
-		var request HomeRequest
-		err := json.Unmarshal(data, &request)
-		shouldNot(err)
-		return request
 	case "ls":
 		var request LsRequest
 		err := json.Unmarshal(data, &request)

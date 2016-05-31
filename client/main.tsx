@@ -15,7 +15,7 @@ import { ICommandInput } from './messages.ts';
 interface IProps {
   connection: Connection;
   seq: IterableIterator<number>;
-  home: string;
+  root: string;
 }
 
 interface IBrowser {
@@ -34,7 +34,7 @@ export default class Main extends React.Component<IProps, IState> {
 
     this.state = { previews: [] };
 
-    this.ls(this.props.home).then((browser: IBrowser) => {
+    this.ls(this.props.root).then((browser: IBrowser) => {
       this.setState({ browser });
     });
   }
@@ -59,7 +59,7 @@ export default class Main extends React.Component<IProps, IState> {
           this.setState({ browser });
         });
       };
-      panels.push(<FileBrowser files={files} path={path} home={this.props.home} onCommand={onCommand} changeDir={changeDir} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
+      panels.push(<FileBrowser files={files} path={path} root={this.props.root} onCommand={onCommand} changeDir={changeDir} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
       }}></FileBrowser>);
     }
     for (const preview of this.state.previews) {

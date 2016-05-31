@@ -4,7 +4,7 @@ const { FormControl, FormGroup, InputGroup } = require('react-bootstrap');
 
 interface IProps {
   changeDir: (path: string) => void;
-  home: string;
+  root: string;
 }
 
 interface IState {
@@ -73,7 +73,7 @@ export default class Path extends React.Component<IProps, IState> {
 
   private clickHome(): void {
     this.setState({changing: true});
-    this.props.changeDir(this.props.home);
+    this.props.changeDir(this.props.root);
   }
 }
 

@@ -7,10 +7,6 @@ export interface IMessage {
   seq: number;
 }
 
-export interface IHome extends IMessage {
-  type: 'home';
-}
-
 export interface ILs extends IMessage {
   type: 'ls';
   path: string;
@@ -58,5 +54,5 @@ export interface ITail extends ICommand {
   option: Option.ITailOption;
 }
 
-type Message = IHome | ILs | IClose | IMore | ICommand;
+type Message = ILs | IClose | IMore | ICommand;
 export default Message;

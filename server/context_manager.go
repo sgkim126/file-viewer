@@ -15,13 +15,15 @@ type ContextManager struct {
 	nextSeq  int
 	contexts map[int]Context
 	keys     []key
+	root     string
 }
 
-func NewContextManager() ContextManager {
+func NewContextManager(root string) ContextManager {
 	return ContextManager{
 		0,
 		make(map[int]Context, 0),
 		make([]key, 0),
+		root,
 	}
 }
 
@@ -51,6 +53,10 @@ func (cm *ContextManager) AddKey(key key) error {
 	}
 	cm.keys = append(cm.keys, key)
 	return nil
+}
+
+func (cm ContextManager) Root() string {
+	return cm.root
 }
 
 func (cm *ContextManager) AddContext(key key, path string, command string) (id int, err error) {

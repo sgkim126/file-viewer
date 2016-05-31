@@ -16,7 +16,7 @@ interface IProps {
   onClick: (e: React.MouseEvent, path: string, isFIle: boolean) => void;
   onCommand: (command: string, input: ICommandInput, option: CommandOption) => void;
   changeDir: (path: string) => void;
-  home: string;
+  root: string;
 }
 
 interface IState {
@@ -80,7 +80,7 @@ export default class FileBrowser extends React.Component<IProps, IState> {
       this.setState({dir_visible: !this.state.dir_visible});
     };
     return <Panel title='files' onStop={this.onStop.bind(this)}>
-      <Path changeDir={this.changeDir.bind(this)} home={this.props.home}>{this.props.path}</Path>
+      <Path changeDir={this.changeDir.bind(this)} root={this.props.root}>{this.props.path}</Path>
       <ButtonGroup justified>
         <Button bsStyle='primary' href='#' onClick={onFileVisible} active={this.state.file_visible}>File</Button>
         <Button bsStyle='primary' href='#' onClick={onDirVisible} active={this.state.dir_visible}>Directory</Button>
