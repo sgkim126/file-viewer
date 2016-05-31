@@ -15,6 +15,7 @@ import (
 
 func main() {
 	port := flag.Int("port", 12389, "port number to open server")
+	bind := flag.String("bind", "127.0.0.1", "bind address")
 	flag.Parse()
 
 	html, err := Asset("../html/index.html")
@@ -49,8 +50,8 @@ func main() {
 
 	http.Handle("/", http.StripPrefix("/", http.HandlerFunc(handleFile(contents, contentTypes))))
 	http.HandleFunc("/c", http.HandlerFunc(handleRequest(kg, cm)))
-	fmt.Println("Listen :%d", *port)
-	http.ListenAndServe(fmt.Sprintf(":%d", *port), nil)
+	fmt.Println("Listen %s:%d", *bind, *port)
+	http.ListenAndServe(fmt.Sprintf("%s:%d", *bind, *port), nil)
 }
 
 func handleRequest(kg KeyGenerator, cm ContextManager) func(http.ResponseWriter, *http.Request) {

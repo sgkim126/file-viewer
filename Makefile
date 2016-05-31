@@ -3,11 +3,12 @@ TS_SRC := $(shell ls client/*.ts client/*.tsx)
 STYL_SRC := $(shell ls client/*.styl)
 
 PORT := 12389
+BIND := 0.0.0.0
 
 all: ./server/server
 
 run: ./server/server
-	$< -port $(PORT)
+	$< -port $(PORT) -bind $(BIND)
 
 ./server/server: ./server/bindata.go $(GO_SRC) | goget
 	cd ./server/; go build
