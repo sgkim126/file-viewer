@@ -1,7 +1,7 @@
 package main
 
 type NewRequest struct {
-	RequestKey
+	Seq
 }
 
 func (request NewRequest) Handle(kg KeyGenerator, cm *ContextManager) Response {

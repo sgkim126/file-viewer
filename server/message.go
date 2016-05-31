@@ -10,12 +10,13 @@ type Request interface {
 	Handle(kg KeyGenerator, cm *ContextManager) Response
 }
 
-type RequestKey struct {
+type Seq struct {
 	Key *key `json:"key"`
+	Seq *int `json:"seq"`
 }
 
 type RequestType struct {
-	RequestKey
+	Seq
 	Type    string  `json:"type"`
 	Command *string `json:"command"`
 }
@@ -88,11 +89,6 @@ func ResponseMessage(v interface{}) []byte {
 		return []byte(err.Error())
 	}
 	return encoded
-}
-
-type Seq struct {
-	RequestKey
-	Seq int `json:"seq"`
 }
 
 type MessageError struct {

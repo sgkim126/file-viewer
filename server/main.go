@@ -90,6 +90,20 @@ func handleRequest(kg KeyGenerator, cm ContextManager) func(http.ResponseWriter,
 				err = json.Unmarshal(buffers, &requestType)
 				shouldNot(err)
 
+				defer func() {
+					r := recover()
+					if r == nil {
+						return
+					}
+					err, ok := r.(error)
+					if !ok {
+						panic(r)
+					}
+					panic(MessageError{
+						requestType.Seq,
+						err.Error(),
+					})
+				}()
 				request := requestType.Request(buffers)
 				response := request.Handle(kg, &cm)
 

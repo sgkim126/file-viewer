@@ -35,21 +35,6 @@ func Commands(request CommandRequest, key key, cm ContextManager) string {
 	panic(errors.New("Cannot make command. Invalid input"))
 }
 func RunCommand(request CommandRequest, kg KeyGenerator, cm *ContextManager) Response {
-	defer func() {
-		r := recover()
-		if r == nil {
-			return
-		}
-		err, ok := r.(error)
-		if !ok {
-			fmt.Println("Error in RunCommand:", r)
-			return
-		}
-		panic(MessageError{
-			request.seq(),
-			err.Error(),
-		})
-	}()
 	inputPath, err := request.input().Path(request.key(), *cm)
 	shouldNot(err)
 

@@ -16,12 +16,7 @@ func (request LsRequest) Handle(kg KeyGenerator, cm *ContextManager) Response {
 	targetDirPath := request.Path
 
 	fileInfos, err := ioutil.ReadDir(targetDirPath)
-	if err != nil {
-		panic(MessageError{
-			request.Seq,
-			err.Error(),
-		})
-	}
+	shouldNot(err)
 	sizeofFiles := len(fileInfos)
 	files := make([]FileStat, sizeofFiles)
 	for i := 0; i < sizeofFiles; i += 1 {

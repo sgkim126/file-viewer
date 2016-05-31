@@ -17,22 +17,6 @@ type MoreRequest struct {
 }
 
 func (request MoreRequest) Handle(kg KeyGenerator, cm *ContextManager) Response {
-	defer func() {
-		r := recover()
-		if r == nil {
-			return
-		}
-		err, ok := r.(error)
-		if !ok {
-			fmt.Println("Error in More:", r)
-			return
-		}
-		panic(MessageError{
-			request.Seq,
-			err.Error(),
-		})
-	}()
-
 	c, err := cm.GetContext(*request.Key, request.Id)
 	shouldNot(err)
 	path := c.path
