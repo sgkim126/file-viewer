@@ -3,11 +3,14 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/gorilla/websocket"
 )
@@ -134,4 +137,14 @@ func handleFile(contents map[string]*[]byte, contentTypes map[string]string) fun
 		response.Header().Set("Content-Type", contentType)
 		io.Copy(response, buffer)
 	}
+}
+
+func shouldInRoot(root string, path string) {
+	rel, err := filepath.Rel(root, path)
+	if err == nil {
+		if !strings.HasPrefix(rel, "..") {
+			return
+		}
+	}
+	panic(errors.New(fmt.Sprintf("%s is out of root", path)))
 }

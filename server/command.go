@@ -35,8 +35,7 @@ func Commands(request CommandRequest, token token, cm ContextManager) string {
 	panic(errors.New("Cannot make command. Invalid input"))
 }
 func RunCommand(request CommandRequest, tg TokenGenerator, cm *ContextManager) Response {
-	inputPath, err := request.input().Path(request.token(), *cm)
-	shouldNot(err)
+	inputPath := request.input().Path(request.token(), *cm)
 
 	stdoutFile, err := ioutil.TempFile("", "filew-viewer")
 	defer stdoutFile.Close()

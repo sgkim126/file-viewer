@@ -9,21 +9,16 @@ type CommandInput struct {
 	Pipe *int    `json:"pipe"`
 }
 
-func (input CommandInput) Path(token token, cm ContextManager) (path string, err error) {
+func (input CommandInput) Path(token token, cm ContextManager) string {
 	if input.File != nil {
-		path = *input.File
-		return
+		shouldInRoot(cm.Root(), *input.File)
+		return *input.File
 	}
 	if input.Pipe != nil {
-		var c Context
-		c, err = cm.GetContext(token, *input.Pipe)
-		if err != nil {
-			return
-		}
-		path = c.path
-		return
+		c, err := cm.GetContext(token, *input.Pipe)
+		shouldNot(err)
+		return c.path
 	}
 
-	err = errors.New("Cannot make path")
-	return
+	panic(errors.New("Cannot make path"))
 }

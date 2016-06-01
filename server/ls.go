@@ -15,8 +15,10 @@ type LsRequest struct {
 func (request LsRequest) Handle(tg TokenGenerator, cm *ContextManager) Response {
 	targetDirPath := request.Path
 
+	shouldInRoot(cm.Root(), targetDirPath)
 	fileInfos, err := ioutil.ReadDir(targetDirPath)
 	shouldNot(err)
+
 	sizeofFiles := len(fileInfos)
 	files := make([]FileStat, sizeofFiles)
 	for i := 0; i < sizeofFiles; i += 1 {
