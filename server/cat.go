@@ -19,12 +19,12 @@ func (request CatRequest) Name() string {
 	return "cat"
 }
 
-func (request CatRequest) Commands(key key, cm ContextManager) string {
-	return Commands(request, key, cm)
+func (request CatRequest) Commands(token token, cm ContextManager) string {
+	return Commands(request, token, cm)
 }
 
-func (request CatRequest) Handle(kg KeyGenerator, cm *ContextManager) Response {
-	return RunCommand(request, kg, cm)
+func (request CatRequest) Handle(tg TokenGenerator, cm *ContextManager) Response {
+	return RunCommand(request, tg, cm)
 }
 
 func (request CatRequest) input() CommandInput {
@@ -55,8 +55,8 @@ func (request CatRequest) options() []string {
 	return []string{}
 }
 
-func (request CatRequest) key() key {
-	return *request.Key
+func (request CatRequest) token() token {
+	return *request.Token
 }
 
 func (request CatRequest) seq() Seq {

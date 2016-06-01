@@ -12,14 +12,14 @@ import (
 
 type CommandRequest interface {
 	Name() string
-	Commands(key key, cm ContextManager) string
+	Commands(token token, cm ContextManager) string
 	input() CommandInput
 	options() []string
-	key() key
+	token() token
 	seq() Seq
 }
 
-func Commands(request CommandRequest, key key, cm ContextManager) string {
+func Commands(request CommandRequest, token token, cm ContextManager) string {
 	options := ""
 	input := request.input()
 	if input.File != nil {
@@ -27,15 +27,15 @@ func Commands(request CommandRequest, key key, cm ContextManager) string {
 	}
 	if input.Pipe != nil {
 		var c Context
-		c, err := cm.GetContext(key, *input.Pipe)
+		c, err := cm.GetContext(token, *input.Pipe)
 		shouldNot(err)
 		return fmt.Sprintf("%s | %s %s", c.command, request.Name(), options)
 	}
 
 	panic(errors.New("Cannot make command. Invalid input"))
 }
-func RunCommand(request CommandRequest, kg KeyGenerator, cm *ContextManager) Response {
-	inputPath, err := request.input().Path(request.key(), *cm)
+func RunCommand(request CommandRequest, tg TokenGenerator, cm *ContextManager) Response {
+	inputPath, err := request.input().Path(request.token(), *cm)
 	shouldNot(err)
 
 	stdoutFile, err := ioutil.TempFile("", "filew-viewer")
@@ -53,8 +53,8 @@ func RunCommand(request CommandRequest, kg KeyGenerator, cm *ContextManager) Res
 	shouldNot(err)
 
 	var command string
-	command = request.Commands(request.key(), *cm)
-	id, err := cm.AddContext(request.key(), stdoutFile.Name(), command)
+	command = request.Commands(request.token(), *cm)
+	id, err := cm.AddContext(request.token(), stdoutFile.Name(), command)
 	shouldNot(err)
 
 	bytes, chars, words, lines, max_line_length := wc(stdoutFile.Name())

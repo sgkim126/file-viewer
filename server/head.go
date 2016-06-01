@@ -19,12 +19,12 @@ func (request HeadRequest) Name() string {
 	return "head"
 }
 
-func (request HeadRequest) Commands(key key, cm ContextManager) string {
-	return Commands(request, key, cm)
+func (request HeadRequest) Commands(token token, cm ContextManager) string {
+	return Commands(request, token, cm)
 }
 
-func (request HeadRequest) Handle(kg KeyGenerator, cm *ContextManager) Response {
-	return RunCommand(request, kg, cm)
+func (request HeadRequest) Handle(tg TokenGenerator, cm *ContextManager) Response {
+	return RunCommand(request, tg, cm)
 }
 
 func (request HeadRequest) input() CommandInput {
@@ -42,8 +42,8 @@ func (request HeadRequest) options() []string {
 	return options
 }
 
-func (request HeadRequest) key() key {
-	return *request.Key
+func (request HeadRequest) token() token {
+	return *request.Token
 }
 
 func (request HeadRequest) seq() Seq {

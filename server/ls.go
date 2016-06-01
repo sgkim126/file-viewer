@@ -12,7 +12,7 @@ type LsRequest struct {
 	Path string `json:"path"`
 }
 
-func (request LsRequest) Handle(kg KeyGenerator, cm *ContextManager) Response {
+func (request LsRequest) Handle(tg TokenGenerator, cm *ContextManager) Response {
 	targetDirPath := request.Path
 
 	fileInfos, err := ioutil.ReadDir(targetDirPath)

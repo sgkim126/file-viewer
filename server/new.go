@@ -4,27 +4,27 @@ type NewRequest struct {
 	Seq
 }
 
-func (request NewRequest) Handle(kg KeyGenerator, cm *ContextManager) Response {
-	oldKey := request.Key
-	if oldKey != nil {
-		if cm.HasKey(*oldKey) {
+func (request NewRequest) Handle(tg TokenGenerator, cm *ContextManager) Response {
+	oldToken := request.Token
+	if oldToken != nil {
+		if cm.HasToken(*oldToken) {
 			return NewResponse{
-				*oldKey,
+				*oldToken,
 				cm.Root(),
 			}
 		}
 	}
-	newKey := <-kg
-	cm.AddKey(newKey)
+	newToken := <-tg
+	cm.AddToken(newToken)
 	return NewResponse{
-		newKey,
+		newToken,
 		cm.Root(),
 	}
 }
 
 type NewResponse struct {
-	Key  key    `json:"key"`
-	Root string `json:"root"`
+	Token token  `json:"token"`
+	Root  string `json:"root"`
 }
 
 func (response NewResponse) ResponseMessage() []byte {

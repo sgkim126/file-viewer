@@ -3,7 +3,7 @@ import * as Option from './options.ts';
 
 export interface IMessage {
   type: string;
-  key: string;
+  token: string;
   seq: number;
 }
 

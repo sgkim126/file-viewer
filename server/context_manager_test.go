@@ -6,57 +6,57 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestContextManagerAddKey(t *testing.T) {
-	cm := NewContextManager()
-	assert.False(t, cm.HasKey("a"))
-	err := cm.AddKey("a")
-	assert.True(t, cm.HasKey("a"))
+func TestContextManagerAddToken(t *testing.T) {
+	cm := NewContextManager("/root")
+	assert.False(t, cm.HasToken("a"))
+	err := cm.AddToken("a")
+	assert.True(t, cm.HasToken("a"))
 	assert.Nil(t, err)
 }
 
-func TestContextManagerAddKeyReturnErrorOnDuplicated(t *testing.T) {
-	cm := NewContextManager()
-	assert.False(t, cm.HasKey("a"))
-	err := cm.AddKey("a")
-	assert.True(t, cm.HasKey("a"))
+func TestContextManagerAddTokenReturnErrorOnDuplicated(t *testing.T) {
+	cm := NewContextManager("/root")
+	assert.False(t, cm.HasToken("a"))
+	err := cm.AddToken("a")
+	assert.True(t, cm.HasToken("a"))
 	assert.Nil(t, err)
-	err = cm.AddKey("a")
+	err = cm.AddToken("a")
 	assert.NotNil(t, err)
 }
 
 func TestContextManagerAddContext(t *testing.T) {
-	cm := NewContextManager()
-	assert.False(t, cm.HasKey("a"))
-	err := cm.AddKey("a")
-	assert.True(t, cm.HasKey("a"))
+	cm := NewContextManager("/root")
+	assert.False(t, cm.HasToken("a"))
+	err := cm.AddToken("a")
+	assert.True(t, cm.HasToken("a"))
 	assert.Nil(t, err)
 	_, err = cm.AddContext("a", "/tmp/a", "cat a")
 	assert.Nil(t, err)
 }
 
-func TestContextManagerGetContextReturnErrorIfKeyIsNotExists(t *testing.T) {
-	cm := NewContextManager()
+func TestContextManagerGetContextReturnErrorIfTokenIsNotExists(t *testing.T) {
+	cm := NewContextManager("/root")
 	_, err := cm.GetContext("a", 1)
 	assert.NotNil(t, err)
 }
 
 func TestContextManagerGetContextReturnErrorIfIdIsNotExists(t *testing.T) {
-	cm := NewContextManager()
-	_ = cm.AddKey("a")
+	cm := NewContextManager("/root")
+	_ = cm.AddToken("a")
 	_, err := cm.GetContext("a", 1)
 	assert.NotNil(t, err)
 }
 
-func TestContextManagerRemoveContextReturnsErrorIfKeyIsNotExists(t *testing.T) {
-	cm := NewContextManager()
+func TestContextManagerRemoveContextReturnsErrorIfTokenIsNotExists(t *testing.T) {
+	cm := NewContextManager("/root")
 	path, err := cm.RemoveContext("a", 1)
 	assert.Equal(t, "", path)
 	assert.NotNil(t, err)
 }
 
 func TestContextManagerRemoveContextReturnsErrorIfIdIsNotExists(t *testing.T) {
-	cm := NewContextManager()
-	err := cm.AddKey("a")
+	cm := NewContextManager("/root")
+	err := cm.AddToken("a")
 	assert.Nil(t, err)
 	path, err := cm.RemoveContext("a", 1)
 	assert.Equal(t, "", path)
@@ -64,8 +64,8 @@ func TestContextManagerRemoveContextReturnsErrorIfIdIsNotExists(t *testing.T) {
 }
 
 func TestContextManagerRemoveContextReturnsPath(t *testing.T) {
-	cm := NewContextManager()
-	err := cm.AddKey("a")
+	cm := NewContextManager("/root")
+	err := cm.AddToken("a")
 	assert.Nil(t, err)
 	id, err := cm.AddContext("a", "path", "command")
 	assert.Nil(t, err)

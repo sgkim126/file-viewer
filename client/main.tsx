@@ -42,8 +42,8 @@ export default class Main extends React.Component<IProps, IState> {
   public render(): JSX.Element {
     const onCommand = (command: string, input: ICommandInput, option: CommandOption) => {
       const seq = this.props.seq.next().value;
-      const key = this.props.connection.key;
-      const message: Message = { seq, key, type: 'command', command, input, option };
+      const token = this.props.connection.token;
+      const message: Message = { seq, token, type: 'command', command, input, option };
       const result = this.props.connection.send(message).then((preview: IResult) => {
         const previews = this.state.previews.slice();
         previews.push(preview);
@@ -94,9 +94,9 @@ export default class Main extends React.Component<IProps, IState> {
 
 function ls(path: string, connection: Connection, seqGen: IterableIterator<number>): Promise<IBrowser> {
   const seq = seqGen.next().value;
-  const key = connection.key;
+  const token = connection.token;
 
-  return connection.send({seq, key, path, type: 'ls'})
+  return connection.send({seq, token, path, type: 'ls'})
   .then((result: {files: IFile[]}): IBrowser => {
     return { path, files: result.files };
   });
@@ -104,7 +104,7 @@ function ls(path: string, connection: Connection, seqGen: IterableIterator<numbe
 
 function readMore(id: number, start: number, lines: number, connection: Connection, seqGen: IterableIterator<number>): Promise<IMoreResult> {
   const seq = seqGen.next().value;
-  const key = connection.key;
+  const token = connection.token;
 
-  return connection.send({seq, key, id, start, lines, type: 'more'});
+  return connection.send({seq, token, id, start, lines, type: 'more'});
 }

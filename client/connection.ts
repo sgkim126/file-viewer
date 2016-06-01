@@ -2,7 +2,7 @@ import Message from './messages.ts';
 
 export default class Connection {
   private _socket: WebSocket;
-  private _key: string;
+  private _token: string;
 
   private _resolvers: Map<number, (value: any) => void>;
   private _rejecters: Map<number, (reason: any) => void>;
@@ -10,25 +10,25 @@ export default class Connection {
   private _onerror: (e: Event) => void;
   private _onclose: (e: CloseEvent) => void;
 
-  constructor(key: string, socket: WebSocket) {
+  constructor(token: string, socket: WebSocket) {
     socket.onmessage = this.onMessage.bind(this);
     socket.onerror = this.onError.bind(this);
     socket.onclose = this.onClose.bind(this);
     this._socket = socket;
-    this._key = key;
+    this._token = token;
     this._resolvers = new Map();
     this._rejecters = new Map();
     this._onclose = (e) => e;
     this._onerror = (e) => e;
   }
 
-  static open(key?: string): Promise<[Connection, string]> {
+  static open(token?: string): Promise<[Connection, string]> {
     return new Promise((resolve, reject) => {
       const socket = new WebSocket(`ws://${location.host}/c`);
       socket.onopen = (e) => {
         socket.onmessage = (e: MessageEvent) => {
-          const { key, root } = JSON.parse(e.data);
-          resolve([new Connection(key, socket), root]);
+          const { token, root } = JSON.parse(e.data);
+          resolve([new Connection(token, socket), root]);
         };
         socket.onclose = (e) => {
           reject(e);
@@ -36,7 +36,7 @@ export default class Connection {
         socket.onerror = (e) => {
           reject(e);
         };
-        socket.send(JSON.stringify(new_command(key)));
+        socket.send(JSON.stringify(new_command(token)));
       };
     });
   }
@@ -72,8 +72,8 @@ export default class Connection {
     this._onerror(e);
   }
 
-  get key(): string {
-    return this._key;
+  get token(): string {
+    return this._token;
   }
 
   set onerror(onerror: (e: Event) => any) {
@@ -92,11 +92,11 @@ export default class Connection {
   }
 }
 
-function new_command(key?: string): Object {
+function new_command(token?: string): Object {
   const type = 'new';
   const command = { type };
-  if (key) {
-    command['key'] = key;
+  if (token) {
+    command['token'] = token;
   }
   return command;
 }

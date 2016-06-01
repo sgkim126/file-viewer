@@ -28,12 +28,12 @@ func (request UniqRequest) Name() string {
 	return "uniq"
 }
 
-func (request UniqRequest) Commands(key key, cm ContextManager) string {
-	return Commands(request, key, cm)
+func (request UniqRequest) Commands(token token, cm ContextManager) string {
+	return Commands(request, token, cm)
 }
 
-func (request UniqRequest) Handle(kg KeyGenerator, cm *ContextManager) Response {
-	return RunCommand(request, kg, cm)
+func (request UniqRequest) Handle(tg TokenGenerator, cm *ContextManager) Response {
+	return RunCommand(request, tg, cm)
 }
 
 func (request UniqRequest) input() CommandInput {
@@ -84,8 +84,8 @@ func (request UniqRequest) options() []string {
 	return []string{}
 }
 
-func (request UniqRequest) key() key {
-	return *request.Key
+func (request UniqRequest) token() token {
+	return *request.Token
 }
 
 func (request UniqRequest) seq() Seq {

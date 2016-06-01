@@ -16,8 +16,8 @@ type MoreRequest struct {
 	Lines int   `json:"lines"`
 }
 
-func (request MoreRequest) Handle(kg KeyGenerator, cm *ContextManager) Response {
-	c, err := cm.GetContext(*request.Key, request.Id)
+func (request MoreRequest) Handle(tg TokenGenerator, cm *ContextManager) Response {
+	c, err := cm.GetContext(*request.Token, request.Id)
 	shouldNot(err)
 	path := c.path
 

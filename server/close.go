@@ -9,8 +9,8 @@ type CloseRequest struct {
 	Id int `json:"id"`
 }
 
-func (request CloseRequest) Handle(kg KeyGenerator, cm *ContextManager) Response {
-	path, err := cm.RemoveContext(*request.Key, request.Id)
+func (request CloseRequest) Handle(tg TokenGenerator, cm *ContextManager) Response {
+	path, err := cm.RemoveContext(*request.Token, request.Id)
 	shouldNot(err)
 	err = os.Remove(path)
 	shouldNot(err)

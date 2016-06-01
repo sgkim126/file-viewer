@@ -7,12 +7,12 @@ import (
 )
 
 type Request interface {
-	Handle(kg KeyGenerator, cm *ContextManager) Response
+	Handle(kg TokenGenerator, cm *ContextManager) Response
 }
 
 type Seq struct {
-	Key *key `json:"key"`
-	Seq *int `json:"seq"`
+	Token *token `json:"token"`
+	Seq   *int   `json:"seq"`
 }
 
 type RequestType struct {

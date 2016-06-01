@@ -41,17 +41,17 @@ func main() {
 	contentTypes[CSSPath] = "text/css ; charset=utf-8"
 	contentTypes[JSPath] = "application/javascript; charset=utf-8"
 
-	kg := NewKeyGenerator(3)
+	tg := NewTokenGenerator(3)
 	cm := NewContextManager(*root)
 
 	http.Handle("/", http.StripPrefix("/", http.HandlerFunc(handleFile(contents, contentTypes))))
-	http.HandleFunc("/c", http.HandlerFunc(handleRequest(kg, cm, *root)))
+	http.HandleFunc("/c", http.HandlerFunc(handleRequest(tg, cm, *root)))
 	fmt.Println("  Root %s", *root)
 	fmt.Println("Listen %s:%d", *bind, *port)
 	http.ListenAndServe(fmt.Sprintf("%s:%d", *bind, *port), nil)
 }
 
-func handleRequest(kg KeyGenerator, cm ContextManager, root string) func(http.ResponseWriter, *http.Request) {
+func handleRequest(tg TokenGenerator, cm ContextManager, root string) func(http.ResponseWriter, *http.Request) {
 	return func(response http.ResponseWriter, httpRequest *http.Request) {
 		upgrader := websocket.Upgrader{}
 		ws, err := upgrader.Upgrade(response, httpRequest, nil)
@@ -108,7 +108,7 @@ func handleRequest(kg KeyGenerator, cm ContextManager, root string) func(http.Re
 					})
 				}()
 				request := requestType.Request(buffers)
-				response := request.Handle(kg, &cm)
+				response := request.Handle(tg, &cm)
 
 				err = ws.WriteMessage(messageType, []byte(response.ResponseMessage()))
 				shouldNot(err)

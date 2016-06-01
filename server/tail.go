@@ -22,14 +22,14 @@ func (request TailRequest) Name() string {
 	return "tail"
 }
 
-func (request TailRequest) Commands(key key, cm ContextManager) string {
+func (request TailRequest) Commands(token token, cm ContextManager) string {
 	options := strings.Join(request.options(), " ")
 	if request.Input.File != nil {
 		return fmt.Sprintf("%s %s %s", request.Name(), options, *request.Input.File)
 	}
 	if request.Input.Pipe != nil {
 		var c Context
-		c, err := cm.GetContext(key, *request.Input.Pipe)
+		c, err := cm.GetContext(token, *request.Input.Pipe)
 		shouldNot(err)
 		return fmt.Sprintf("%s | %s %s", c.command, request.Name(), options)
 	}
@@ -37,7 +37,7 @@ func (request TailRequest) Commands(key key, cm ContextManager) string {
 	panic(errors.New("Cannot make command. Invalid input"))
 }
 
-func (request TailRequest) Handle(kg KeyGenerator, cm *ContextManager) Response {
+func (request TailRequest) Handle(kg TokenGenerator, cm *ContextManager) Response {
 	return RunCommand(request, kg, cm)
 }
 
@@ -56,8 +56,8 @@ func (request TailRequest) options() []string {
 	return options
 }
 
-func (request TailRequest) key() key {
-	return *request.Key
+func (request TailRequest) token() token {
+	return *request.Token
 }
 
 func (request TailRequest) seq() Seq {

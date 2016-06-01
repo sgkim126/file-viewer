@@ -9,14 +9,14 @@ type CommandInput struct {
 	Pipe *int    `json:"pipe"`
 }
 
-func (input CommandInput) Path(key key, cm ContextManager) (path string, err error) {
+func (input CommandInput) Path(token token, cm ContextManager) (path string, err error) {
 	if input.File != nil {
 		path = *input.File
 		return
 	}
 	if input.Pipe != nil {
 		var c Context
-		c, err = cm.GetContext(key, *input.Pipe)
+		c, err = cm.GetContext(token, *input.Pipe)
 		if err != nil {
 			return
 		}
