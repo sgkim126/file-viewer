@@ -54,6 +54,24 @@ func main() {
 	http.ListenAndServe(fmt.Sprintf("%s:%d", *bind, *port), nil)
 }
 
+type WebsocketMessage struct {
+	messageType int
+	data        []byte
+}
+
+func writer(ws *websocket.Conn) chan<- WebsocketMessage {
+	c := make(chan WebsocketMessage, 5)
+	go func(c <-chan WebsocketMessage) {
+		for m := range c {
+			err := ws.WriteMessage(m.messageType, m.data)
+			if err != nil {
+				fmt.Println("Cannot write message:", err)
+			}
+		}
+	}(c)
+	return c
+}
+
 func handleRequest(tg TokenGenerator, cm ContextManager, root string) func(http.ResponseWriter, *http.Request) {
 	return func(response http.ResponseWriter, httpRequest *http.Request) {
 		upgrader := websocket.Upgrader{}
@@ -62,6 +80,7 @@ func handleRequest(tg TokenGenerator, cm ContextManager, root string) func(http.
 			fmt.Println("Cannot upgrade:", err)
 		}
 
+		writer := writer(ws)
 		for {
 			messageType, buffers, err := ws.ReadMessage()
 			if messageType != 1 {
@@ -89,8 +108,7 @@ func handleRequest(tg TokenGenerator, cm ContextManager, root string) func(http.
 					}
 					encoded, err := json.Marshal(errorResponse)
 					shouldNot(err)
-					err = ws.WriteMessage(messageType, encoded)
-					shouldNot(err)
+					writer <- WebsocketMessage{messageType, encoded}
 				}(ws)
 				requestType := RequestType{}
 				err = json.Unmarshal(buffers, &requestType)
@@ -113,7 +131,7 @@ func handleRequest(tg TokenGenerator, cm ContextManager, root string) func(http.
 				request := requestType.Request(buffers)
 				response := request.Handle(tg, &cm)
 
-				err = ws.WriteMessage(messageType, []byte(response.ResponseMessage()))
+				writer <- WebsocketMessage{messageType, []byte(response.ResponseMessage())}
 				shouldNot(err)
 			}(messageType, buffers, ws)
 		}
