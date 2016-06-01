@@ -63,6 +63,7 @@ func RunCommand(request CommandRequest, tg TokenGenerator, cm *ContextManager) R
 		request.seq(),
 		command,
 		id,
+		request.Name(),
 		bytes,
 		chars,
 		words,

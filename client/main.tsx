@@ -69,7 +69,7 @@ export default class Main extends React.Component<IProps, IState> {
         const show_result_id = result.id;
         this.setState({ show_result_id });
       };
-      return <Button key={result.id} block bsSize='large' onClick={onClick}>{result.command}</Button>;
+      return <Button key={result.id} block bsSize='large' onClick={onClick} title={result.command}>{result.name}</Button>;
     });
     return <div className='full-width full-height'>
       <Col xs={6} className='full-height'>

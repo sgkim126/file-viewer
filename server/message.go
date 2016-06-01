@@ -95,6 +95,7 @@ type CommandResponse struct {
 	Seq
 	Command       string `json:"command"`
 	Id            int    `json:"id"`
+	Name          string `json:"name"`
 	Bytes         int    `json:"bytes"`
 	Chars         int    `json:"chars"`
 	Words         int    `json:"words"`
