@@ -5,7 +5,6 @@ import IFile from './ifile.ts';
 import IMenu from './imenu.ts';
 import Menu from './menu.tsx';
 import CommandOption from './options.ts';
-import Panel from './panel.tsx';
 import Path from './path.tsx';
 import { Button, ButtonGroup } from 'react-bootstrap';
 import { ICommandInput } from './messages.ts';
@@ -79,7 +78,7 @@ export default class FileBrowser extends React.Component<IProps, IState> {
       e.preventDefault();
       this.setState({dir_visible: !this.state.dir_visible});
     };
-    return <Panel title='files' onStop={this.onStop.bind(this)}>
+    return <div>
       <Path changeDir={this.changeDir.bind(this)} root={this.props.root}>{this.props.path}</Path>
       <ButtonGroup justified>
         <Button bsStyle='primary' href='#' onClick={onFileVisible} active={this.state.file_visible}>File</Button>
@@ -89,7 +88,7 @@ export default class FileBrowser extends React.Component<IProps, IState> {
         {files}
       </div>
       {menu}
-    </Panel>;
+    </div>;
   }
 
   private menu(): JSX.Element {

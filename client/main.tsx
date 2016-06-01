@@ -7,9 +7,8 @@ import IFile from './ifile.ts';
 import IMoreResult from './imoreresult.ts';
 import IResult from './iresult.ts';
 import Message from './messages.ts';
-import Result from './result.tsx';
-import SeqGenerator from './seq-generator.ts';
-import { Grid, Row, Col } from 'react-bootstrap';
+import Results from './results.tsx';
+import { Button, Col } from 'react-bootstrap';
 import { ICommandInput } from './messages.ts';
 
 interface IProps {
@@ -25,14 +24,20 @@ interface IBrowser {
 
 interface IState {
   browser?: IBrowser;
-  previews?: IResult[];
+  results?: IResult[];
+  show_result_id?: number;
 }
 
 export default class Main extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
 
-    this.state = { previews: [] };
+    const browser: IBrowser = {
+      path: "",
+      files: [],
+    };
+    const results: IResult[] = [];
+    this.state = { browser, results, show_result_id: -1 };
 
     this.ls(this.props.root).then((browser: IBrowser) => {
       this.setState({ browser });
@@ -44,43 +49,38 @@ export default class Main extends React.Component<IProps, IState> {
       const seq = this.props.seq.next().value;
       const token = this.props.connection.token;
       const message: Message = { seq, token, type: 'command', command, input, option };
-      const result = this.props.connection.send(message).then((preview: IResult) => {
-        const previews = this.state.previews.slice();
-        previews.push(preview);
-        this.setState({ previews });
+      const result = this.props.connection.send(message).then((result: IResult) => {
+        const show_result_id = result.id;
+        const results = this.state.results.slice();
+        results.push(result);
+        this.setState({ results, show_result_id });
       });
     };
     const panels: JSX.Element[] = [];
-    if (this.state.browser) {
-      const { path, files } = this.state.browser;
-      const changeDir = (path: string) => {
-        this.ls(path)
-        .then((browser: IBrowser) => {
-          this.setState({ browser });
-        });
+    const { path, files } = this.state.browser;
+    const changeDir = (path: string) => {
+      this.ls(path)
+      .then((browser: IBrowser) => {
+        this.setState({ browser });
+      });
+    };
+    const results = this.state.results.map((result: IResult, key: number) => {
+      const onClick = () => {
+        const show_result_id = result.id;
+        this.setState({ show_result_id });
       };
-      panels.push(<FileBrowser files={files} path={path} root={this.props.root} onCommand={onCommand} changeDir={changeDir} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
-      }}></FileBrowser>);
-    }
-    for (const preview of this.state.previews) {
-      const { command, bytes, chars, words, lines, max_line_length, id } = preview;
-      panels.push(
-        <Result id={id} command={command}
-          bytes={bytes} chars={chars} words={words} lines={lines} max_line_length={max_line_length}
-          onClose={this.onClose.bind(this)} onCommand={onCommand}
-          readMore={this.readMore.bind(this)} />);
-    }
+      return <Button key={result.id} block bsSize='large' onClick={onClick}>{result.command}</Button>;
+    });
     return <div className='full-width full-height'>
-    {panels}
+      <Col xs={6} className='full-height'>
+        <FileBrowser files={files} path={path} root={this.props.root} onCommand={onCommand} changeDir={changeDir} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
+        }} />
+      </Col>
+      <Col xs={1}>{results}</Col>
+      <Col xs={5} className='full-height'>
+        <Results show={this.state.show_result_id} readMore={this.readMore.bind(this)} results={this.state.results} />
+      </Col>
     </div>;
-  }
-
-  private onClose(id: number): void {
-    const previews = this.state.previews.slice().filter((preview: IResult) => preview.id !== id);
-    this.setState({ previews });
-    const seq = this.props.seq.next().value;
-    const key = this.props.connection.key;
-    this.props.connection.send({ type: 'close', seq, key, id });
   }
 
   private ls(path: string): Promise<IBrowser> {
