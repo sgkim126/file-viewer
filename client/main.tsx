@@ -5,6 +5,7 @@ import Connection from './connection.ts';
 import FileBrowser from './file-browser.tsx';
 import IFile from './ifile.ts';
 import IMoreResult from './imoreresult.ts';
+import IBrowser from './ibrowser.ts';
 import IResult from './iresult.ts';
 import Message from './messages.ts';
 import Results from './results.tsx';
@@ -15,11 +16,6 @@ interface IProps {
   connection: Connection;
   seq: IterableIterator<number>;
   root: string;
-}
-
-interface IBrowser {
-  path: string;
-  files: IFile[];
 }
 
 interface IState {
@@ -58,12 +54,6 @@ export default class Main extends React.Component<IProps, IState> {
     };
     const panels: JSX.Element[] = [];
     const { path, files } = this.state.browser;
-    const changeDir = (path: string) => {
-      this.ls(path)
-      .then((browser: IBrowser) => {
-        this.setState({ browser });
-      });
-    };
     const results = this.state.results.map((result: IResult, key: number) => {
       const onClick = () => {
         const show_result_id = result.id;
@@ -73,7 +63,10 @@ export default class Main extends React.Component<IProps, IState> {
     });
     return <div className='full-width full-height'>
       <Col xs={6} className='full-height'>
-        <FileBrowser files={files} path={path} root={this.props.root} onCommand={onCommand} changeDir={changeDir} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
+        <FileBrowser
+          ls={this.ls.bind(this)}
+          root={this.props.root} rootFiles={files}
+          onCommand={onCommand} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
         }} />
       </Col>
       <Col xs={1}>{results}</Col>

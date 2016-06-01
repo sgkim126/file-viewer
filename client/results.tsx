@@ -6,7 +6,7 @@ import Result from './result.tsx';
 import { ICommandInput } from './messages.ts';
 
 interface IProps {
-  results: IResult[]
+  results: IResult[];
   readMore: (id: number, start: number, lines: number) => Promise<IMoreResult>;
   show: number;
 }
@@ -20,7 +20,6 @@ export default class Results extends React.Component<IProps, IState> {
   }
 
   public render(): JSX.Element {
-    console.log(this.props.children)
     const results = this.props.results.map((result: IResult) => {
       const hide = result.id !== this.props.show;
       return <Result key={result.id} {...result} hide={hide} readMore={this.props.readMore} />;

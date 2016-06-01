@@ -7,7 +7,7 @@ import IResult from './iresult.ts';
 import { Button } from 'react-bootstrap';
 
 interface IProps extends IResult {
-  hide: boolean
+  hide: boolean;
   readMore: (id: number, start: number, lines: number) => Promise<IMoreResult>;
 }
 
