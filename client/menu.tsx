@@ -58,11 +58,11 @@ export default class Menu extends React.Component<IProps, IState> {
     };
     return <div style={style} className='file-menu'>
       <ButtonGroup vertical>{buttons}</ButtonGroup>
-      <Modal bsSize='small' show={this.state.head} onHide={() => this.setState({head: false}) }>
+      <Modal key={0} bsSize='small' show={this.state.head} onHide={() => this.setState({head: false}) }>
         <Modal.Header>head</Modal.Header>
         <Modal.Body><Form onSubmit={onHead}><FormControl type='number' placeholder='--lines' defaultValue={10} id='head-input' autoFocus /></Form></Modal.Body>
       </Modal>
-      <Modal bsSize='small' show={this.state.tail} onHide={() => this.setState({tail: false}) }>
+      <Modal key={1} bsSize='small' show={this.state.tail} onHide={() => this.setState({tail: false}) }>
         <Modal.Header>tail</Modal.Header>
         <Modal.Body><Form onSubmit={onTail}><FormControl type='number' placeholder='--lines' defaultValue={10} id='tail-input' autoFocus /></Form></Modal.Body>
       </Modal>
@@ -78,9 +78,9 @@ export default class Menu extends React.Component<IProps, IState> {
       this.setState({head: false, tail: false});
       this.props.onCommand('cat', { file: path }, {});
     };
-    return [<Button onClick={() => { this.setState({head: true}); } } block>Head</Button>,
-      <Button onClick={() => { this.setState({tail: true}); } } block>Tail</Button>,
-    <Button onClick={onCat} block><Glyphicon glyph='eye-open' /></Button>];
+    return [<Button key={0} onClick={() => { this.setState({head: true}); } } block>Head</Button>,
+      <Button key={1} onClick={() => { this.setState({tail: true}); } } block>Tail</Button>,
+    <Button key={2} onClick={onCat} block><Glyphicon glyph='eye-open' /></Button>];
   }
   private changeDirElement(): JSX.Element {
     const file = this.props.file;
