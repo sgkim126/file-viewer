@@ -8,7 +8,7 @@ BIND := 0.0.0.0
 all: ./server/server
 
 run: ./server/server
-	$< -port $(PORT) -bind $(BIND)
+	$< -port $(PORT) -bind $(BIND) --root=$(PWD)/data
 
 ./server/server: ./server/bindata.go $(GO_SRC) | goget
 	cd ./server/; go build
