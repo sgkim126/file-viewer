@@ -2,7 +2,7 @@ const { Collapse } = require('react-bootstrap');
 import * as React from 'react';
 import IFile from './ifile.ts';
 import ISelected from './iselected.ts';
-import { Button, ButtonGroup, Glyphicon, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Glyphicon, ListGroup, ListGroupItem } from 'react-bootstrap';
 
 interface IProps {
   column: number;
@@ -43,7 +43,7 @@ export default class Dir extends React.Component<IProps, IState> {
       const column = this.props.column;
       const path = this.path(file.name);
       const is_dir = file.is_dir;
-      this.props.onSelect(e, { column, path, is_dir });
+      this.props.onSelect(e, { column, input: { file: path } , is_dir });
     };
 
     const onClick = (e: React.MouseEvent, file: IFile) => {
@@ -57,7 +57,7 @@ export default class Dir extends React.Component<IProps, IState> {
       <ListGroup>
         {this.props.files.map((file: IFile) => {
           const glyph = <Glyphicon glyph={file.is_dir ? 'folder-open' : 'file'} />;
-          const active = this.isSelected(this.path(file.name));
+          const active = !!this.props.selecteds.find(({input}: ISelected) => input.file === this.path(file.name));
           return <ListGroupItem active={active} key={file.name} onClick={(e) => onClick(e, file)}>{glyph} {file.name}</ListGroupItem>;
         })}
       </ListGroup>
@@ -67,15 +67,6 @@ export default class Dir extends React.Component<IProps, IState> {
 
   private path(filename: string): string {
     return `${this.props.path}/${filename}`;
-  }
-
-  private isSelected(targetPath: string): boolean {
-    for (const { path } of this.props.selecteds) {
-      if (targetPath === path) {
-        return true;
-      }
-    }
-    return false;
   }
 }
 

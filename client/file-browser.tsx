@@ -2,14 +2,12 @@ import * as React from 'react';
 import './file-browser.styl';
 import Commander from './commander.tsx';
 import Dir from './dir.tsx';
-import File from './file.tsx';
 import IBrowser from './ibrowser.ts';
 import IFile from './ifile.ts';
 import ISelected from './iselected.ts';
-import IMenu from './imenu.ts';
-import Menu from './menu.tsx';
+import IResult from './iresult.ts';
 import CommandOption from './options.ts';
-import { Button, ButtonGroup, Col } from 'react-bootstrap';
+import { Col, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
 import { ICommandInput } from './messages.ts';
 
 interface IProps {
@@ -21,6 +19,10 @@ interface IProps {
 
   columns: Map<string, IFile[]>[];
   openDir: (path: string, columnNumber: number) => void;
+
+  results: IResult[];
+  resultId: number;
+  showResult: (resultId: number) => void;
 }
 
 interface IState {
@@ -44,7 +46,9 @@ export default class FileBrowser extends React.Component<IProps, IState> {
         return;
       }
 
-      const selecteds = this.state.selecteds.filter(({ path }: ISelected) => { return path !== selected.path; });
+      const selecteds = this.state.selecteds.filter(({ input }: ISelected) => {
+        return input.file !== selected.input.file || input.pipe !== selected.input.pipe;
+      });
       if (selecteds.length === this.state.selecteds.length) {
         selecteds.push(selected);
       }
@@ -61,17 +65,36 @@ export default class FileBrowser extends React.Component<IProps, IState> {
       return <div key={key} className='column'>{row}</div>;
     });
 
+    const results = this.props.results.map((result: IResult, key: number) => {
+      const onClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (e.altKey) {
+          const resultId = result.id;
+          this.props.showResult(resultId);
+          return;
+        }
+        onSelect(e, { input: { pipe: result.id }});
+      };
+      const active = !!this.state.selecteds.find(({input}: ISelected) => input.pipe === result.id);
+      return <ListGroupItem active={active} key={result.id} onClick={onClick} title={result.command}>{result.name}</ListGroupItem>;
+    });
+
     const onClick = () => {
       this.setState({ selecteds: [] });
     };
     return <div className='file-browser' onClick={onClick}>
+    <Row>
       <Commander openDir={this.props.openDir} selecteds={selecteds} onCommand={this.props.onCommand}/>
-      <div className='file-browser-inner'>
+    </Row>
+    <Row>
+      <Col xs={8} className='file-browser-inner'>
         <div className='column'>
           <Dir column={-1} path={this.props.root} files={this.props.rootFiles} open={true} onSelect={onSelect} foldable={false} selecteds={selecteds}/>
         </div>
         {columns}
-      </div>
+      </Col>
+      <Col xs={4}><ListGroup>{results}</ListGroup></Col>
+    </Row>
     </div>;
   }
 }

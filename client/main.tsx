@@ -9,7 +9,7 @@ import IBrowser from './ibrowser.ts';
 import IResult from './iresult.ts';
 import Message from './messages.ts';
 import Results from './results.tsx';
-import { Button, Col } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
 import { ICommandInput } from './messages.ts';
 
 interface IProps {
@@ -21,7 +21,7 @@ interface IProps {
 interface IState {
   browser?: IBrowser;
   results?: IResult[];
-  show_result_id?: number;
+  resultId?: number;
   columns?: Map<string, IFile[]>[];
 }
 
@@ -33,8 +33,8 @@ export default class Main extends React.Component<IProps, IState> {
       path: "",
       files: [],
     };
-    const results: IResult[] = [];
-    this.state = { browser, results, show_result_id: -1,
+    this.state = { browser,
+      results: [], resultId: -1,
       columns: [],
     };
 
@@ -49,21 +49,14 @@ export default class Main extends React.Component<IProps, IState> {
       const token = this.props.connection.token;
       const message: Message = { seq, token, type: 'command', command, input, option };
       const result = this.props.connection.send(message).then((result: IResult) => {
-        const show_result_id = result.id;
+        const resultId = result.id;
         const results = this.state.results.slice();
         results.push(result);
-        this.setState({ results, show_result_id });
+        this.setState({ results, resultId });
       });
     };
     const panels: JSX.Element[] = [];
-    const { path, files } = this.state.browser;
-    const results = this.state.results.map((result: IResult, key: number) => {
-      const onClick = () => {
-        const show_result_id = result.id;
-        this.setState({ show_result_id });
-      };
-      return <Button key={result.id} block bsSize='large' onClick={onClick} title={result.command}>{result.name}</Button>;
-    });
+    const { files } = this.state.browser;
 
     const openDir = (path: string, columnNumber: number): void => {
       this.ls(path).then(({ files }: IBrowser) => {
@@ -80,18 +73,22 @@ export default class Main extends React.Component<IProps, IState> {
       });
     };
 
+    const showResult = (resultId: number) => {
+      this.setState({ resultId });
+    };
+
     return <div className='full-width full-height'>
-      <Col xs={6} className='full-height'>
+      <Col xs={7} className='full-height'>
         <FileBrowser
           ls={this.ls.bind(this)}
           root={this.props.root} rootFiles={files} columns={this.state.columns}
-          openDir={openDir}
+          results={this.state.results} resultId={this.state.resultId}
+          openDir={openDir} showResult={showResult}
           onCommand={onCommand} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
         }} />
       </Col>
-      <Col xs={1}>{results}</Col>
       <Col xs={5} className='full-height'>
-        <Results show={this.state.show_result_id} readMore={this.readMore.bind(this)} results={this.state.results} />
+        <Results show={this.state.resultId} readMore={this.readMore.bind(this)} results={this.state.results} />
       </Col>
     </div>;
   }

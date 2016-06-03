@@ -1,7 +1,9 @@
+import { ICommandInput } from './messages.ts';
+
 interface ISelected {
-  column: number;
-  path: string;
-  is_dir: boolean;
+  column?: number;
+  is_dir?: boolean;
+  input: ICommandInput;
 }
 
 export default ISelected;

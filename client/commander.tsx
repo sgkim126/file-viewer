@@ -48,7 +48,7 @@ export default class Commander extends React.Component<IProps, IState> {
   private openButton(selected: ISelected): JSX.Element {
     const onClick = (e: React.MouseEvent) => {
       e.stopPropagation();
-      this.props.openDir(selected.path, selected.column + 1);
+      this.props.openDir(selected.input.file, selected.column + 1);
     };
     return <Button key='open' onClick={onClick}>open</Button>;
   }
@@ -56,7 +56,7 @@ export default class Commander extends React.Component<IProps, IState> {
   private catButton(selected: ISelected): JSX.Element {
     const onClick = (e: React.MouseEvent) => {
       e.stopPropagation();
-      this.props.onCommand('cat', { file: selected.path }, {});
+      this.props.onCommand('cat', selected.input, {});
     };
     return <Button key='cat' onClick={onClick}>cat</Button>;
   }
@@ -64,7 +64,7 @@ export default class Commander extends React.Component<IProps, IState> {
   private headButton(selected: ISelected): JSX.Element {
     const onClick = (e: React.MouseEvent) => {
       e.stopPropagation();
-      this.props.onCommand('head', { file: selected.path }, {});
+      this.props.onCommand('head', selected.input, {});
     };
     return <Button key='head' onClick={onClick}>head</Button>;
   }
@@ -72,7 +72,7 @@ export default class Commander extends React.Component<IProps, IState> {
   private tailButton(selected: ISelected): JSX.Element {
     const onClick = (e: React.MouseEvent) => {
       e.stopPropagation();
-      this.props.onCommand('tail', { file: selected.path }, {});
+      this.props.onCommand('tail', selected.input, {});
     };
     return <Button key='tail' onClick={onClick}>tail</Button>;
   }
