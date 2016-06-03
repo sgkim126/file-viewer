@@ -22,6 +22,7 @@ interface IState {
   browser?: IBrowser;
   results?: IResult[];
   show_result_id?: number;
+  columns?: Map<string, IFile[]>[];
 }
 
 export default class Main extends React.Component<IProps, IState> {
@@ -33,7 +34,9 @@ export default class Main extends React.Component<IProps, IState> {
       files: [],
     };
     const results: IResult[] = [];
-    this.state = { browser, results, show_result_id: -1 };
+    this.state = { browser, results, show_result_id: -1,
+      columns: [],
+    };
 
     this.ls(this.props.root).then((browser: IBrowser) => {
       this.setState({ browser });
@@ -61,11 +64,28 @@ export default class Main extends React.Component<IProps, IState> {
       };
       return <Button key={result.id} block bsSize='large' onClick={onClick} title={result.command}>{result.name}</Button>;
     });
+
+    const openDir = (path: string, columnNumber: number): void => {
+      this.ls(path).then(({ files }: IBrowser) => {
+        const columns = this.state.columns;
+        const column = (columns.length === columnNumber)
+          ? new Map<string, IFile[]>()
+          : columns[columnNumber];
+
+          if (!column.has(path)) {
+            column.set(path, files);
+            columns[columnNumber] = column;
+            this.setState({ columns });
+          }
+      });
+    };
+
     return <div className='full-width full-height'>
       <Col xs={6} className='full-height'>
         <FileBrowser
           ls={this.ls.bind(this)}
-          root={this.props.root} rootFiles={files}
+          root={this.props.root} rootFiles={files} columns={this.state.columns}
+          openDir={openDir}
           onCommand={onCommand} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
         }} />
       </Col>
