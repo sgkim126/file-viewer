@@ -1,6 +1,7 @@
 const { Collapse } = require('react-bootstrap');
 import * as React from 'react';
 import IFile from './ifile.ts';
+import ISelected from './iselected.ts';
 import { Button, ButtonGroup, Glyphicon, ListGroup, ListGroupItem } from 'react-bootstrap';
 
 interface IProps {
@@ -9,8 +10,9 @@ interface IProps {
   files: IFile[];
   open?: boolean;
   foldable?: boolean;
+  selecteds?: ISelected[];
 
-  onSelect: (path: string, column: number, is_dir: boolean) => void;
+  onSelect: (e: React.MouseEvent, selected: ISelected) => void;
 }
 
 interface IState {
@@ -37,7 +39,10 @@ export default class Dir extends React.Component<IProps, IState> {
     };
 
     const onSelect = (e: React.MouseEvent, file: IFile) => {
-      this.props.onSelect(this.path(file.name), this.props.column + 1, file.is_dir);
+      const column = this.props.column;
+      const path = this.path(file.name);
+      const is_dir = file.is_dir;
+      this.props.onSelect(e, { column, path, is_dir });
     };
 
     return <div key={this.props.path}>
@@ -46,7 +51,8 @@ export default class Dir extends React.Component<IProps, IState> {
       <ListGroup>
         {this.props.files.map((file: IFile) => {
           const glyph = <Glyphicon glyph={file.is_dir ? 'folder-open' : 'file'} />;
-          return <ListGroupItem key={file.name} onClick={(e) => { onSelect(e, file) }}>{glyph} {file.name}</ListGroupItem>;
+          const active = this.isSelected(this.path(file.name));
+          return <ListGroupItem active={active} key={file.name} onClick={(e) => onSelect(e, file)}>{glyph} {file.name}</ListGroupItem>;
         })}
       </ListGroup>
       </Collapse>
@@ -55,6 +61,15 @@ export default class Dir extends React.Component<IProps, IState> {
 
   private path(filename: string): string {
     return `${this.props.path}/${filename}`;
+  }
+
+  private isSelected(targetPath: string): boolean {
+    for (const { path } of this.props.selecteds) {
+      if (targetPath === path) {
+        return true;
+      }
+    }
+    return false;
   }
 }
 

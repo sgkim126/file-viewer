@@ -22,7 +22,7 @@ interface IProps {
 
 interface IState {
   columns?: Map<string, IFile[]>[];
-  selected?: ISelected;
+  selecteds?: ISelected[];
 }
 
 export default class FileBrowser extends React.Component<IProps, IState> {
@@ -30,6 +30,7 @@ export default class FileBrowser extends React.Component<IProps, IState> {
     super(props);
     this.state = {
       columns: [],
+      selecteds: [],
     };
   }
 
@@ -51,24 +52,34 @@ export default class FileBrowser extends React.Component<IProps, IState> {
       });
     };
 
-    const onSelect = (path: string, column: number, is_dir: boolean): void => {
-      const selected = { path, column, is_dir };
-      this.setState({ selected });
+    const onSelect = (e: React.MouseEvent, selected: ISelected): void => {
+      if (!e.ctrlKey) {
+        this.setState({ selecteds: [ selected ] });
+        return;
+      }
+
+      const selecteds = this.state.selecteds.filter(({ path }: ISelected) => { return path !== selected.path; });
+      if (selecteds.length === this.state.selecteds.length) {
+        selecteds.push(selected);
+      }
+      this.setState({ selecteds });
     };
+
+    const selecteds = this.state.selecteds;
 
     const columns = this.state.columns.map((column: Map<string, IFile[]>, key: number) => {
       let row: JSX.Element[] = [];
       for (const [path, files] of column) {
-        row.push(<Dir key={path} column={key} path={path} files={files} onSelect={onSelect}/>);
+        row.push(<Dir key={path} column={key} path={path} files={files} onSelect={onSelect} selecteds={selecteds}/>);
       }
       return <div key={key} className='column'>{row}</div>;
     });
 
     return <div className='file-browser'>
-      <Commander openDir={openDir} selected={this.state.selected} onCommand={this.props.onCommand}/>
+      <Commander openDir={openDir} selecteds={selecteds} onCommand={this.props.onCommand}/>
       <div className='file-browser-inner'>
         <div className='column'>
-          <Dir column={-1} path={this.props.root} files={this.props.rootFiles} open={true} onSelect={onSelect} foldable={false}/>
+          <Dir column={-1} path={this.props.root} files={this.props.rootFiles} open={true} onSelect={onSelect} foldable={false} selecteds={selecteds}/>
         </div>
         {columns}
       </div>

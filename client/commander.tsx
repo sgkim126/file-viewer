@@ -5,7 +5,7 @@ import { Button, ButtonGroup } from 'react-bootstrap';
 import { ICommandInput } from './messages.ts';
 
 interface IProps {
-  selected: ISelected;
+  selecteds: ISelected[];
 
   openDir: (path: string, column: number) => void;
   onCommand: (command: string, input: ICommandInput, option: CommandOption) => void;
@@ -27,47 +27,49 @@ export default class Commander extends React.Component<IProps, IState> {
 
   private buttons(): JSX.Element[] {
     const buttons: JSX.Element[] = [];
-    if (!this.props.selected) {
+    if (this.props.selecteds.length === 0) {
       buttons.push(<Button disabled>No selected</Button>);
-      return buttons;
-    }
-
-    if (this.props.selected.is_dir) {
-      buttons.push(this.openButton());
+    } else if (this.props.selecteds.length === 1) {
+      const selected = this.props.selecteds[0];
+      if (selected.is_dir) {
+        buttons.push(this.openButton(selected));
+      } else {
+        buttons.push(this.catButton(selected));
+        buttons.push(this.headButton(selected));
+        buttons.push(this.tailButton(selected));
+      }
     } else {
-      buttons.push(this.catButton());
-      buttons.push(this.headButton());
-      buttons.push(this.tailButton());
+      buttons.push(<Button disabled>No available command</Button>);
     }
 
     return buttons;
   }
 
-  private openButton(): JSX.Element {
+  private openButton(selected: ISelected): JSX.Element {
     const onClick = () => {
-      this.props.openDir(this.props.selected.path, this.props.selected.column);
+      this.props.openDir(selected.path, selected.column + 1);
     };
-    return <Button onClick={onClick}>open</Button>;
+    return <Button key='open' onClick={onClick}>open</Button>;
   }
 
-  private catButton(): JSX.Element {
+  private catButton(selected: ISelected): JSX.Element {
     const onClick = () => {
-      this.props.onCommand('cat', { file: this.props.selected.path }, {});
+      this.props.onCommand('cat', { file: selected.path }, {});
     };
-    return <Button onClick={onClick}>cat</Button>;
+    return <Button key='cat' onClick={onClick}>cat</Button>;
   }
 
-  private headButton(): JSX.Element {
+  private headButton(selected: ISelected): JSX.Element {
     const onClick = () => {
-      this.props.onCommand('head', { file: this.props.selected.path }, {});
+      this.props.onCommand('head', { file: selected.path }, {});
     };
-    return <Button onClick={onClick}>head</Button>;
+    return <Button key='head' onClick={onClick}>head</Button>;
   }
 
-  private tailButton(): JSX.Element {
+  private tailButton(selected: ISelected): JSX.Element {
     const onClick = () => {
-      this.props.onCommand('tail', { file: this.props.selected.path }, {});
+      this.props.onCommand('tail', { file: selected.path }, {});
     };
-    return <Button onClick={onClick}>tail</Button>;
+    return <Button key='tail' onClick={onClick}>tail</Button>;
   }
 }
