@@ -25,6 +25,8 @@ export default class Result extends React.Component<IProps, IState> {
       lines: 0,
       contents: [],
     };
+
+    this.readMore(30);
   }
 
   public render(): JSX.Element {
