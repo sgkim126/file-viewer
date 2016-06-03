@@ -28,7 +28,7 @@ export default class Commander extends React.Component<IProps, IState> {
   private buttons(): JSX.Element[] {
     const buttons: JSX.Element[] = [];
     if (this.props.selecteds.length === 0) {
-      buttons.push(<Button disabled>No selected</Button>);
+      buttons.push(<Button key='no-selected' disabled>No selected</Button>);
     } else if (this.props.selecteds.length === 1) {
       const selected = this.props.selecteds[0];
       if (selected.is_dir) {
@@ -39,7 +39,7 @@ export default class Commander extends React.Component<IProps, IState> {
         buttons.push(this.tailButton(selected));
       }
     } else {
-      buttons.push(<Button disabled>No available command</Button>);
+      buttons.push(<Button key='no-available' disabled>No available command</Button>);
     }
 
     return buttons;
