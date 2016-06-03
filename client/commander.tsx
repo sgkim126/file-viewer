@@ -46,28 +46,32 @@ export default class Commander extends React.Component<IProps, IState> {
   }
 
   private openButton(selected: ISelected): JSX.Element {
-    const onClick = () => {
+    const onClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
       this.props.openDir(selected.path, selected.column + 1);
     };
     return <Button key='open' onClick={onClick}>open</Button>;
   }
 
   private catButton(selected: ISelected): JSX.Element {
-    const onClick = () => {
+    const onClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
       this.props.onCommand('cat', { file: selected.path }, {});
     };
     return <Button key='cat' onClick={onClick}>cat</Button>;
   }
 
   private headButton(selected: ISelected): JSX.Element {
-    const onClick = () => {
+    const onClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
       this.props.onCommand('head', { file: selected.path }, {});
     };
     return <Button key='head' onClick={onClick}>head</Button>;
   }
 
   private tailButton(selected: ISelected): JSX.Element {
-    const onClick = () => {
+    const onClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
       this.props.onCommand('tail', { file: selected.path }, {});
     };
     return <Button key='tail' onClick={onClick}>tail</Button>;

@@ -33,16 +33,22 @@ export default class Dir extends React.Component<IProps, IState> {
   }
 
   public render(): JSX.Element {
-    const onCollapse = () => {
+    const onCollapse = (e: React.MouseEvent) => {
       const open = !this.state.open || !this.props.foldable;
       this.setState({ open, });
     };
 
     const onSelect = (e: React.MouseEvent, file: IFile) => {
+      e.stopPropagation();
       const column = this.props.column;
       const path = this.path(file.name);
       const is_dir = file.is_dir;
       this.props.onSelect(e, { column, path, is_dir });
+    };
+
+    const onClick = (e: React.MouseEvent, file: IFile) => {
+      e.stopPropagation();
+      onSelect(e, file);
     };
 
     return <div key={this.props.path}>
@@ -52,7 +58,7 @@ export default class Dir extends React.Component<IProps, IState> {
         {this.props.files.map((file: IFile) => {
           const glyph = <Glyphicon glyph={file.is_dir ? 'folder-open' : 'file'} />;
           const active = this.isSelected(this.path(file.name));
-          return <ListGroupItem active={active} key={file.name} onClick={(e) => onSelect(e, file)}>{glyph} {file.name}</ListGroupItem>;
+          return <ListGroupItem active={active} key={file.name} onClick={(e) => onClick(e, file)}>{glyph} {file.name}</ListGroupItem>;
         })}
       </ListGroup>
       </Collapse>

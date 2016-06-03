@@ -61,7 +61,10 @@ export default class FileBrowser extends React.Component<IProps, IState> {
       return <div key={key} className='column'>{row}</div>;
     });
 
-    return <div className='file-browser'>
+    const onClick = () => {
+      this.setState({ selecteds: [] });
+    };
+    return <div className='file-browser' onClick={onClick}>
       <Commander openDir={this.props.openDir} selecteds={selecteds} onCommand={this.props.onCommand}/>
       <div className='file-browser-inner'>
         <div className='column'>
