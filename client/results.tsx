@@ -1,9 +1,7 @@
 import * as React from 'react';
-import CommandOption from './options.ts';
 import IMoreResult from './imoreresult.ts';
 import IResult from './iresult.ts';
 import Result from './result.tsx';
-import { ICommandInput } from './messages.ts';
 
 interface IProps {
   results: IResult[];

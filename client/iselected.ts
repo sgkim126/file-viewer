@@ -1,4 +1,4 @@
-import { ICommandInput } from './messages.ts';
+import ICommandInput from './icommandinput.ts';
 
 interface ISelected {
   column?: number;

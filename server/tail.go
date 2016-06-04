@@ -1,21 +1,19 @@
 package main
 
 import (
-	"errors"
-	"fmt"
 	"strconv"
-	"strings"
 )
 
 type TailOption struct {
 	Lines *int `json:"lines"`
 	Bytes *int `json:"bytes"`
+
+	Input CommandInput `json:"input"`
 }
 
 type TailRequest struct {
 	Seq
-	Input  CommandInput `json:"input"`
-	Option TailOption   `json:"option"`
+	Option TailOption `json:"option"`
 }
 
 func (request TailRequest) Name() string {
@@ -23,18 +21,7 @@ func (request TailRequest) Name() string {
 }
 
 func (request TailRequest) Commands(token token, cm ContextManager) string {
-	options := strings.Join(request.options(), " ")
-	if request.Input.File != nil {
-		return fmt.Sprintf("%s %s %s", request.Name(), options, *request.Input.File)
-	}
-	if request.Input.Pipe != nil {
-		var c Context
-		c, err := cm.GetContext(token, *request.Input.Pipe)
-		shouldNot(err)
-		return fmt.Sprintf("%s | %s %s", c.command, request.Name(), options)
-	}
-
-	panic(errors.New("Cannot make command. Invalid input"))
+	return CommandsForOneInput(request, token, cm)
 }
 
 func (request TailRequest) Handle(kg TokenGenerator, cm *ContextManager) Response {
@@ -42,7 +29,7 @@ func (request TailRequest) Handle(kg TokenGenerator, cm *ContextManager) Respons
 }
 
 func (request TailRequest) input() CommandInput {
-	return request.Input
+	return request.Option.Input
 }
 
 func (request TailRequest) options() []string {

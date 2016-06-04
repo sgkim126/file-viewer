@@ -1,3 +1,5 @@
+import ICommandInput from './icommandinput.ts';
+
 export interface ICatOption {
   "number-nonblank"?: boolean;
   "show-ends"?: boolean;
@@ -5,17 +7,24 @@ export interface ICatOption {
   "squeeze-blank"?: boolean;
   "show-tabs"?: boolean;
   "show-nonprinting"?: boolean;
+
+  inputs: ICommandInput[];
 }
 
 export interface IHeadOption {
   lines?: number;
   bytes?: number;
+
+  input: ICommandInput;
 }
 
 export interface ITailOption {
   lines?: number;
   bytes?: number;
+
+  input: ICommandInput;
 }
 
-type CommandOption = ICatOption | IHeadOption | ITailOption;
-export default CommandOption;
+type ICommandOption = ICatOption | IHeadOption | ITailOption;
+
+export default ICommandOption;

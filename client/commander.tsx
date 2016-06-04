@@ -1,14 +1,14 @@
+import * as Option from './icommandoption.ts';
 import * as React from 'react';
-import CommandOption from './options.ts';
+import ICommandOption from './icommandoption.ts';
 import ISelected from './iselected.ts';
 import { Button, ButtonGroup } from 'react-bootstrap';
-import { ICommandInput } from './messages.ts';
 
 interface IProps {
   selecteds: ISelected[];
 
   openDir: (path: string, column: number) => void;
-  onCommand: (command: string, input: ICommandInput, option: CommandOption) => void;
+  onCommand: (command: string, option: ICommandOption) => void;
 }
 
 interface IState {
@@ -29,16 +29,24 @@ export default class Commander extends React.Component<IProps, IState> {
     const buttons: JSX.Element[] = [];
     if (this.props.selecteds.length === 0) {
       buttons.push(<Button key='no-selected' disabled>No selected</Button>);
-    } else if (this.props.selecteds.length === 1) {
+      return buttons;
+    }
+
+    if (!this.hasDir()) {
+      buttons.push(this.catButton(this.props.selecteds));
+    }
+
+    if (this.props.selecteds.length === 1) {
       const selected = this.props.selecteds[0];
       if (selected.is_dir) {
         buttons.push(this.openButton(selected));
       } else {
-        buttons.push(this.catButton(selected));
         buttons.push(this.headButton(selected));
         buttons.push(this.tailButton(selected));
       }
-    } else {
+    }
+
+    if (buttons.length === 0) {
       buttons.push(<Button key='no-available' disabled>No available command</Button>);
     }
 
@@ -53,10 +61,12 @@ export default class Commander extends React.Component<IProps, IState> {
     return <Button key='open' onClick={onClick}>open</Button>;
   }
 
-  private catButton(selected: ISelected): JSX.Element {
+  private catButton(selecteds: ISelected[]): JSX.Element {
     const onClick = (e: React.MouseEvent) => {
       e.stopPropagation();
-      this.props.onCommand('cat', selected.input, {});
+      const inputs = selecteds.map((selected: ISelected) => selected.input);
+      const option: Option.ICatOption = { inputs };
+      this.props.onCommand('cat', option);
     };
     return <Button key='cat' onClick={onClick}>cat</Button>;
   }
@@ -64,7 +74,9 @@ export default class Commander extends React.Component<IProps, IState> {
   private headButton(selected: ISelected): JSX.Element {
     const onClick = (e: React.MouseEvent) => {
       e.stopPropagation();
-      this.props.onCommand('head', selected.input, {});
+      const input = selected.input;
+      const option: Option.IHeadOption = { input };
+      this.props.onCommand('head', option);
     };
     return <Button key='head' onClick={onClick}>head</Button>;
   }
@@ -72,8 +84,14 @@ export default class Commander extends React.Component<IProps, IState> {
   private tailButton(selected: ISelected): JSX.Element {
     const onClick = (e: React.MouseEvent) => {
       e.stopPropagation();
-      this.props.onCommand('tail', selected.input, {});
+      const input = selected.input;
+      const option: Option.ITailOption = { input };
+      this.props.onCommand('tail', option);
     };
     return <Button key='tail' onClick={onClick}>tail</Button>;
+  }
+
+  private hasDir(): boolean {
+    return !!this.props.selecteds.find((selected: ISelected) => selected.is_dir);
   }
 }

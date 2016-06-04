@@ -1,16 +1,15 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import CommandOption from './options.ts';
 import Connection from './connection.ts';
 import FileBrowser from './file-browser.tsx';
+import IBrowser from './ibrowser.ts';
+import ICommandOption from './icommandoption.ts';
 import IFile from './ifile.ts';
 import IMoreResult from './imoreresult.ts';
-import IBrowser from './ibrowser.ts';
 import IResult from './iresult.ts';
 import Message from './messages.ts';
 import Results from './results.tsx';
 import { Col } from 'react-bootstrap';
-import { ICommandInput } from './messages.ts';
 
 interface IProps {
   connection: Connection;
@@ -44,10 +43,11 @@ export default class Main extends React.Component<IProps, IState> {
   }
 
   public render(): JSX.Element {
-    const onCommand = (command: string, input: ICommandInput, option: CommandOption) => {
+    const onCommand = (command: string, option: ICommandOption) => {
       const seq = this.props.seq.next().value;
       const token = this.props.connection.token;
-      const message: Message = { seq, token, type: 'command', command, input, option };
+      const type = 'command';
+      const message: Message = { seq, token, type, command, option } as any;
       const result = this.props.connection.send(message).then((result: IResult) => {
         const resultId = result.id;
         const results = this.state.results.slice();

@@ -7,12 +7,13 @@ import (
 type HeadOption struct {
 	Lines *int `json:"lines"`
 	Bytes *int `json:"bytes"`
+
+	Input CommandInput `json:"input"`
 }
 
 type HeadRequest struct {
 	Seq
-	Input  CommandInput `json:"input"`
-	Option HeadOption   `json:"option"`
+	Option HeadOption `json:"option"`
 }
 
 func (request HeadRequest) Name() string {
@@ -28,7 +29,7 @@ func (request HeadRequest) Handle(tg TokenGenerator, cm *ContextManager) Respons
 }
 
 func (request HeadRequest) input() CommandInput {
-	return request.Input
+	return request.Option.Input
 }
 
 func (request HeadRequest) options() []string {

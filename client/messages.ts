@@ -1,5 +1,5 @@
-import CommandOption from './options.ts';
-import * as Option from './options.ts';
+import * as Option from './icommandoption.ts';
+import ICommandOption from './icommandoption.ts';
 
 export interface IMessage {
   type: string;
@@ -27,30 +27,21 @@ export interface IMore extends IMessage {
 interface ICommand extends IMessage {
   type: 'command';
   command: string;
-  option: CommandOption;
-  [input: string]: ICommandInput;
-}
-
-export interface ICommandInput {
-  file?: string;
-  pipe?: number;
+  option: ICommandOption;
 }
 
 export interface ICat extends ICommand {
   command: 'cat';
-  input: ICommandInput;
   option: Option.ICatOption;
 }
 
 export interface IHead extends ICommand {
   command: 'head';
-  input: ICommandInput;
   option: Option.IHeadOption;
 }
 
 export interface ITail extends ICommand {
   command: 'tail';
-  input: ICommandInput;
   option: Option.ITailOption;
 }
 

@@ -16,12 +16,13 @@ type UniqOption struct {
 	Unique         *bool   `json:"unique"`
 	ZeroTerminated *bool   `json:"zero-terminated"`
 	CheckChars     *int    `json:"check-chars"`
+
+	Input CommandInput `json:"input"`
 }
 
 type UniqRequest struct {
 	Seq
-	Input  CommandInput `json:"input"`
-	Option UniqOption   `json:"option"`
+	Option UniqOption `json:"option"`
 }
 
 func (request UniqRequest) Name() string {
@@ -37,7 +38,7 @@ func (request UniqRequest) Handle(tg TokenGenerator, cm *ContextManager) Respons
 }
 
 func (request UniqRequest) input() CommandInput {
-	return request.Input
+	return request.Option.Input
 }
 
 func (request UniqRequest) options() []string {

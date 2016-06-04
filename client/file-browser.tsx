@@ -3,16 +3,15 @@ import './file-browser.styl';
 import Commander from './commander.tsx';
 import Dir from './dir.tsx';
 import IBrowser from './ibrowser.ts';
+import ICommandOption from './icommandoption.ts';
 import IFile from './ifile.ts';
-import ISelected from './iselected.ts';
 import IResult from './iresult.ts';
-import CommandOption from './options.ts';
+import ISelected from './iselected.ts';
 import { Col, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
-import { ICommandInput } from './messages.ts';
 
 interface IProps {
   onClick: (e: React.MouseEvent, path: string, isFIle: boolean) => void;
-  onCommand: (command: string, input: ICommandInput, option: CommandOption) => void;
+  onCommand: (command: string, option: ICommandOption) => void;
   ls: (path: string) => Promise<IBrowser>;
   root: string;
   rootFiles: IFile[];

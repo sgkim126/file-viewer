@@ -7,28 +7,25 @@ type CatOption struct {
 	SqueezeBlank    *bool `json:"squeeze-blank"`
 	ShowTabs        *bool `json:"show-tabs"`
 	ShowNonprinting *bool `json:"show-nonprinting"`
+
+	Inputs []CommandInput `json:"inputs"`
 }
 
 type CatRequest struct {
 	Seq
-	Input  CommandInput `json:"input"`
-	Option CatOption    `json:"option"`
+	Option CatOption `json:"option"`
 }
 
 func (request CatRequest) Name() string {
 	return "cat"
 }
 
-func (request CatRequest) Commands(token token, cm ContextManager) string {
-	return CommandsForOneInput(request, token, cm)
-}
-
 func (request CatRequest) Handle(tg TokenGenerator, cm *ContextManager) Response {
-	return RunCommandForOneInput(request, tg, cm)
+	return RunCommandForMultipleInput(request, tg, cm)
 }
 
-func (request CatRequest) input() CommandInput {
-	return request.Input
+func (request CatRequest) inputs() []CommandInput {
+	return request.Option.Inputs
 }
 
 func (request CatRequest) options() []string {
