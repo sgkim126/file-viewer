@@ -6,11 +6,12 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/onsi/gocleanup"
 )
 
-type CommandRequest interface {
+type OneInputCommandRequest interface {
 	Name() string
 	Commands(token token, cm ContextManager) string
 	input() CommandInput
@@ -19,22 +20,25 @@ type CommandRequest interface {
 	seq() Seq
 }
 
-func Commands(request CommandRequest, token token, cm ContextManager) string {
-	options := ""
+func CommandsForOneInput(request OneInputCommandRequest, token token, cm ContextManager) string {
+	options := strings.Join(request.options(), " ")
+	if options != "" {
+		options = " " + options
+	}
 	input := request.input()
 	if input.File != nil {
-		return fmt.Sprintf("%s %s %s", request.Name(), options, *input.File)
+		return fmt.Sprintf("%s%s %s", request.Name(), options, *input.File)
 	}
 	if input.Pipe != nil {
 		var c Context
 		c, err := cm.GetContext(token, *input.Pipe)
 		shouldNot(err)
-		return fmt.Sprintf("%s | %s %s", c.command, request.Name(), options)
+		return fmt.Sprintf("%s | %s%s", c.command, request.Name(), options)
 	}
 
 	panic(errors.New("Cannot make command. Invalid input"))
 }
-func RunCommand(request CommandRequest, tg TokenGenerator, cm *ContextManager) Response {
+func RunCommandForOneInput(request OneInputCommandRequest, tg TokenGenerator, cm *ContextManager) Response {
 	inputPath := request.input().Path(request.token(), *cm)
 
 	stdoutFile, err := ioutil.TempFile("", "filew-viewer")

@@ -20,11 +20,11 @@ func (request CatRequest) Name() string {
 }
 
 func (request CatRequest) Commands(token token, cm ContextManager) string {
-	return Commands(request, token, cm)
+	return CommandsForOneInput(request, token, cm)
 }
 
 func (request CatRequest) Handle(tg TokenGenerator, cm *ContextManager) Response {
-	return RunCommand(request, tg, cm)
+	return RunCommandForOneInput(request, tg, cm)
 }
 
 func (request CatRequest) input() CommandInput {

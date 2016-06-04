@@ -38,7 +38,7 @@ func (request TailRequest) Commands(token token, cm ContextManager) string {
 }
 
 func (request TailRequest) Handle(kg TokenGenerator, cm *ContextManager) Response {
-	return RunCommand(request, kg, cm)
+	return RunCommandForOneInput(request, kg, cm)
 }
 
 func (request TailRequest) input() CommandInput {
