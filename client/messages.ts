@@ -45,5 +45,10 @@ export interface ITail extends ICommand {
   option: Option.ITailOption;
 }
 
+export interface IUniq extends ICommand {
+  command: 'uniq';
+  option: Option.IUniqOption;
+}
+
 type Message = ILs | IClose | IMore | ICommand;
 export default Message;

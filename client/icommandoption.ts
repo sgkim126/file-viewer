@@ -25,6 +25,20 @@ export interface ITailOption {
   input: ICommandInput;
 }
 
-type ICommandOption = ICatOption | IHeadOption | ITailOption;
+export interface IUniqOption {
+  count?: boolean;
+  repeated?: boolean;
+  "all-repeated"?: string;
+  "skip-fields"?: number;
+  "ignore-case"?: boolean;
+  "skip-chars"?: number;
+  unique?: boolean;
+  "zero-terminated"?: boolean;
+  "check-chars"?: number;
+
+  input: ICommandInput;
+}
+
+type ICommandOption = ICatOption | IHeadOption | ITailOption | IUniqOption;
 
 export default ICommandOption;

@@ -41,6 +41,7 @@ export default class Commander extends React.Component<IProps, IState> {
       if (selected.is_dir) {
         buttons.push(this.openButton(selected));
       } else {
+        buttons.push(this.uniqButton(selected));
         buttons.push(this.headButton(selected));
         buttons.push(this.tailButton(selected));
       }
@@ -89,6 +90,16 @@ export default class Commander extends React.Component<IProps, IState> {
       this.props.onCommand('tail', option);
     };
     return <Button key='tail' onClick={onClick}>tail</Button>;
+  }
+
+  private uniqButton(selected: ISelected): JSX.Element {
+    const onClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      const input = selected.input;
+      const option: Option.IUniqOption = { input };
+      this.props.onCommand('uniq', option);
+    };
+    return <Button key='uniq' onClick={onClick}>uniq</Button>;
   }
 
   private hasDir(): boolean {
