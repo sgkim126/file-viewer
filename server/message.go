@@ -71,6 +71,11 @@ func (requestType RequestType) Request(data []byte) Request {
 				err := json.Unmarshal(data, &request)
 				shouldNot(err)
 				return request
+			case "cut":
+				var request CutRequest
+				err := json.Unmarshal(data, &request)
+				shouldNot(err)
+				return request
 			}
 		}
 		panic(errors.New(fmt.Sprintf("Unhandled command: %s", string(data))))
