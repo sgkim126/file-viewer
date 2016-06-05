@@ -1,61 +1,44 @@
 import * as React from 'react';
 import './file-browser.styl';
-import Commander from './commander.tsx';
 import Dir from './dir.tsx';
 import IBrowser from './ibrowser.ts';
 import ICommandOption from './icommandoption.ts';
 import IFile from './ifile.ts';
 import IResult from './iresult.ts';
 import ISelected from './iselected.ts';
-import { Col, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
+import { Col, ListGroup, ListGroupItem } from 'react-bootstrap';
 
 interface IProps {
-  onClick: (e: React.MouseEvent, path: string, isFIle: boolean) => void;
-  onCommand: (command: string, option: ICommandOption) => void;
   ls: (path: string) => Promise<IBrowser>;
   root: string;
   rootFiles: IFile[];
 
   columns: Map<string, IFile[]>[];
-  openDir: (path: string, columnNumber: number) => void;
 
   results: IResult[];
   resultId: number;
-  showResult: (resultId: number) => void;
+
+  clearSelects: () => void;
+  onSelect: (e: React.MouseEvent, selected: ISelected) => void;
+  selecteds?: ISelected[];
 }
 
 interface IState {
-  selecteds?: ISelected[];
 }
 
 export default class FileBrowser extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      selecteds: [],
     };
   }
 
   public render(): JSX.Element {
     let selectedFile = { } as any;
 
-    const onSelect = (e: React.MouseEvent, selected: ISelected): void => {
-      if (!e.ctrlKey) {
-        this.setState({ selecteds: [ selected ] });
-        return;
-      }
+    const selecteds = this.props.selecteds;
 
-      const selecteds = this.state.selecteds.filter(({ input }: ISelected) => {
-        return input.file !== selected.input.file || input.pipe !== selected.input.pipe;
-      });
-      if (selecteds.length === this.state.selecteds.length) {
-        selecteds.push(selected);
-      }
-      this.setState({ selecteds });
-    };
-
-    const selecteds = this.state.selecteds;
-
+    const onSelect = this.props.onSelect;
     const columns = this.props.columns.map((column: Map<string, IFile[]>, key: number) => {
       let row: JSX.Element[] = [];
       for (const [path, files] of column) {
@@ -67,25 +50,14 @@ export default class FileBrowser extends React.Component<IProps, IState> {
     const results = this.props.results.map((result: IResult, key: number) => {
       const onClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        if (e.altKey) {
-          const resultId = result.id;
-          this.props.showResult(resultId);
-          return;
-        }
         onSelect(e, { input: { pipe: result.id }});
       };
-      const active = !!this.state.selecteds.find(({input}: ISelected) => input.pipe === result.id);
-      return <ListGroupItem active={active} key={result.id} onClick={onClick} title={result.command}>{result.name}</ListGroupItem>;
+      const active = !!this.props.selecteds.find(({input}: ISelected) => input.pipe === result.id);
+      const bsStyle =  result.id === this.props.resultId ? 'info' : undefined;
+      return <ListGroupItem active={active} bsStyle={bsStyle} key={result.id} onClick={onClick} title={result.command}>{result.name}</ListGroupItem>;
     });
 
-    const onClick = () => {
-      this.setState({ selecteds: [] });
-    };
-    return <div className='file-browser' onClick={onClick}>
-    <Row>
-      <Commander openDir={this.props.openDir} selecteds={selecteds} onCommand={this.props.onCommand}/>
-    </Row>
-    <Row>
+    return <div className='file-browser' onClick={this.props.clearSelects}>
       <Col xs={8} className='file-browser-inner'>
         <div className='column'>
           <Dir column={-1} path={this.props.root} files={this.props.rootFiles} open={true} onSelect={onSelect} foldable={false} selecteds={selecteds}/>
@@ -93,7 +65,6 @@ export default class FileBrowser extends React.Component<IProps, IState> {
         {columns}
       </Col>
       <Col xs={4}><ListGroup>{results}</ListGroup></Col>
-    </Row>
     </div>;
   }
 }

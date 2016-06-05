@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import Commander from './commander.tsx';
 import Connection from './connection.ts';
 import FileBrowser from './file-browser.tsx';
 import IBrowser from './ibrowser.ts';
@@ -7,9 +8,10 @@ import ICommandOption from './icommandoption.ts';
 import IFile from './ifile.ts';
 import IMoreResult from './imoreresult.ts';
 import IResult from './iresult.ts';
+import ISelected from './iselected.ts';
 import Message from './messages.ts';
 import Results from './results.tsx';
-import { Col } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 
 interface IProps {
   connection: Connection;
@@ -22,6 +24,8 @@ interface IState {
   results?: IResult[];
   resultId?: number;
   columns?: Map<string, IFile[]>[];
+
+  selecteds?: ISelected[];
 }
 
 export default class Main extends React.Component<IProps, IState> {
@@ -35,6 +39,7 @@ export default class Main extends React.Component<IProps, IState> {
     this.state = { browser,
       results: [], resultId: -1,
       columns: [],
+      selecteds: [],
     };
 
     this.ls(this.props.root).then((browser: IBrowser) => {
@@ -73,23 +78,49 @@ export default class Main extends React.Component<IProps, IState> {
       });
     };
 
-    const showResult = (resultId: number) => {
-      this.setState({ resultId });
+    const clearSelects = (): void => {
+      this.setState({ selecteds: [] });
+    };
+    const onSelect = (e: React.MouseEvent, selected: ISelected): void => {
+      if (e.altKey) {
+        if (selected.input.pipe) {
+          this.setState({ resultId: selected.input.pipe });
+        }
+        return;
+      }
+
+      if (!e.ctrlKey) {
+        this.setState({ selecteds: [ selected ] });
+        return;
+      }
+
+      const selecteds = this.state.selecteds.filter(({ input }: ISelected) => {
+        return input.file !== selected.input.file || input.pipe !== selected.input.pipe;
+      });
+      if (selecteds.length === this.state.selecteds.length) {
+        selecteds.push(selected);
+      }
+      this.setState({ selecteds });
     };
 
     return <div className='full-width full-height'>
+    <Row>
+      <Col xs={12}>
+        <Commander openDir={openDir} selecteds={this.state.selecteds} onCommand={onCommand}/>
+      </Col>
+    </Row>
+    <Row>
       <Col xs={7} className='full-height'>
         <FileBrowser
           ls={this.ls.bind(this)}
           root={this.props.root} rootFiles={files} columns={this.state.columns}
           results={this.state.results} resultId={this.state.resultId}
-          openDir={openDir} showResult={showResult}
-          onCommand={onCommand} onClick={(e: React.MouseEvent, path: string, isFile: boolean) => {
-        }} />
+          clearSelects={clearSelects} onSelect={onSelect} selecteds={this.state.selecteds} />
       </Col>
       <Col xs={5} className='full-height'>
         <Results show={this.state.resultId} readMore={this.readMore.bind(this)} results={this.state.results} />
       </Col>
+    </Row>
     </div>;
   }
 
