@@ -55,5 +55,10 @@ export interface ISort extends ICommand {
   option: Option.ISortOption;
 }
 
+export interface ICut extends ICommand {
+  command: 'cut';
+  option: Option.ICutOption;
+}
+
 type Message = ILs | IClose | IMore | ICommand;
 export default Message;

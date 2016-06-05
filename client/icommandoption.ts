@@ -69,6 +69,20 @@ export interface ISortOption {
   inputs: ICommandInput[];
 }
 
-type ICommandOption = ICatOption | IHeadOption | ITailOption | IUniqOption | ISortOption;
+export interface ICutOption {
+  list1?: number;
+  list2?: number;
+  list?: string;
+
+  complement?: boolean;
+
+  delimiter?: string;
+  onlyDelimited?: boolean;
+  outputDelimiter?: string;
+
+  inputs: ICommandInput[];
+}
+
+type ICommandOption = ICatOption | IHeadOption | ITailOption | IUniqOption | ISortOption | ICutOption;
 
 export default ICommandOption;
