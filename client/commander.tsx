@@ -34,6 +34,7 @@ export default class Commander extends React.Component<IProps, IState> {
 
     if (!this.hasDir()) {
       buttons.push(this.catButton(this.props.selecteds));
+      buttons.push(this.sortButton(this.props.selecteds));
     }
 
     if (this.props.selecteds.length === 1) {
@@ -100,6 +101,16 @@ export default class Commander extends React.Component<IProps, IState> {
       this.props.onCommand('uniq', option);
     };
     return <Button key='uniq' onClick={onClick}>uniq</Button>;
+  }
+
+  private sortButton(selecteds: ISelected[]): JSX.Element {
+    const onClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      const inputs = selecteds.map((selected: ISelected) => selected.input);
+      const option: Option.ISortOption = { inputs };
+      this.props.onCommand('sort', option);
+    };
+    return <Button key='sort' onClick={onClick}>sort</Button>;
   }
 
   private hasDir(): boolean {
