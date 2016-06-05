@@ -49,7 +49,7 @@ func (request CatRequest) options() []string {
 	if option.ShowNonprinting != nil && *option.ShowNonprinting {
 		options = append(options, "--show-nonprinting")
 	}
-	return []string{}
+	return options
 }
 
 func (request CatRequest) token() token {

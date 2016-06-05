@@ -82,7 +82,7 @@ func (request UniqRequest) options() []string {
 	if option.CheckChars != nil {
 		options = append(options, "--check-chars", strconv.Itoa(*option.CheckChars))
 	}
-	return []string{}
+	return options
 }
 
 func (request UniqRequest) token() token {
