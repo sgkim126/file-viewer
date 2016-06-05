@@ -50,5 +50,10 @@ export interface IUniq extends ICommand {
   option: Option.IUniqOption;
 }
 
+export interface ISort extends ICommand {
+  command: 'sort';
+  option: Option.ISortOption;
+}
+
 type Message = ILs | IClose | IMore | ICommand;
 export default Message;
