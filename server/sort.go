@@ -7,31 +7,31 @@ import (
 )
 
 type SortOption struct {
-	IngoreLeadingBlanks *bool `json:"ignore-leading-blanks"`
-	DictionaryOrder     *bool `json:"dictionary-order"`
-	IgnoreCase          *bool `json:"ignore-case"`
-	GeneralNumericSort  *bool `json:"general-numeric-sort"`
-	IgnoreNonprinting   *bool `json:"ignore-nonprinting"`
-	MonthSort           *bool `json:"month-sort"`
-	HumanNumericSort    *bool `json:"human-numeric-sort"`
-	NumericSort         *bool `json:"numeric-sort"`
-	RandomSort          *bool `json:"random-sort"`
+	IngoreLeadingBlanks *bool `json:"ignoreLeadingBlanks"`
+	DictionaryOrder     *bool `json:"dictionaryOrder"`
+	IgnoreCase          *bool `json:"ignoreCase"`
+	GeneralNumericSort  *bool `json:"generalNumericSort"`
+	IgnoreNonprinting   *bool `json:"ignoreNonprinting"`
+	MonthSort           *bool `json:"monthSort"`
+	HumanNumericSort    *bool `json:"humanNumericSort"`
+	NumericSort         *bool `json:"numericSort"`
+	RandomSort          *bool `json:"randomSort"`
 	Reverse             *bool `json:"reverse"`
-	VersionSort         *bool `json:"version-sort"`
+	VersionSort         *bool `json:"versionSort"`
 
-	BatchSize      *int          `json:"batch-size"`
+	BatchSize      *int          `json:"batchSize"`
 	Check          *bool         `json:"check"`
-	CheckSilent    *bool         `json:"check-silent"`
+	CheckSilent    *bool         `json:"checkSilent"`
 	Debug          *bool         `json:"debug"`
-	Files0From     *CommandInput `json:"files0-from"`
+	Files0From     *CommandInput `json:"files0From"`
 	Key            *[]int        `json:"key"`
 	Merge          *bool         `json:"merge"`
 	Stable         *bool         `json:"stable"`
-	BufferSize     *int          `json:"buffer-size"`
-	FieldSeperator *string       `json:"field-seperator"`
+	BufferSize     *int          `json:"bufferSize"`
+	FieldSeperator *string       `json:"fieldSeperator"`
 	Parallel       *int          `json:"parallel"`
 	Unique         *bool         `json:"unique"`
-	ZeroTerminated *bool         `json:"zero-terminated"`
+	ZeroTerminated *bool         `json:"zeroTerminated"`
 
 	Inputs []CommandInput `json:"inputs"`
 }

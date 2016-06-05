@@ -1,12 +1,12 @@
 import ICommandInput from './icommandinput.ts';
 
 export interface ICatOption {
-  "number-nonblank"?: boolean;
-  "show-ends"?: boolean;
-  "number"?: boolean;
-  "squeeze-blank"?: boolean;
-  "show-tabs"?: boolean;
-  "show-nonprinting"?: boolean;
+  numberNonblank?: boolean;
+  showEnds?: boolean;
+  number?: boolean;
+  squeezeBlank?: boolean;
+  showTabs?: boolean;
+  showNonprinting?: boolean;
 
   inputs: ICommandInput[];
 }
@@ -28,43 +28,43 @@ export interface ITailOption {
 export interface IUniqOption {
   count?: boolean;
   repeated?: boolean;
-  "all-repeated"?: string;
-  "skip-fields"?: number;
-  "ignore-case"?: boolean;
-  "skip-chars"?: number;
+  allRepeated?: string;
+  skipFields?: number;
+  ignoreCase?: boolean;
+  skipChars?: number;
   unique?: boolean;
-  "zero-terminated"?: boolean;
-  "check-chars"?: number;
+  zeroTerminated?: boolean;
+  checkChars?: number;
 
   input: ICommandInput;
 }
 
 export interface ISortOption {
-  "ignore-leading-blanks"?: boolean;
-  "dictionary-order"?: boolean;
-  "ignore-case"?: boolean;
-  "general-numeric-sort"?: boolean;
-  "ignore-nonprinting"?: boolean;
-  "month-sort"?: boolean;
-  "human-numeric-sort"?: boolean;
-  "numeric-sort"?: boolean;
-  "random-sort"?: boolean;
+  ignoreLeadingBlanks?: boolean;
+  dictionaryOrder?: boolean;
+  ignoreCase?: boolean;
+  generalNumericSort?: boolean;
+  ignoreNonprinting?: boolean;
+  monthSort?: boolean;
+  humanNumericSort?: boolean;
+  numericSort?: boolean;
+  randomSort?: boolean;
   reverse?: boolean;
-  "version-sort"?: boolean;
+  versionSort?: boolean;
 
-  "batch-size"?: number;
+  batchSize?: number;
   check?: boolean;
-  "check-silent"?: boolean;
+  checkSilent?: boolean;
   debug?: boolean;
-  "files0-from"?: ICommandInput;
+  files0From?: ICommandInput;
   key?: number[];
   merge?: boolean;
   stable?: boolean;
-  "buffer-size"?: number;
-  "field-seperator"?: string;
+  bufferSize?: number;
+  fieldSeperator?: string;
   parallel?: number;
   unique?: boolean;
-  "zero-terminated"?: boolean;
+  zeroTerminated?: boolean;
 
   inputs: ICommandInput[];
 }

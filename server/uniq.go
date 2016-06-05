@@ -9,13 +9,13 @@ import (
 type UniqOption struct {
 	Count          *bool   `json:"count"`
 	Repeated       *bool   `json:"repeated"`
-	AllRepeated    *string `json:"all-repeated"`
-	SkipFields     *int    `json:"skip-fields"`
-	IgnoreCase     *bool   `json:"ignore-case"`
-	SkipChars      *int    `json:"skip-chars"`
+	AllRepeated    *string `json:"allRepeated"`
+	SkipFields     *int    `json:"skipFields"`
+	IgnoreCase     *bool   `json:"ignoreCase"`
+	SkipChars      *int    `json:"skipChars"`
 	Unique         *bool   `json:"unique"`
-	ZeroTerminated *bool   `json:"zero-terminated"`
-	CheckChars     *int    `json:"check-chars"`
+	ZeroTerminated *bool   `json:"zeroTerminated"`
+	CheckChars     *int    `json:"checkChars"`
 
 	Input CommandInput `json:"input"`
 }
