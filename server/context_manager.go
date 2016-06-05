@@ -20,7 +20,7 @@ type ContextManager struct {
 
 func NewContextManager(root string) ContextManager {
 	return ContextManager{
-		0,
+		1,
 		make(map[int]Context, 0),
 		make([]token, 0),
 		root,
