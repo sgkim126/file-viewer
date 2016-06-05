@@ -62,6 +62,7 @@ export default class Commander extends React.Component<IProps, IState> {
     if (!this.hasDir()) {
       buttons.push(this.catButton(this.props.selecteds));
       buttons.push(this.sortButton(this.props.selecteds));
+      buttons.push(this.cutButton(this.props.selecteds));
     }
 
     if (this.props.selecteds.length === 1) {
@@ -625,6 +626,117 @@ export default class Commander extends React.Component<IProps, IState> {
       this.setState({ menu: { title, body, onSubmit,  } });
     };
     return <Button key='sort' onClick={onClick}>sort</Button>;
+  }
+
+  private cutButton(selecteds: ISelected[]): JSX.Element {
+    const onClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+
+      let list1Ref: HTMLInputElement;
+      let list2Ref: HTMLInputElement;
+      let listFieldsRef: HTMLInputElement;
+      let listBytesRef: HTMLInputElement;
+      let listCharactersRef: HTMLInputElement;
+
+      let complementRef: HTMLInputElement;
+      let onlyDelimitedRef: HTMLInputElement;
+      let delimiterRef: HTMLInputElement;
+      let outputDelimiterRef: HTMLInputElement;
+
+      const title = 'cut';
+      const onSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const inputs = selecteds.map((selected: ISelected) => selected.input);
+        const option: Option.ICutOption = { inputs };
+
+        const list1RefValue = (findDOMNode(list1Ref) as HTMLInputElement).value;
+        if (list1RefValue !== "") {
+          option.list1 = parseInt(list1RefValue, 10);
+        }
+        const list2RefValue = (findDOMNode(list2Ref) as HTMLInputElement).value;
+        if (list2RefValue !== "") {
+          option.list2 = parseInt(list2RefValue, 10);
+        }
+
+        if ((findDOMNode(listFieldsRef) as any).checked) {
+          option.list = 'field';
+        } else if ((findDOMNode(listBytesRef) as any).checked) {
+          option.list = 'byte';
+        } else if ((findDOMNode(listCharactersRef) as any).checked) {
+          option.list = 'character';
+        }
+
+        if (complementRef.checked) {
+          option.complement = true;
+        }
+        if (onlyDelimitedRef.checked) {
+          option.onlyDelimited = true;
+        }
+        const delimiterRefValue = (findDOMNode(delimiterRef) as HTMLInputElement).value;
+        if (delimiterRefValue !== "") {
+          option.delimiter = delimiterRefValue;
+        }
+        const outputDelimiterRefValue = (findDOMNode(outputDelimiterRef) as HTMLInputElement).value;
+        if (outputDelimiterRefValue !== "") {
+          option.outputDelimiter = outputDelimiterRefValue;
+        }
+
+        this.props.onCommand('cut', option);
+        this.setState({ menu: undefined });
+      };
+
+      const checkListFields = () => {
+        (findDOMNode(listBytesRef) as any).checked = false;
+        (findDOMNode(listCharactersRef) as any).checked = false;
+      };
+      const checkListBytes = () => {
+        (findDOMNode(listFieldsRef) as any).checked = false;
+        (findDOMNode(listCharactersRef) as any).checked = false;
+      };
+      const checkListCharacters = () => {
+        (findDOMNode(listFieldsRef) as any).checked = false;
+        (findDOMNode(listBytesRef) as any).checked = false;
+      };
+      const body = <form onSubmit={onSubmit}>
+        <FormGroup>
+          <Radio onChange={checkListFields} inline checked inputRef={(ref: HTMLInputElement) => { listFieldsRef = ref; }}>field</Radio>
+          <Radio onChange={checkListBytes} inline inputRef={(ref: HTMLInputElement) => { listBytesRef = ref; }}>byte</Radio>
+          <Radio onChange={checkListCharacters} inline inputRef={(ref: HTMLInputElement) => { listCharactersRef = ref; }}>character</Radio>
+          <HelpBlock>field: select only these fields;  also print any line that contains no delimiter character, unless the -s option is specified</HelpBlock>
+          <HelpBlock>byte: select only these bytes</HelpBlock>
+          <HelpBlock>charcater: select only these characters</HelpBlock>
+        </FormGroup>
+        <FormGroup>
+          <ControlLabel>N</ControlLabel>
+          <FormControl ref={(ref: HTMLInputElement) => { list1Ref = ref; }} type='number' placeholder='N' />
+          <ControlLabel>M</ControlLabel>
+          <FormControl ref={(ref: HTMLInputElement) => { list2Ref = ref; }} type='number' placeholder='M' />
+          <HelpBlock>use SEP instead of non-blank to blank transition</HelpBlock>
+        </FormGroup>
+        <FormGroup>
+          <Checkbox inputRef={(ref: HTMLInputElement) => { complementRef = ref; }}>complement</Checkbox>
+          <HelpBlock>complement the set of selected bytes, characters or fields</HelpBlock>
+        </FormGroup>
+        <FormGroup>
+          <Checkbox inputRef={(ref: HTMLInputElement) => { onlyDelimitedRef = ref; }}>only delimited</Checkbox>
+          <HelpBlock>use STRING as the output delimiter the default is to use the input delimiter</HelpBlock>
+        </FormGroup>
+        <FormGroup>
+          <ControlLabel>delimiter</ControlLabel>
+          <FormControl ref={(ref: HTMLInputElement) => { delimiterRef = ref; }} type='text' placeholder='delimiter' />
+          <HelpBlock>use DELIM instead of TAB for field delimiter</HelpBlock>
+        </FormGroup>
+        <FormGroup>
+          <ControlLabel>output delimiter</ControlLabel>
+          <FormControl ref={(ref: HTMLInputElement) => { outputDelimiterRef = ref; }} type='text' placeholder='output delimiter' />
+          <HelpBlock>use STRING as the output delimiter the default is to use the input delimiter</HelpBlock>
+        </FormGroup>
+      </form>;
+
+      this.setState({ menu: { title, body, onSubmit,  } });
+    };
+    return <Button key='cut' onClick={onClick}>cut</Button>;
   }
 
   private hasDir(): boolean {
