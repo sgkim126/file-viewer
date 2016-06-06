@@ -86,7 +86,6 @@ export default class Main extends React.Component<IProps, IState> {
         this.setState({ results, resultSeq });
       });
     };
-    const panels: JSX.Element[] = [];
     const { files } = this.state.browser;
 
     const openDir = (path: string, columnNumber: number): void => {

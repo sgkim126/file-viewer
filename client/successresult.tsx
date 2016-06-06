@@ -1,4 +1,3 @@
-const Draggable = require('react-draggable');
 const { Form, FormControl, FormGroup, InputGroup } = require('react-bootstrap');
 import './result.styl';
 import * as React from 'react';
