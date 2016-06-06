@@ -1,4 +1,5 @@
 interface IResult {
+  seq: number;
   id: number;
   command: string;
   name: string;

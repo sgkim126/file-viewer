@@ -22,7 +22,7 @@ interface IProps {
 interface IState {
   browser?: IBrowser;
   results?: IResult[];
-  resultId?: number;
+  resultSeq?: number;
   columns?: Map<string, IFile[]>[];
 
   selecteds?: ISelected[];
@@ -37,7 +37,7 @@ export default class Main extends React.Component<IProps, IState> {
       files: [],
     };
     this.state = { browser,
-      results: [], resultId: -1,
+      results: [], resultSeq: -1,
       columns: [],
       selecteds: [],
     };
@@ -54,10 +54,10 @@ export default class Main extends React.Component<IProps, IState> {
       const type = 'command';
       const message: Message = { seq, token, type, command, option } as any;
       const result = this.props.connection.send(message).then((result: IResult) => {
-        const resultId = result.id;
+        const resultSeq = result.seq;
         const results = this.state.results.slice();
         results.push(result);
-        this.setState({ results, resultId });
+        this.setState({ results, resultSeq });
       });
     };
     const panels: JSX.Element[] = [];
@@ -83,8 +83,8 @@ export default class Main extends React.Component<IProps, IState> {
     };
     const onSelect = (e: React.MouseEvent, selected: ISelected): void => {
       if (e.altKey) {
-        if (selected.input.pipe) {
-          this.setState({ resultId: selected.input.pipe });
+        if (selected.resultSeq) {
+          this.setState({ resultSeq: selected.resultSeq });
         }
         return;
       }
@@ -114,11 +114,11 @@ export default class Main extends React.Component<IProps, IState> {
         <FileBrowser
           ls={this.ls.bind(this)}
           root={this.props.root} rootFiles={files} columns={this.state.columns}
-          results={this.state.results} resultId={this.state.resultId}
+          results={this.state.results} resultSeq={this.state.resultSeq}
           clearSelects={clearSelects} onSelect={onSelect} selecteds={this.state.selecteds} />
       </Col>
       <Col xs={5} className='full-height'>
-        <Results show={this.state.resultId} readMore={this.readMore.bind(this)} results={this.state.results} />
+        <Results show={this.state.resultSeq} readMore={this.readMore.bind(this)} results={this.state.results} />
       </Col>
     </Row>
     </div>;

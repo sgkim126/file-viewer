@@ -19,8 +19,8 @@ export default class Results extends React.Component<IProps, IState> {
 
   public render(): JSX.Element {
     const results = this.props.results.map((result: IResult) => {
-      const hide = result.id !== this.props.show;
-      return <Result key={result.id} {...result} hide={hide} readMore={this.props.readMore} />;
+      const hide = result.seq !== this.props.show;
+      return <Result key={result.seq} {...result} hide={hide} readMore={this.props.readMore} />;
     });
     return <div className='full-height'>{results}</div>;
   }

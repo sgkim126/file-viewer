@@ -16,7 +16,7 @@ interface IProps {
   columns: Map<string, IFile[]>[];
 
   results: IResult[];
-  resultId: number;
+  resultSeq: number;
 
   clearSelects: () => void;
   onSelect: (e: React.MouseEvent, selected: ISelected) => void;
@@ -50,10 +50,10 @@ export default class FileBrowser extends React.Component<IProps, IState> {
     const results = this.props.results.map((result: IResult, key: number) => {
       const onClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        onSelect(e, { input: { pipe: result.id }});
+        onSelect(e, { input: { pipe: result.id }, resultSeq: result.seq });
       };
       const active = !!this.props.selecteds.find(({input}: ISelected) => input.pipe === result.id);
-      const bsStyle =  result.id === this.props.resultId ? 'info' : undefined;
+      const bsStyle =  result.seq === this.props.resultSeq ? 'info' : undefined;
       return <ListGroupItem active={active} bsStyle={bsStyle} key={result.id} onClick={onClick} title={result.command}>{result.name}</ListGroupItem>;
     });
 
