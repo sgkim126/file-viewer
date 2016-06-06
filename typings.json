@@ -3,6 +3,7 @@
     "node": "registry:dt/node#4.0.0+20160319033040",
     "react": "registry:dt/react#0.14.0+20160319053454",
     "react-bootstrap": "registry:dt/react-bootstrap#0.0.0+20160423135514",
+    "react-dnd": "registry:dt/react-dnd#1.1.4+20160316155526",
     "react-dom": "registry:dt/react-dom#0.14.0+20160316155526"
   }
 }
