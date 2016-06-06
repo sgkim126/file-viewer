@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -47,16 +48,40 @@ func RunCommandForOneInput(request OneInputCommandRequest, tg TokenGenerator, cm
 		os.Remove(stdoutFile.Name())
 	})
 	shouldNot(err)
+	stderrFile, err := ioutil.TempFile("", "filew-viewer")
+	defer stderrFile.Close()
+	gocleanup.Register(func() {
+		os.Remove(stderrFile.Name())
+	})
+	defer os.Remove(stderrFile.Name())
 
 	arguments := append(request.options(), inputPath)
 	cmd := exec.Command(request.Name(), arguments...)
 	cmd.Stdout = stdoutFile
-
-	err = cmd.Run()
+	cmd.Stderr = stderrFile
 	shouldNot(err)
 
-	var command string
-	command = request.Commands(request.token(), *cm)
+	command := request.Commands(request.token(), *cm)
+
+	err = cmd.Run()
+	if err != nil {
+		stderr, err := os.Open(stderrFile.Name())
+		shouldNot(err)
+		scanner := bufio.NewScanner(stderr)
+		e := []string{}
+		for scanner.Scan() {
+			shouldNot(scanner.Err())
+			line := scanner.Text()
+			e = append(e, line)
+		}
+		panic(CommandError{
+			request.seq(),
+			e,
+			command,
+			request.Name(),
+		})
+	}
+
 	id, err := cm.AddContext(request.token(), stdoutFile.Name(), command)
 	shouldNot(err)
 

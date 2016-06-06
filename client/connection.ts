@@ -53,7 +53,7 @@ export default class Connection {
   private onMessage(e: MessageEvent): void {
     const data = JSON.parse(e.data);
     const SEQ = data.seq;
-    const isError = data.error;
+    const isError = data.error || data.errors;
     if (isError) {
       this._rejecters.get(SEQ)(data);
     } else {

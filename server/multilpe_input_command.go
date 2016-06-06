@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -34,22 +35,6 @@ func OptionsForMultipleInput(request MultipleInputCommandRequest, token token, c
 }
 
 func RunCommandForMultipleInput(request MultipleInputCommandRequest, tg TokenGenerator, cm *ContextManager) Response {
-	stdoutFile, err := ioutil.TempFile("", "filew-viewer")
-	defer stdoutFile.Close()
-	gocleanup.Register(func() {
-		os.Remove(stdoutFile.Name())
-	})
-	shouldNot(err)
-
-	arguments := OptionsForMultipleInput(request, request.token(), *cm, func(input CommandInput) string {
-		return input.Path(request.token(), *cm)
-	})
-	cmd := exec.Command(request.Name(), arguments...)
-	cmd.Stdout = stdoutFile
-
-	err = cmd.Run()
-	shouldNot(err)
-
 	argumentsForCommand := OptionsForMultipleInput(request, request.token(), *cm, func(input CommandInput) string {
 		if input.File != nil {
 			return *input.File
@@ -67,6 +52,47 @@ func RunCommandForMultipleInput(request MultipleInputCommandRequest, tg TokenGen
 		command = " " + command
 	}
 	command = request.Name() + command
+
+	stdoutFile, err := ioutil.TempFile("", "filew-viewer")
+	defer stdoutFile.Close()
+	gocleanup.Register(func() {
+		os.Remove(stdoutFile.Name())
+	})
+	shouldNot(err)
+	stderrFile, err := ioutil.TempFile("", "filew-viewer")
+	defer stderrFile.Close()
+	gocleanup.Register(func() {
+		os.Remove(stderrFile.Name())
+	})
+	defer os.Remove(stderrFile.Name())
+
+	arguments := OptionsForMultipleInput(request, request.token(), *cm, func(input CommandInput) string {
+		return input.Path(request.token(), *cm)
+	})
+	cmd := exec.Command(request.Name(), arguments...)
+	cmd.Stdout = stdoutFile
+	cmd.Stderr = stderrFile
+	shouldNot(err)
+
+	err = cmd.Run()
+	if err != nil {
+		stderr, err := os.Open(stderrFile.Name())
+		shouldNot(err)
+		scanner := bufio.NewScanner(stderr)
+		e := []string{}
+		for scanner.Scan() {
+			shouldNot(scanner.Err())
+			line := scanner.Text()
+			e = append(e, line)
+		}
+		panic(CommandError{
+			request.seq(),
+			e,
+			command,
+			request.Name(),
+		})
+	}
+
 	id, err := cm.AddContext(request.token(), stdoutFile.Name(), command)
 	shouldNot(err)
 

@@ -6,6 +6,7 @@ import ICommandOption from './icommandoption.ts';
 import IFile from './ifile.ts';
 import IResult from './iresult.ts';
 import ISelected from './iselected.ts';
+import FailureResultButton from './failureresultbutton.tsx';
 import PendingResultButton from './pendingresultbutton.tsx';
 import SuccessResultButton from './successresultbutton.tsx';
 import { Col, ListGroup, ListGroupItem } from 'react-bootstrap';
@@ -50,7 +51,7 @@ export default class FileBrowser extends React.Component<IProps, IState> {
     });
 
     const results = this.props.results.map((result: IResult, key: number) => {
-      const { success, pending } = result;
+      const { failure, success, pending } = result;
       if (success) {
         const title = success.command;
         const name = success.name;
@@ -66,6 +67,13 @@ export default class FileBrowser extends React.Component<IProps, IState> {
         const { onSelect } = this.props;
         const props = { seq, title, name, onSelect };
         return <PendingResultButton key={result.seq} {...props} />;
+      } else if (failure) {
+        const seq = failure.seq;
+        const title = failure.command;
+        const name = failure.name;
+        const { onSelect } = this.props;
+        const props = { seq, title, name, onSelect };
+        return <FailureResultButton key={result.seq} {...props} />;
       }
       return undefined;
     });

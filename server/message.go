@@ -101,6 +101,13 @@ type MessageError struct {
 	Error string `json:"error"`
 }
 
+type CommandError struct {
+	Seq
+	Errors  []string `json:"errors"`
+	Command string   `json:"command"`
+	Name    string   `json:"name"`
+}
+
 type CommandResponse struct {
 	Seq
 	Command       string `json:"command"`

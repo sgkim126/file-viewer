@@ -5,6 +5,7 @@ import Connection from './connection.ts';
 import FileBrowser from './file-browser.tsx';
 import IBrowser from './ibrowser.ts';
 import ICommandOption from './icommandoption.ts';
+import IFailure from './ifailure.ts';
 import IFile from './ifile.ts';
 import IMoreResult from './imoreresult.ts';
 import IPending from './ipending.ts';
@@ -68,6 +69,17 @@ export default class Main extends React.Component<IProps, IState> {
         const results = this.state.results.map((result: IResult) => {
           if (result.seq === resultSeq) {
             return { seq: resultSeq, success };
+          }
+          return result;
+        });
+        this.setState({ results, resultSeq });
+      }, (failure: IFailure) => {
+        failure.name = command;
+        failure.command = command;
+        const resultSeq = failure.seq;
+        const results = this.state.results.map((result: IResult) => {
+          if (result.seq === seq) {
+            return { seq: resultSeq, failure };
           }
           return result;
         });

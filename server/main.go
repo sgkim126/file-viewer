@@ -104,7 +104,14 @@ func handleRequest(tg TokenGenerator, cm ContextManager, root string) func(http.
 					}
 					errorResponse, ok := r.(MessageError)
 					if !ok {
-						panic(r)
+						commandError, ok := r.(CommandError)
+						if !ok {
+							panic(r)
+						}
+						encoded, err := json.Marshal(commandError)
+						shouldNot(err)
+						writer <- WebsocketMessage{messageType, encoded}
+						return
 					}
 					encoded, err := json.Marshal(errorResponse)
 					shouldNot(err)
