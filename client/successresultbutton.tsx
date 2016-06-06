@@ -27,7 +27,7 @@ export default class SuccessResultButton extends React.Component<IProps, IState>
       e.stopPropagation();
       onSelect(e, { input: { pipe }, resultSeq: seq });
     };
-    const active = !!selecteds.find((selected: ISelected) => selected.resultSeq === resultSeq);
+    const active = !!selecteds.find((selected: ISelected) => selected.resultSeq === seq);
     const bsStyle = seq === resultSeq ? 'info' : undefined;
     return <ListGroupItem active={active} bsStyle={bsStyle} key={seq} onClick={onClick} title={title}>{name}</ListGroupItem>;
   }

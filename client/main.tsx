@@ -104,7 +104,11 @@ export default class Main extends React.Component<IProps, IState> {
       });
     };
 
-    const clearSelects = (): void => {
+    const clearSelects = (e: React.MouseEvent): void => {
+      if (e.ctrlKey) {
+        return;
+      }
+
       this.setState({ selecteds: [] });
     };
     const onSelect = (e: React.MouseEvent, selected: ISelected): void => {
@@ -112,6 +116,10 @@ export default class Main extends React.Component<IProps, IState> {
         if (selected.resultSeq) {
           this.setState({ resultSeq: selected.resultSeq });
         }
+        return;
+      }
+
+      if (!selected.input) {
         return;
       }
 

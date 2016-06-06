@@ -21,7 +21,7 @@ interface IProps {
   results: IResult[];
   resultSeq: number;
 
-  clearSelects: () => void;
+  clearSelects: (e: React.MouseEvent) => void;
   onSelect: (e: React.MouseEvent, selected: ISelected) => void;
   selecteds?: ISelected[];
 }
