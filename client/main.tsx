@@ -58,10 +58,19 @@ export default class Main extends React.Component<IProps, IState> {
       const token = this.props.connection.token;
       const type = 'command';
       const message: Message = { seq, token, type, command, option } as any;
-      const result = this.props.connection.send(message).then((success: ISuccess) => {
+      const result = this.props.connection.send(message);
+      const results = this.state.results.slice();
+      results.push({ seq, pending: { seq, command }});
+      this.setState({ results });
+
+      result.then((success: ISuccess) => {
         const resultSeq = success.seq;
-        const results = this.state.results.slice();
-        results.push({ seq: resultSeq, success });
+        const results = this.state.results.map((result: IResult) => {
+          if (result.seq === resultSeq) {
+            return { seq: resultSeq, success };
+          }
+          return result;
+        });
         this.setState({ results, resultSeq });
       });
     };

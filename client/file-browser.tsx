@@ -6,6 +6,7 @@ import ICommandOption from './icommandoption.ts';
 import IFile from './ifile.ts';
 import IResult from './iresult.ts';
 import ISelected from './iselected.ts';
+import SuccessResultButton from './successresultbutton.tsx';
 import { Col, ListGroup, ListGroupItem } from 'react-bootstrap';
 
 interface IProps {
@@ -48,16 +49,17 @@ export default class FileBrowser extends React.Component<IProps, IState> {
     });
 
     const results = this.props.results.map((result: IResult, key: number) => {
-      const onClick = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        const pipe = result.success ? result.success.id : undefined;
-        onSelect(e, { input: { pipe }, resultSeq: result.seq });
-      };
-      const active = !!this.props.selecteds.find(({input}: ISelected) => result.success && (input.pipe === result.success.id));
-      const bsStyle =  result.seq === this.props.resultSeq ? 'info' : undefined;
-      const title = result.success ? result.success.command : 'pending';
-      const name = result.success ? result.success.name : 'result';
-      return <ListGroupItem active={active} bsStyle={bsStyle} key={result.seq} onClick={onClick} title={title}>{name}</ListGroupItem>;
+      const success = result.success;
+      if (success) {
+        const title = success.command;
+        const name = success.name;
+        const pipe = success.id;
+        const seq = success.seq;
+        const { selecteds, resultSeq, onSelect } = this.props;
+        const props = { seq, name, title, pipe, selecteds, resultSeq, onSelect };
+        return <SuccessResultButton key={result.seq} {...props} />;
+      }
+      return undefined;
     });
 
     return <div className='file-browser' onClick={this.props.clearSelects}>
