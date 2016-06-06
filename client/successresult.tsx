@@ -3,10 +3,10 @@ const { Form, FormControl, FormGroup, InputGroup } = require('react-bootstrap');
 import './result.styl';
 import * as React from 'react';
 import IMoreResult from './imoreresult.ts';
-import IResult from './iresult.ts';
+import ISuccess from './isuccess.ts';
 import { Button } from 'react-bootstrap';
 
-interface IProps extends IResult {
+interface IProps extends ISuccess {
   hide: boolean;
   readMore: (id: number, start: number, lines: number) => Promise<IMoreResult>;
 }
@@ -14,7 +14,7 @@ interface IProps extends IResult {
 interface IState extends IMoreResult {
 }
 
-export default class Result extends React.Component<IProps, IState> {
+export default class SuccessResult extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
 

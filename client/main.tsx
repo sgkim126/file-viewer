@@ -7,7 +7,9 @@ import IBrowser from './ibrowser.ts';
 import ICommandOption from './icommandoption.ts';
 import IFile from './ifile.ts';
 import IMoreResult from './imoreresult.ts';
+import IPending from './ipending.ts';
 import IResult from './iresult.ts';
+import ISuccess from './isuccess.ts';
 import ISelected from './iselected.ts';
 import Message from './messages.ts';
 import Results from './results.tsx';
@@ -26,6 +28,8 @@ interface IState {
   columns?: Map<string, IFile[]>[];
 
   selecteds?: ISelected[];
+
+  pendings?: IPending[];
 }
 
 export default class Main extends React.Component<IProps, IState> {
@@ -40,6 +44,7 @@ export default class Main extends React.Component<IProps, IState> {
       results: [], resultSeq: -1,
       columns: [],
       selecteds: [],
+      pendings: [],
     };
 
     this.ls(this.props.root).then((browser: IBrowser) => {
@@ -53,10 +58,10 @@ export default class Main extends React.Component<IProps, IState> {
       const token = this.props.connection.token;
       const type = 'command';
       const message: Message = { seq, token, type, command, option } as any;
-      const result = this.props.connection.send(message).then((result: IResult) => {
-        const resultSeq = result.seq;
+      const result = this.props.connection.send(message).then((success: ISuccess) => {
+        const resultSeq = success.seq;
         const results = this.state.results.slice();
-        results.push(result);
+        results.push({ seq: resultSeq, success });
         this.setState({ results, resultSeq });
       });
     };

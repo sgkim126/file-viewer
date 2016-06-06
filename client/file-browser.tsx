@@ -50,11 +50,14 @@ export default class FileBrowser extends React.Component<IProps, IState> {
     const results = this.props.results.map((result: IResult, key: number) => {
       const onClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        onSelect(e, { input: { pipe: result.id }, resultSeq: result.seq });
+        const pipe = result.success ? result.success.id : undefined;
+        onSelect(e, { input: { pipe }, resultSeq: result.seq });
       };
-      const active = !!this.props.selecteds.find(({input}: ISelected) => input.pipe === result.id);
+      const active = !!this.props.selecteds.find(({input}: ISelected) => result.success && (input.pipe === result.success.id));
       const bsStyle =  result.seq === this.props.resultSeq ? 'info' : undefined;
-      return <ListGroupItem active={active} bsStyle={bsStyle} key={result.id} onClick={onClick} title={result.command}>{result.name}</ListGroupItem>;
+      const title = result.success ? result.success.command : 'pending';
+      const name = result.success ? result.success.name : 'result';
+      return <ListGroupItem active={active} bsStyle={bsStyle} key={result.seq} onClick={onClick} title={title}>{name}</ListGroupItem>;
     });
 
     return <div className='file-browser' onClick={this.props.clearSelects}>

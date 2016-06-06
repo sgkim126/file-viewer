@@ -1,7 +1,7 @@
 import * as React from 'react';
 import IMoreResult from './imoreresult.ts';
 import IResult from './iresult.ts';
-import Result from './result.tsx';
+import SuccessResult from './successresult.tsx';
 
 interface IProps {
   results: IResult[];
@@ -20,7 +20,8 @@ export default class Results extends React.Component<IProps, IState> {
   public render(): JSX.Element {
     const results = this.props.results.map((result: IResult) => {
       const hide = result.seq !== this.props.show;
-      return <Result key={result.seq} {...result} hide={hide} readMore={this.props.readMore} />;
+      const success = result.success;
+      return <SuccessResult key={result.seq} {...success} hide={hide} readMore={this.props.readMore} />;
     });
     return <div className='full-height'>{results}</div>;
   }

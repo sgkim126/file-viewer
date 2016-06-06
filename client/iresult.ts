@@ -1,13 +1,8 @@
+import ISuccess from './isuccess.ts';
+
 interface IResult {
   seq: number;
-  id: number;
-  command: string;
-  name: string;
-  bytes: number;
-  chars: number;
-  words: number;
-  lines: number;
-  max_line_length: number;
+  success?: ISuccess;
 }
 
 export default IResult;
