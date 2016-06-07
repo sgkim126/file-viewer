@@ -111,7 +111,7 @@ export default class Main extends React.Component<IProps, IState> {
       this.setState({ selecteds: [] });
     };
     const onSelect = (e: React.MouseEvent, selected: ISelected): void => {
-      if (e.altKey) {
+      if (e.altKey || e.shiftKey) {
         if (selected.resultSeq) {
           this.setState({ resultSeq: selected.resultSeq });
         }
