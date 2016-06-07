@@ -49,9 +49,7 @@ export default class Main extends React.Component<IProps, IState> {
       pendings: [],
     };
 
-    this.ls(this.props.root).then((browser: IBrowser) => {
-      this.setState({ browser });
-    });
+    this.ls(this.props.root).then((browser: IBrowser) => this.setState({ browser }));
   }
 
   public render(): JSX.Element {
@@ -67,23 +65,17 @@ export default class Main extends React.Component<IProps, IState> {
 
       result.then((success: ISuccess) => {
         const resultSeq = success.seq;
-        const results = this.state.results.map((result: IResult) => {
-          if (result.seq === resultSeq) {
-            return { seq: resultSeq, success };
-          }
-          return result;
-        });
+        const results = this.state.results.map(
+          (result: IResult) => result.seq === resultSeq ? { seq: resultSeq, success } : result
+        );
         this.setState({ results, resultSeq });
       }, (failure: IFailure) => {
         failure.name = command;
         failure.command = command;
         const resultSeq = failure.seq;
-        const results = this.state.results.map((result: IResult) => {
-          if (result.seq === seq) {
-            return { seq: resultSeq, failure };
-          }
-          return result;
-        });
+        const results = this.state.results.map(
+          (result: IResult) => result.seq === seq ?{ seq: resultSeq, failure } : result
+        );
         this.setState({ results, resultSeq });
       });
     };
@@ -92,9 +84,7 @@ export default class Main extends React.Component<IProps, IState> {
     const openDir = (path: string, columnNumber: number): void => {
       this.ls(path).then(({ files }: IBrowser) => {
         const columns = this.state.columns;
-        const column = (columns.length === columnNumber)
-          ? new Map<string, IFile[]>()
-          : columns[columnNumber];
+        const column = (columns.length === columnNumber) ? new Map<string, IFile[]>() : columns[columnNumber];
 
           if (!column.has(path)) {
             column.set(path, files);
