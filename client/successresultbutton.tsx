@@ -25,9 +25,9 @@ export default class SuccessResultButton extends React.Component<IProps, IState>
     const { seq, title, name, pipe, selecteds, resultSeq, onSelect } = this.props;
     const onClick = (e: React.MouseEvent) => {
       e.stopPropagation();
-      onSelect(e, { input: { pipe }, resultSeq: seq, name, title });
+      onSelect(e, { input: { pipe }, seq, name, title });
     };
-    const active = !!selecteds.find((selected: ISelected) => selected.resultSeq === seq);
+    const active = !!selecteds.find((selected: ISelected) => selected.seq === seq);
     const bsStyle = seq === resultSeq ? 'info' : undefined;
     return <ListGroupItem active={active} bsStyle={bsStyle} key={seq} onClick={onClick} title={title}>{name}</ListGroupItem>;
   }

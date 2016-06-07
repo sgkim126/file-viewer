@@ -103,8 +103,8 @@ export default class Main extends React.Component<IProps, IState> {
     };
     const onSelect = (e: React.MouseEvent, selected: ISelected): void => {
       if (e.altKey || e.shiftKey) {
-        if (selected.resultSeq) {
-          this.setState({ resultSeq: selected.resultSeq });
+        if (selected.seq) {
+          this.setState({ resultSeq: selected.seq });
         }
         return;
       }
@@ -146,7 +146,7 @@ export default class Main extends React.Component<IProps, IState> {
 
       close(result.success.id, this.props.connection, this.props.seq);
 
-      const selecteds = this.state.selecteds.filter((selected: ISelected) => selected.resultSeq !== result.seq);
+      const selecteds = this.state.selecteds.filter((selected: ISelected) => selected.seq !== result.seq);
       this.setState({ selecteds });
     };
 
