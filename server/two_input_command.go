@@ -49,7 +49,7 @@ func RunCommandForTwoInput(request TwoInputCommandRequest, tg TokenGenerator, cm
 	}
 	command = request.Name() + command
 
-	stdoutFile, err := ioutil.TempFile("", "filew-viewer")
+	stdoutFile, err := ioutil.TempFile("", "file-viewer")
 	shouldNot(err)
 
 	defer func(fileName string) {

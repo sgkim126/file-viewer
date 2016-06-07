@@ -42,7 +42,7 @@ func CommandsForOneInput(request OneInputCommandRequest, token token, cm Context
 func RunCommandForOneInput(request OneInputCommandRequest, tg TokenGenerator, cm *ContextManager) Response {
 	inputPath := request.input().Path(request.token(), *cm)
 
-	stdoutFile, err := ioutil.TempFile("", "filew-viewer")
+	stdoutFile, err := ioutil.TempFile("", "file-viewer")
 	shouldNot(err)
 
 	defer func(fileName string) {
