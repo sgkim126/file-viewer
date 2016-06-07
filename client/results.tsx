@@ -26,7 +26,7 @@ export default class Results extends React.Component<IProps, IState> {
       const hide = result.seq !== this.props.show;
       const { failure, success } = result;
       if (success) {
-        return <SuccessResult key={result.seq} {...success} hide={hide} readMore={this.props.readMore} />;
+        return <SuccessResult key={result.seq} {...success} hide={hide} readMore={this.props.readMore} closeResult={closeResult}/>;
       } else if (failure) {
         return <FailureResult key={result.seq} {...failure} hide={hide} closeResult={closeResult}/>;
       }

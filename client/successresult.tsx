@@ -3,11 +3,13 @@ import './result.styl';
 import * as React from 'react';
 import IMoreResult from './imoreresult.ts';
 import ISuccess from './isuccess.ts';
-import { Button, Col, Row, Well } from 'react-bootstrap';
+import { Button, Col, Glyphicon, Row, Well } from 'react-bootstrap';
 
 interface IProps extends ISuccess {
   hide: boolean;
   readMore: (id: number, start: number, lines: number) => Promise<IMoreResult>;
+
+  closeResult: (seq: number) => void;
 }
 
 interface IState extends IMoreResult {
@@ -44,8 +46,9 @@ export default class SuccessResult extends React.Component<IProps, IState> {
       className += ' hidden';
     }
 
+    const closeResult = () => this.props.closeResult(this.props.seq);
     return <div className={className}>
-    <Well>{this.props.command}</Well>
+    <Well>{this.props.command}<Button className='close-result' onClick={closeResult}><Glyphicon glyph='remove' /></Button></Well>
     <pre>{this.state.contents.join('\n')}</pre>
     <Form onSubmit={readMore}>
       <FormGroup>

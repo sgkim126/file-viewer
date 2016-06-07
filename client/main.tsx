@@ -143,11 +143,21 @@ export default class Main extends React.Component<IProps, IState> {
 
     const closeResult = (seq: number) => {
       const result = this.state.results.find((result: IResult) => result.seq === seq);
-
-      if (result != null) {
-        const results = this.state.results.filter((result: IResult) => result.seq !== seq);
-        this.setState({ results });
+      if (result == null) {
+        return;
       }
+      const results = this.state.results.filter((result: IResult) => result.seq !== seq);
+
+      this.setState({ results });
+
+      if (result.success == null) {
+        return;
+      }
+
+      close(result.success.id, this.props.connection, this.props.seq);
+
+      const selecteds = this.state.selecteds.filter((selected: ISelected) => selected.resultSeq !== result.seq);
+      this.setState({ selecteds });
     };
 
     const closeDir = (column: number, path: string) => {
@@ -206,4 +216,11 @@ function readMore(id: number, start: number, lines: number, connection: Connecti
   const token = connection.token;
 
   return connection.send({seq, token, id, start, lines, type: 'more'});
+}
+
+function close(id: number, connection: Connection, seqGen: IterableIterator<number>) {
+  const seq = seqGen.next().value;
+  const token = connection.token;
+
+  return connection.send({seq, token, id, type: 'close'});
 }
