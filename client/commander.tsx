@@ -61,6 +61,7 @@ export default class Commander extends React.Component<IProps, IState> {
 
     if (!this.hasDir()) {
       buttons.push(this.catButton(this.props.selecteds));
+      buttons.push(this.tacButton(this.props.selecteds));
       buttons.push(this.sortButton(this.props.selecteds));
       buttons.push(this.cutButton(this.props.selecteds));
     }
@@ -165,6 +166,57 @@ export default class Commander extends React.Component<IProps, IState> {
       this.setState({ menu: { title, body, onSubmit,  } });
     };
     return <Button key='cat' onClick={onClick}>cat</Button>;
+  }
+
+  private tacButton(selecteds: ISelected[]): JSX.Element {
+    const onClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+
+      let beforeRef: HTMLInputElement;
+      let regexRef: HTMLInputElement;
+      let separatorRef: HTMLInputElement;
+
+      const title = 'tac';
+      const onSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const inputs = selecteds.map((selected: ISelected) => selected.input);
+        const option: Option.ITacOption = { inputs };
+
+        if (beforeRef.checked) {
+          option.before = true;
+        }
+        if (regexRef.checked) {
+          option.regex = true;
+        }
+        const separatorValue = (findDOMNode(separatorRef) as HTMLInputElement).value;
+        if (separatorValue !== "") {
+          option.separator = separatorValue;
+        }
+
+        this.props.onCommand('tac', option);
+        this.setState({ menu: undefined });
+      };
+
+      const body = <form onSubmit={onSubmit}>
+        <FormGroup>
+          <Checkbox inputRef={(ref: HTMLInputElement) => { beforeRef = ref; }}>before</Checkbox>
+          <HelpBlock>attach the separator before instead of after</HelpBlock>
+        </FormGroup>
+        <FormGroup>
+          <Checkbox inputRef={(ref: HTMLInputElement) => { regexRef = ref; }}>regex</Checkbox>
+          <HelpBlock>interpret the separator as a regular expression</HelpBlock>
+        </FormGroup>
+        <FormGroup>
+          <ControlLabel>separator</ControlLabel>
+          <FormControl ref={(ref: HTMLInputElement) => { separatorRef = ref; }} type='text' placeholder='seperator' />
+          <HelpBlock>use STRING as the separator instead of newline</HelpBlock>
+        </FormGroup>
+      </form>;
+
+      this.setState({ menu: { title, body, onSubmit,  } });
+    };
+    return <Button key='tac' onClick={onClick}>tac</Button>;
   }
 
   private headButton(selected: ISelected): JSX.Element {

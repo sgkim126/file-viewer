@@ -15,6 +15,8 @@ export interface ITacOption {
   before?: boolean;
   regex?: boolean;
   separator?: string;
+
+  inputs: ICommandInput[];
 }
 
 export interface IHeadOption {
