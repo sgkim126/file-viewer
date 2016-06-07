@@ -33,6 +33,11 @@ export interface ICat extends ICommand {
   option: Option.ICatOption;
 }
 
+export interface ITac extends ICommand {
+  command: 'tac';
+  option: Option.ITacOption;
+}
+
 export interface IHead extends ICommand {
   command: 'head';
   option: Option.IHeadOption;

@@ -11,6 +11,12 @@ export interface ICatOption {
   inputs: ICommandInput[];
 }
 
+export interface ITacOption {
+  before?: boolean;
+  regex?: boolean;
+  separator?: string;
+}
+
 export interface IHeadOption {
   lines?: number;
   bytes?: number;
@@ -83,6 +89,6 @@ export interface ICutOption {
   inputs: ICommandInput[];
 }
 
-type ICommandOption = ICatOption | IHeadOption | ITailOption | IUniqOption | ISortOption | ICutOption;
+type ICommandOption = ICatOption | ITacOption | IHeadOption | ITailOption | IUniqOption | ISortOption | ICutOption;
 
 export default ICommandOption;
