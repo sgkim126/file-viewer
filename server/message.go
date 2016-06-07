@@ -76,6 +76,11 @@ func (requestType RequestType) Request(data []byte) Request {
 				err := json.Unmarshal(data, &request)
 				shouldNot(err)
 				return request
+			case "comm":
+				var request CommRequest
+				err := json.Unmarshal(data, &request)
+				shouldNot(err)
+				return request
 			case "cut":
 				var request CutRequest
 				err := json.Unmarshal(data, &request)
