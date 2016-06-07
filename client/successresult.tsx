@@ -53,7 +53,7 @@ export default class SuccessResult extends React.Component<IProps, IState> {
           <FormControl type='number' defaultValue={10} id='read-more-lines' />
           <InputGroup.Button><Button type='submit'>lines</Button></InputGroup.Button>
         </InputGroup>
-        <Button className={this.props.bytes === this.state.bytes ? 'hidden' : ''} onClick={readAll}>all</Button>
+        <Button block className={this.props.bytes === this.state.bytes ? 'hidden' : ''} onClick={readAll}>read all</Button>
       </FormGroup>
     </Form>
     <Well bsSize='small'>

@@ -47,7 +47,9 @@ export default class FileBrowser extends React.Component<IProps, IState> {
       for (const [path, files] of column) {
         row.push(<Dir key={path} column={key} path={path} files={files} onSelect={onSelect} selecteds={selecteds}/>);
       }
-      return <div key={key} className='column'>{row}</div>;
+      const position = 'absolute';
+      const left = ((key + 1) * 200) + 15 + 'px';
+      return <div key={key} className='column' style={{ position, left }}>{row}</div>;
     });
 
     const results = this.props.results.map((result: IResult, key: number) => {
@@ -79,13 +81,13 @@ export default class FileBrowser extends React.Component<IProps, IState> {
     });
 
     return <div className='file-browser' onClick={this.props.clearSelects}>
-      <Col xs={8} className='file-browser-inner'>
+      <Col xs={9} className='file-browser-inner'>
         <div className='column'>
           <Dir column={-1} path={this.props.root} files={this.props.rootFiles} open={true} onSelect={onSelect} foldable={false} selecteds={selecteds}/>
         </div>
         {columns}
       </Col>
-      <Col xs={4}><ListGroup>{results}</ListGroup></Col>
+      <Col xs={3}><ListGroup>{results}</ListGroup></Col>
     </div>;
   }
 }

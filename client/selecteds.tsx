@@ -24,7 +24,8 @@ export default class Selecteds extends React.Component<IProps, IState> {
         this.swap(i - 1, i);
       };
       const prevButton = i === 0 ? undefined : <Button bsSize='small' onClick={onClick}><Glyphicon glyph='transfer' /></Button>;
-      return [prevButton, <span className='selected' key={title} title={title}>{name}</span>];
+      const glyph = <Glyphicon glyph={selected.is_dir ? 'folder-open' : 'file'} />;
+      return [prevButton, <span className='selected' key={title} title={title}>{glyph}&nbsp;&nbsp;{name}</span>];
     });
     return <div className='selecteds'>{selecteds}</div>;
   }

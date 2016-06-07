@@ -52,7 +52,7 @@ export default class Dir extends React.Component<IProps, IState> {
         {this.props.files.map((file: IFile) => {
           const glyph = <Glyphicon glyph={file.is_dir ? 'folder-open' : 'file'} />;
           const active = !!this.props.selecteds.find(({input}: ISelected) => input.file === this.path(file.name));
-          return <ListGroupItem active={active} key={file.name} onClick={(e) => onClick(e, file)}>{glyph} {file.name}</ListGroupItem>;
+          return <ListGroupItem active={active} key={file.name} onClick={(e) => onClick(e, file)}>{glyph}&nbsp;&nbsp;{file.name}</ListGroupItem>;
         })}
       </ListGroup>
     </Panel>;
