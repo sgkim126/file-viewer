@@ -93,7 +93,8 @@ func RunCommandForMultipleInput(request MultipleInputCommandRequest, tg TokenGen
 		})
 	}
 
-	id, err := cm.AddContext(request.token(), stdoutFile.Name(), command)
+	seq := *request.seq().Seq
+	err = cm.AddContext(seq, request.token(), stdoutFile.Name(), command)
 	shouldNot(err)
 
 	bytes, chars, words, lines, max_line_length := wc(stdoutFile.Name())
@@ -101,7 +102,6 @@ func RunCommandForMultipleInput(request MultipleInputCommandRequest, tg TokenGen
 	return CommandResponse{
 		request.seq(),
 		command,
-		id,
 		request.Name(),
 		bytes,
 		chars,

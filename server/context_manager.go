@@ -12,7 +12,6 @@ type Context struct {
 }
 
 type ContextManager struct {
-	nextSeq  int
 	contexts map[int]Context
 	tokens   []token
 	root     string
@@ -20,7 +19,6 @@ type ContextManager struct {
 
 func NewContextManager(root string) ContextManager {
 	return ContextManager{
-		1,
 		make(map[int]Context, 0),
 		make([]token, 0),
 		root,
@@ -59,44 +57,42 @@ func (cm ContextManager) Root() string {
 	return cm.root
 }
 
-func (cm *ContextManager) AddContext(token token, path string, command string) (id int, err error) {
+func (cm *ContextManager) AddContext(seq int, token token, path string, command string) error {
 	if !cm.HasToken(token) {
-		err = errors.New(fmt.Sprintf("\"%s\" is not exists", token))
+		return errors.New(fmt.Sprintf("\"%s\" is not exists", token))
 	}
-	id = cm.nextSeq
-	cm.nextSeq += 1
-	cm.contexts[id] = Context{
+	cm.contexts[seq] = Context{
 		token,
 		path,
 		command,
 	}
-	return
+	return nil
 }
 
-func (cm ContextManager) GetContext(token token, id int) (context Context, err error) {
+func (cm ContextManager) GetContext(token token, seq int) (context Context, err error) {
 	if !cm.HasToken(token) {
 		err = errors.New(fmt.Sprintf("\"%s\" is not exists", token))
 		return
 	}
-	context, ok := cm.contexts[id]
+	context, ok := cm.contexts[seq]
 	if !ok {
-		err = errors.New(fmt.Sprintf("\"%s\"[%d] is not exists", token, id))
+		err = errors.New(fmt.Sprintf("\"%s\"[%d] is not exists", token, seq))
 		return
 	}
 	return
 }
 
-func (cm *ContextManager) RemoveContext(token token, id int) (path string, err error) {
+func (cm *ContextManager) RemoveContext(token token, seq int) (path string, err error) {
 	if !cm.HasToken(token) {
 		err = errors.New(fmt.Sprintf("\"%s\" is not exists", token))
 		return
 	}
-	context, ok := cm.contexts[id]
+	context, ok := cm.contexts[seq]
 	if !ok {
-		err = errors.New(fmt.Sprintf("\"%s\"[%d] is not exists", token, id))
+		err = errors.New(fmt.Sprintf("\"%s\"[%d] is not exists", token, seq))
 		return
 	}
 	path = context.path
-	delete(cm.contexts, id)
+	delete(cm.contexts, seq)
 	return
 }

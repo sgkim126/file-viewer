@@ -6,7 +6,7 @@ import SuccessResult from './successresult.tsx';
 
 interface IProps {
   results: IResult[];
-  readMore: (id: number, start: number, lines: number) => Promise<IMoreResult>;
+  readMore: (seq: number, start: number, lines: number) => Promise<IMoreResult>;
   show: number;
 
   closeResult: (seq: number) => void;

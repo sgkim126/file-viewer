@@ -6,11 +6,10 @@ import (
 
 type CloseRequest struct {
 	Seq
-	Id int `json:"id"`
 }
 
 func (request CloseRequest) Handle(tg TokenGenerator, cm *ContextManager) Response {
-	path, err := cm.RemoveContext(*request.Token, request.Id)
+	path, err := cm.RemoveContext(*request.Token, *request.Seq.Seq)
 	shouldNot(err)
 	err = os.Remove(path)
 	shouldNot(err)

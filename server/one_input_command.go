@@ -82,7 +82,8 @@ func RunCommandForOneInput(request OneInputCommandRequest, tg TokenGenerator, cm
 		})
 	}
 
-	id, err := cm.AddContext(request.token(), stdoutFile.Name(), command)
+	seq := *request.seq().Seq
+	err = cm.AddContext(seq, request.token(), stdoutFile.Name(), command)
 	shouldNot(err)
 
 	bytes, chars, words, lines, max_line_length := wc(stdoutFile.Name())
@@ -90,7 +91,6 @@ func RunCommandForOneInput(request OneInputCommandRequest, tg TokenGenerator, cm
 	return CommandResponse{
 		request.seq(),
 		command,
-		id,
 		request.Name(),
 		bytes,
 		chars,

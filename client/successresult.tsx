@@ -7,7 +7,7 @@ import { Button, Col, Glyphicon, Row, Well } from 'react-bootstrap';
 
 interface IProps extends ISuccess {
   hide: boolean;
-  readMore: (id: number, start: number, lines: number) => Promise<IMoreResult>;
+  readMore: (seq: number, start: number, lines: number) => Promise<IMoreResult>;
 
   closeResult: (seq: number) => void;
 }
@@ -71,7 +71,7 @@ export default class SuccessResult extends React.Component<IProps, IState> {
   }
 
   private readMore(lines: number): void {
-    this.props.readMore(this.props.id, this.state.bytes, lines).then((result: IMoreResult) => {
+    this.props.readMore(this.props.seq, this.state.bytes, lines).then((result: IMoreResult) => {
       let { bytes, chars, words, lines, contents } = this.state;
       bytes += result.bytes;
       chars += result.chars;

@@ -14,12 +14,10 @@ export interface ILs extends IMessage {
 
 export interface IClose extends IMessage {
   type: 'close';
-  id: number;
 }
 
 export interface IMore extends IMessage {
   type: 'more';
-  id: number;
   start: number;
   lines: number;
 }

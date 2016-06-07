@@ -144,7 +144,7 @@ export default class Main extends React.Component<IProps, IState> {
         return;
       }
 
-      close(result.success.id, this.props.connection, this.props.seq);
+      close(result.success.seq, this.props.connection, this.props.seq);
 
       const selecteds = this.state.selecteds.filter((selected: ISelected) => selected.seq !== result.seq);
       this.setState({ selecteds });
@@ -186,8 +186,8 @@ export default class Main extends React.Component<IProps, IState> {
     return ls(path, this.props.connection, this.props.seq);
   }
 
-  private readMore(id: number, start: number, lines: number): Promise<IMoreResult> {
-    return readMore(id, start, lines, this.props.connection, this.props.seq);
+  private readMore(seq: number, start: number, lines: number): Promise<IMoreResult> {
+    return readMore(seq, start, lines, this.props.connection, this.props.seq);
   }
 }
 
@@ -201,16 +201,14 @@ function ls(path: string, connection: Connection, seqGen: IterableIterator<numbe
   });
 }
 
-function readMore(id: number, start: number, lines: number, connection: Connection, seqGen: IterableIterator<number>): Promise<IMoreResult> {
-  const seq = seqGen.next().value;
+function readMore(seq: number, start: number, lines: number, connection: Connection, seqGen: IterableIterator<number>): Promise<IMoreResult> {
   const token = connection.token;
 
-  return connection.send({seq, token, id, start, lines, type: 'more'});
+  return connection.send({seq, token, start, lines, type: 'more'});
 }
 
-function close(id: number, connection: Connection, seqGen: IterableIterator<number>) {
-  const seq = seqGen.next().value;
+function close(seq: number, connection: Connection, seqGen: IterableIterator<number>) {
   const token = connection.token;
 
-  return connection.send({seq, token, id, type: 'close'});
+  return connection.send({seq, token, type: 'close'});
 }

@@ -11,13 +11,12 @@ import (
 
 type MoreRequest struct {
 	Seq
-	Id    int   `json:"id"`
 	Start int64 `json:"start"`
 	Lines int   `json:"lines"`
 }
 
 func (request MoreRequest) Handle(tg TokenGenerator, cm *ContextManager) Response {
-	c, err := cm.GetContext(*request.Token, request.Id)
+	c, err := cm.GetContext(*request.Token, *request.Seq.Seq)
 	shouldNot(err)
 	path := c.path
 

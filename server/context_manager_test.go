@@ -67,9 +67,10 @@ func TestContextManagerRemoveContextReturnsPath(t *testing.T) {
 	cm := NewContextManager("/root")
 	err := cm.AddToken("a")
 	assert.Nil(t, err)
-	id, err := cm.AddContext("a", "path", "command")
+	seq := 1
+	err := cm.AddContext(seq, "a", "path", "command")
 	assert.Nil(t, err)
-	path, err := cm.RemoveContext("a", id)
+	path, err := cm.RemoveContext("a", seq)
 	assert.Equal(t, "path", path)
 	assert.Nil(t, err)
 }

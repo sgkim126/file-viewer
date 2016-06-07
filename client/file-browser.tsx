@@ -57,7 +57,7 @@ export default class FileBrowser extends React.Component<IProps, IState> {
       if (success) {
         const title = success.command;
         const name = success.name;
-        const pipe = success.id;
+        const pipe = success.seq;
         const seq = success.seq;
         const { selecteds, resultSeq, onSelect } = this.props;
         const props = { seq, name, title, pipe, selecteds, resultSeq, onSelect };
