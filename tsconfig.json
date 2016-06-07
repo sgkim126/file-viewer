@@ -5,6 +5,7 @@
     "noImplicitAny": true,
     "jsx": "preserve",
     "suppressImplicitAnyIndexErrors": true,
+    "experimentalDecorators": true,
     "target": "ES6"
   },
   "exclude": [

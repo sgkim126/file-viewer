@@ -13,6 +13,7 @@ import IResult from './iresult.ts';
 import ISuccess from './isuccess.ts';
 import ISelected from './iselected.ts';
 import Message from './messages.ts';
+import Selecteds from './selecteds.tsx';
 import Results from './results.tsx';
 import { Col, Row } from 'react-bootstrap';
 
@@ -136,10 +137,19 @@ export default class Main extends React.Component<IProps, IState> {
       this.setState({ selecteds });
     };
 
+    const setSelecteds = (selecteds: ISelected[]) => {
+      this.setState({ selecteds });
+    };
+
     return <div className='full-width full-height'>
     <Row>
       <Col xs={12}>
         <Commander openDir={openDir} selecteds={this.state.selecteds} onCommand={onCommand}/>
+      </Col>
+    </Row>
+    <Row>
+      <Col xs={12}>
+        <Selecteds selecteds={this.state.selecteds} setSelecteds={setSelecteds} />
       </Col>
     </Row>
     <Row>
