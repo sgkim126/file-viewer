@@ -17,6 +17,7 @@ interface IProps {
   rootFiles: IFile[];
 
   columns: Map<string, IFile[]>[];
+  closeDir: (column: number, path: string) => void;
 
   results: IResult[];
   resultSeq: number;
@@ -39,13 +40,12 @@ export default class FileBrowser extends React.Component<IProps, IState> {
   public render(): JSX.Element {
     let selectedFile = { } as any;
 
-    const selecteds = this.props.selecteds;
+    const { selecteds, closeDir, onSelect } = this.props;
 
-    const onSelect = this.props.onSelect;
     const columns = this.props.columns.map((column: Map<string, IFile[]>, key: number) => {
       let row: JSX.Element[] = [];
       for (const [path, files] of column) {
-        row.push(<Dir key={path} column={key} path={path} files={files} onSelect={onSelect} selecteds={selecteds}/>);
+        row.push(<Dir key={path} column={key} path={path} files={files} onSelect={onSelect} selecteds={selecteds} closeDir={closeDir}/>);
       }
       const position = 'absolute';
       const left = ((key + 1) * 200) + 15 + 'px';

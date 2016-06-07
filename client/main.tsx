@@ -150,6 +150,12 @@ export default class Main extends React.Component<IProps, IState> {
       }
     };
 
+    const closeDir = (column: number, path: string) => {
+      const { columns } = this.state;
+      columns[column].delete(path);
+      this.setState({ columns });
+    };
+
     return <div className='full-width full-height'>
     <Row>
       <Col xs={12}>
@@ -167,7 +173,7 @@ export default class Main extends React.Component<IProps, IState> {
           ls={this.ls.bind(this)}
           root={this.props.root} rootFiles={files} columns={this.state.columns}
           results={this.state.results} resultSeq={this.state.resultSeq}
-          clearSelects={clearSelects} onSelect={onSelect} selecteds={this.state.selecteds} />
+          clearSelects={clearSelects} onSelect={onSelect} selecteds={this.state.selecteds} closeDir={closeDir} />
       </Col>
       <Col xs={5} className='full-height'>
         <Results show={this.state.resultSeq} readMore={this.readMore.bind(this)} results={this.state.results} closeResult={closeResult} />

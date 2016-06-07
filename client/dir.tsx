@@ -1,7 +1,8 @@
+import './dir.styl';
 import * as React from 'react';
 import IFile from './ifile.ts';
 import ISelected from './iselected.ts';
-import { Glyphicon, ListGroup, ListGroupItem, Panel } from 'react-bootstrap';
+import { Button, Col, Glyphicon, ListGroup, ListGroupItem, Panel, Row } from 'react-bootstrap';
 
 interface IProps {
   column: number;
@@ -11,6 +12,7 @@ interface IProps {
   foldable?: boolean;
   selecteds?: ISelected[];
 
+  closeDir?: (column: number, path: string) => void;
   onSelect: (e: React.MouseEvent, selected: ISelected) => void;
 }
 
@@ -47,11 +49,16 @@ export default class Dir extends React.Component<IProps, IState> {
       onSelect(e, file);
     };
 
-    return <Panel collapsible={this.props.foldable} defaultExpanded={this.props.open} header={basename(this.props.path)} key={this.props.path} title={this.props.path}>
+    const { files, selecteds, column, path, open, foldable, closeDir } = this.props;
+    const onClose = () => closeDir(column, path);
+
+    const closeButton = closeDir ? <Button className='dir-close' onClick={onClose}><Glyphicon glyph='remove' /></Button> : undefined;
+    const header = <span>{basename(path)}{closeButton}</span>;
+    return <Panel collapsible={foldable} defaultExpanded={open} header={header} key={path} title={path}>
       <ListGroup fill>
-        {this.props.files.map((file: IFile) => {
+        {files.map((file: IFile) => {
           const glyph = <Glyphicon glyph={file.is_dir ? 'folder-open' : 'file'} />;
-          const active = !!this.props.selecteds.find(({input}: ISelected) => input.file === this.path(file.name));
+          const active = !!selecteds.find(({input}: ISelected) => input.file === this.path(file.name));
           return <ListGroupItem active={active} key={file.name} onClick={(e) => onClick(e, file)}>{glyph}&nbsp;&nbsp;{file.name}</ListGroupItem>;
         })}
       </ListGroup>
