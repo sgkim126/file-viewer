@@ -51,6 +51,11 @@ func (requestType RequestType) Request(data []byte) Request {
 				err := json.Unmarshal(data, &request)
 				shouldNot(err)
 				return request
+			case "tac":
+				var request TacRequest
+				err := json.Unmarshal(data, &request)
+				shouldNot(err)
+				return request
 			case "head":
 				var request HeadRequest
 				err := json.Unmarshal(data, &request)
