@@ -75,6 +75,8 @@ export default class Commander extends React.Component<IProps, IState> {
         buttons.push(this.headButton(selected));
         buttons.push(this.tailButton(selected));
       }
+    } else if (this.props.selecteds.length === 2) {
+      buttons.push(this.commButton(this.props.selecteds[0], this.props.selecteds[1]));
     }
 
     if (buttons.length === 0) {
@@ -678,6 +680,86 @@ export default class Commander extends React.Component<IProps, IState> {
       this.setState({ menu: { title, body, onSubmit,  } });
     };
     return <Button key='sort' onClick={onClick}>sort</Button>;
+  }
+
+  private commButton(selected1: ISelected, selected2: ISelected): JSX.Element {
+    const onClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+
+      let column1Ref: HTMLInputElement;
+      let column2Ref: HTMLInputElement;
+      let column3Ref: HTMLInputElement;
+      let checkOrderRef: HTMLInputElement;
+      let noCheckOrderRef: HTMLInputElement;
+      let outputDelimiterRef: HTMLInputElement;
+
+      const title = 'comm';
+      const onSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const input1 = selected1.input;
+        const input2 = selected2.input;
+        const option: Option.ICommOption = { input1, input2 };
+
+        if (column1Ref.checked) {
+          option.column1 = true;
+        }
+        if (column2Ref.checked) {
+          option.column2 = true;
+        }
+        if (column3Ref.checked) {
+          option.column3 = true;
+        }
+
+        if (checkOrderRef.checked) {
+          option.checkOrder = true;
+        }
+        if (noCheckOrderRef.checked) {
+          option.noCheckOrder = true;
+        }
+
+        const outputDelimiterValue = (findDOMNode(outputDelimiterRef) as HTMLInputElement).value;
+        if (outputDelimiterValue !== "") {
+          option.outputDelimiter = outputDelimiterValue;
+        }
+
+        this.props.onCommand('comm', option);
+        this.setState({ menu: undefined });
+      };
+
+      const body = <form onSubmit={onSubmit}>
+        <FormGroup>
+          <Checkbox inputRef={(ref: HTMLInputElement) => { column1Ref = ref; }}>-1</Checkbox>
+          <HelpBlock>suppress column 1 (lines unique to FILE1)</HelpBlock>
+        </FormGroup>
+        <FormGroup>
+          <Checkbox inputRef={(ref: HTMLInputElement) => { column2Ref = ref; }}>-2</Checkbox>
+          <HelpBlock>suppress column 2 (lines unique to FILE2)</HelpBlock>
+        </FormGroup>
+        <FormGroup>
+          <Checkbox inputRef={(ref: HTMLInputElement) => { column3Ref = ref; }}>-3</Checkbox>
+          <HelpBlock>lines that appear in both files</HelpBlock>
+        </FormGroup>
+
+        <FormGroup>
+          <Checkbox inputRef={(ref: HTMLInputElement) => { checkOrderRef = ref; }}>check-order</Checkbox>
+          <HelpBlock>check that the input is correctly sorted, even if all input lines are pairable</HelpBlock>
+        </FormGroup>
+        <FormGroup>
+          <Checkbox inputRef={(ref: HTMLInputElement) => { noCheckOrderRef = ref; }}>no-check-order</Checkbox>
+          <HelpBlock>do not check that the input is correctly sorted</HelpBlock>
+        </FormGroup>
+
+        <FormGroup>
+          <ControlLabel>output delimiter</ControlLabel>
+          <FormControl ref={(ref: HTMLInputElement) => { outputDelimiterRef = ref; }} type='text' placeholder='--output-delimiter=STR' />
+          <HelpBlock>separate columns with STR</HelpBlock>
+        </FormGroup>
+      </form>;
+
+      this.setState({ menu: { title, body, onSubmit,  } });
+    };
+    return <Button key='comm' onClick={onClick}>comm</Button>;
   }
 
   private cutButton(selecteds: ISelected[]): JSX.Element {
