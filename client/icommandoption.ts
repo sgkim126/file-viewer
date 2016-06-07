@@ -77,6 +77,20 @@ export interface ISortOption {
   inputs: ICommandInput[];
 }
 
+export interface ICommOption {
+  column1?: boolean;
+  column2?: boolean;
+  column3?: boolean;
+
+  checkOrder?: boolean;
+  noCheckOrder?: boolean;
+
+  outputDelimiter?: string;
+
+  input1: ICommandInput;
+  input2: ICommandInput;
+}
+
 export interface ICutOption {
   list1?: number;
   list2?: number;
@@ -91,6 +105,6 @@ export interface ICutOption {
   inputs: ICommandInput[];
 }
 
-type ICommandOption = ICatOption | ITacOption | IHeadOption | ITailOption | IUniqOption | ISortOption | ICutOption;
+type ICommandOption = ICatOption | ITacOption | IHeadOption | ITailOption | IUniqOption | ISortOption | ICommOption | ICutOption;
 
 export default ICommandOption;

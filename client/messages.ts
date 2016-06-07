@@ -58,6 +58,11 @@ export interface ISort extends ICommand {
   option: Option.ISortOption;
 }
 
+export interface IComm extends ICommand {
+  command: 'comm';
+  option: Option.ICommOption;
+}
+
 export interface ICut extends ICommand {
   command: 'cut';
   option: Option.ICutOption;
