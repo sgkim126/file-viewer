@@ -141,6 +141,15 @@ export default class Main extends React.Component<IProps, IState> {
       this.setState({ selecteds });
     };
 
+    const closeResult = (seq: number) => {
+      const result = this.state.results.find((result: IResult) => result.seq === seq);
+
+      if (result != null) {
+        const results = this.state.results.filter((result: IResult) => result.seq !== seq);
+        this.setState({ results });
+      }
+    };
+
     return <div className='full-width full-height'>
     <Row>
       <Col xs={12}>
@@ -161,7 +170,7 @@ export default class Main extends React.Component<IProps, IState> {
           clearSelects={clearSelects} onSelect={onSelect} selecteds={this.state.selecteds} />
       </Col>
       <Col xs={5} className='full-height'>
-        <Results show={this.state.resultSeq} readMore={this.readMore.bind(this)} results={this.state.results} />
+        <Results show={this.state.resultSeq} readMore={this.readMore.bind(this)} results={this.state.results} closeResult={closeResult} />
       </Col>
     </Row>
     </div>;

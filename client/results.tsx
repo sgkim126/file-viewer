@@ -8,6 +8,8 @@ interface IProps {
   results: IResult[];
   readMore: (id: number, start: number, lines: number) => Promise<IMoreResult>;
   show: number;
+
+  closeResult: (seq: number) => void;
 }
 
 interface IState {
@@ -19,13 +21,14 @@ export default class Results extends React.Component<IProps, IState> {
   }
 
   public render(): JSX.Element {
+    const { closeResult } = this.props;
     const results = this.props.results.map((result: IResult) => {
       const hide = result.seq !== this.props.show;
       const { failure, success } = result;
       if (success) {
         return <SuccessResult key={result.seq} {...success} hide={hide} readMore={this.props.readMore} />;
       } else if (failure) {
-        return <FailureResult key={result.seq} {...failure} hide={hide} />;
+        return <FailureResult key={result.seq} {...failure} hide={hide} closeResult={closeResult}/>;
       }
 
     });
