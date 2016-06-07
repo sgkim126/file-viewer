@@ -5,6 +5,9 @@ interface ISelected {
   is_dir?: boolean;
   input?: ICommandInput;
   resultSeq?: number;
+
+  title: string;
+  name: string;
 }
 
 export default ISelected;

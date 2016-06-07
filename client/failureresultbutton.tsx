@@ -21,7 +21,7 @@ export default class FailureResultButton extends React.Component<IProps, IState>
     const { seq, title, name, onSelect } = this.props;
     const onClick = (e: React.MouseEvent) => {
       e.stopPropagation();
-      onSelect(e, { input: undefined, resultSeq: seq });
+      onSelect(e, { input: undefined, resultSeq: seq, name, title });
     };
     return <ListGroupItem bsStyle='danger' key={seq} onClick={onClick} title={title}>{name}</ListGroupItem>;
   }

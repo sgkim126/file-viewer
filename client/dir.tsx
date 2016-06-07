@@ -43,7 +43,9 @@ export default class Dir extends React.Component<IProps, IState> {
       const column = this.props.column;
       const path = this.path(file.name);
       const is_dir = file.is_dir;
-      this.props.onSelect(e, { column, input: { file: path } , is_dir });
+      const name = file.name;
+      const title = path;
+      this.props.onSelect(e, { column, input: { file: path } , is_dir, name, title });
     };
 
     const onClick = (e: React.MouseEvent, file: IFile) => {
