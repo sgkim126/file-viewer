@@ -3,7 +3,7 @@ import './result.styl';
 import * as React from 'react';
 import IMoreResult from './imoreresult.ts';
 import ISuccess from './isuccess.ts';
-import { Button } from 'react-bootstrap';
+import { Button, Col, Row, Well } from 'react-bootstrap';
 
 interface IProps extends ISuccess {
   hide: boolean;
@@ -45,7 +45,7 @@ export default class SuccessResult extends React.Component<IProps, IState> {
     }
 
     return <div className={className}>
-    <div>{this.props.command}</div>
+    <Well>{this.props.command}</Well>
     <pre>{this.state.contents.join('\n')}</pre>
     <Form onSubmit={readMore}>
       <FormGroup>
@@ -56,12 +56,14 @@ export default class SuccessResult extends React.Component<IProps, IState> {
         <Button className={this.props.bytes === this.state.bytes ? 'hidden' : ''} onClick={readAll}>all</Button>
       </FormGroup>
     </Form>
-    <div>
-      <span>{this.state.bytes}/{this.props.bytes} bytes</span>
-      <span>{this.state.chars}/{this.props.chars} chars</span>
-      <span>{this.state.words}/{this.props.words} words</span>
-      <span>{this.state.lines}/{this.props.lines} lines</span>
-    </div>
+    <Well bsSize='small'>
+    <Row>
+      <Col xs={3}>{this.state.bytes}/{this.props.bytes} bytes</Col>
+      <Col xs={3}>{this.state.chars}/{this.props.chars} chars</Col>
+      <Col xs={3}>{this.state.words}/{this.props.words} words</Col>
+      <Col xs={3}>{this.state.lines}/{this.props.lines} lines</Col>
+    </Row>
+    </Well>
     </div>;
   }
 

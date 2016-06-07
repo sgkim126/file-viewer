@@ -1,6 +1,7 @@
 import './result.styl';
 import * as React from 'react';
 import IFailure from './ifailure.ts';
+import { Well } from 'react-bootstrap';
 
 interface IProps extends IFailure {
   hide: boolean;
@@ -23,6 +24,7 @@ export default class FailureResult extends React.Component<IProps, IState> {
     const error = this.props.error ? this.props.error : this.props.errors.join('\n');
 
     return <div className={className}>
+    <Well>Error</Well>
     <pre>{error}</pre>
     </div>;
   }
