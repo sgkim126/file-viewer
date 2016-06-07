@@ -43,12 +43,22 @@ func RunCommandForOneInput(request OneInputCommandRequest, tg TokenGenerator, cm
 	inputPath := request.input().Path(request.token(), *cm)
 
 	stdoutFile, err := ioutil.TempFile("", "filew-viewer")
+	shouldNot(err)
+
+	defer func(fileName string) {
+		r := recover()
+		if r == nil {
+			return
+		}
+		os.Remove(fileName)
+		panic(r)
+	}(stdoutFile.Name())
 	defer stdoutFile.Close()
 	gocleanup.Register(func() {
 		os.Remove(stdoutFile.Name())
 	})
-	shouldNot(err)
 	stderrFile, err := ioutil.TempFile("", "filew-viewer")
+	shouldNot(err)
 	defer stderrFile.Close()
 	gocleanup.Register(func() {
 		os.Remove(stderrFile.Name())
@@ -59,7 +69,15 @@ func RunCommandForOneInput(request OneInputCommandRequest, tg TokenGenerator, cm
 	cmd := exec.Command(request.Name(), arguments...)
 	cmd.Stdout = stdoutFile
 	cmd.Stderr = stderrFile
-	shouldNot(err)
+
+	defer func(fileName string) {
+		r := recover()
+		if r == nil {
+			return
+		}
+		os.Remove(fileName)
+		panic(r)
+	}(stdoutFile.Name())
 
 	command := request.Commands(request.token(), *cm)
 

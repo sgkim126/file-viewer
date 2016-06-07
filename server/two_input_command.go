@@ -50,12 +50,22 @@ func RunCommandForTwoInput(request TwoInputCommandRequest, tg TokenGenerator, cm
 	command = request.Name() + command
 
 	stdoutFile, err := ioutil.TempFile("", "filew-viewer")
+	shouldNot(err)
+
+	defer func(fileName string) {
+		r := recover()
+		if r == nil {
+			return
+		}
+		os.Remove(fileName)
+		panic(r)
+	}(stdoutFile.Name())
 	defer stdoutFile.Close()
 	gocleanup.Register(func() {
 		os.Remove(stdoutFile.Name())
 	})
-	shouldNot(err)
 	stderrFile, err := ioutil.TempFile("", "filew-viewer")
+	shouldNot(err)
 	defer stderrFile.Close()
 	gocleanup.Register(func() {
 		os.Remove(stderrFile.Name())
@@ -68,7 +78,6 @@ func RunCommandForTwoInput(request TwoInputCommandRequest, tg TokenGenerator, cm
 	cmd := exec.Command(request.Name(), arguments...)
 	cmd.Stdout = stdoutFile
 	cmd.Stderr = stderrFile
-	shouldNot(err)
 
 	err = cmd.Run()
 	if err != nil {
