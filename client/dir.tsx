@@ -1,4 +1,3 @@
-import './dir.styl';
 import * as React from 'react';
 import IFile from './ifile.ts';
 import ISelected from './iselected.ts';
@@ -55,7 +54,7 @@ export default class Dir extends React.Component<IProps, IState> {
     const onClose = () => closeDir(column, path);
     const { page } = this.state;
 
-    const closeButton = closeDir ? <Button className='dir-close' onClick={onClose}><Glyphicon glyph='remove' /></Button> : undefined;
+    const closeButton = closeDir ? <Button className='pull-right' onClick={onClose}><Glyphicon glyph='remove' /></Button> : undefined;
     const header = <span>{basename(path)}{closeButton}</span>;
 
     const clickLeftPage = (e: React.MouseEvent) => {
