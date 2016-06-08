@@ -30,7 +30,7 @@ func TestContextManagerAddContext(t *testing.T) {
 	err := cm.AddToken("a")
 	assert.True(t, cm.HasToken("a"))
 	assert.Nil(t, err)
-	_, err = cm.AddContext("a", "/tmp/a", "cat a")
+	err = cm.AddContext(1, "a", "/tmp/a", "cat a")
 	assert.Nil(t, err)
 }
 
@@ -68,7 +68,7 @@ func TestContextManagerRemoveContextReturnsPath(t *testing.T) {
 	err := cm.AddToken("a")
 	assert.Nil(t, err)
 	seq := 1
-	err := cm.AddContext(seq, "a", "path", "command")
+	err = cm.AddContext(seq, "a", "path", "command")
 	assert.Nil(t, err)
 	path, err := cm.RemoveContext("a", seq)
 	assert.Equal(t, "path", path)
