@@ -21,7 +21,7 @@ interface IState {
   };
 }
 
-export default class Commander extends React.Component<IProps, IState> {
+export default class AdvancedCommander extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
 
