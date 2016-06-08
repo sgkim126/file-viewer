@@ -33,6 +33,6 @@ export default class Commander extends React.Component<IProps, IState> {
       <Panel header="Advanced" eventKey="2">
         <AdvancedCommander openDir={openDir} selecteds={selecteds} onCommand={onCommand}/>
       </Panel>
-    </PanelGroup>
+    </PanelGroup>;
   }
 }
