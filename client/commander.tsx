@@ -2,6 +2,7 @@ import * as React from 'react';
 import AdvancedCommander from './advancedcommander.tsx';
 import ICommandOption from './icommandoption.ts';
 import ISelected from './iselected.ts';
+import NoviceCommander from './novicecommander.tsx';
 import { Panel, PanelGroup, } from 'react-bootstrap';
 
 interface IProps {
@@ -18,7 +19,7 @@ export default class Commander extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      activeKey: 2,
+      activeKey: 1,
     };
   }
 
@@ -29,7 +30,10 @@ export default class Commander extends React.Component<IProps, IState> {
 
     const { selecteds, openDir, onCommand } = this.props;
 
-    return <PanelGroup activeKey={this.state.activeKey} onSelect={handleSelect} accordion>
+    return <PanelGroup defaultActiveKey="1" activeKey={this.state.activeKey} onSelect={handleSelect} accordion>
+      <Panel header="Command" eventKey="1">
+        <NoviceCommander openDir={openDir} selecteds={selecteds} onCommand={onCommand}/>
+      </Panel>
       <Panel header="Advanced" eventKey="2">
         <AdvancedCommander openDir={openDir} selecteds={selecteds} onCommand={onCommand}/>
       </Panel>
