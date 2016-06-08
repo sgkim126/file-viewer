@@ -17,8 +17,8 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.7.4",
-    "react": "^0.14.7",
-    "react-bootstrap": "^0.29.3",
+    "react": "^0.14.8",
+    "react-bootstrap": "^0.29.4",
     "react-dom": "^0.14.7"
   }
 }
