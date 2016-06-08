@@ -4,6 +4,7 @@ import * as React from 'react';
 import IMoreResult from './imoreresult.ts';
 import ISuccess from './isuccess.ts';
 import { Button, Col, Glyphicon, Row, Well } from 'react-bootstrap';
+import { findDOMNode } from 'react-dom';
 
 interface IProps extends ISuccess {
   hide: boolean;
@@ -31,13 +32,19 @@ export default class SuccessResult extends React.Component<IProps, IState> {
   }
 
   public render(): JSX.Element {
+    let readMoreLinesRef: HTMLInputElement;
+
     const readAll = () => {
       const lines = this.props.lines - this.state.lines + 1;
       this.readMore(lines);
     };
     const readMore = (e: React.MouseEvent) => {
       e.preventDefault();
-      const lines = parseInt((document.getElementById('read-more-lines') as HTMLInputElement).value, 10);
+      const linesValue = (findDOMNode(readMoreLinesRef) as HTMLInputElement).value;
+      if (linesValue === "") {
+        return;
+      }
+      const lines = parseInt(linesValue, 10);
       this.readMore(lines);
     };
 
@@ -53,7 +60,7 @@ export default class SuccessResult extends React.Component<IProps, IState> {
     <Form onSubmit={readMore}>
       <FormGroup>
         <InputGroup className={this.props.lines === this.state.lines ? 'hidden' : ''}>
-          <FormControl type='number' defaultValue={10} id='read-more-lines' />
+          <FormControl type='number' defaultValue={10} ref={(ref: HTMLInputElement) => { readMoreLinesRef = ref; }} />
           <InputGroup.Button><Button type='submit'>lines</Button></InputGroup.Button>
         </InputGroup>
         <Button block className={this.props.bytes === this.state.bytes ? 'hidden' : ''} onClick={readAll}>read all</Button>
