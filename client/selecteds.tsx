@@ -18,7 +18,7 @@ export default class Selecteds extends React.Component<IProps, IState> {
   }
 
   public render(): JSX.Element {
-    const selecteds = this.props.selecteds.map((selected: ISelected, i: number): JSX.Element[] => {
+    let selecteds = this.props.selecteds.map((selected: ISelected, i: number): JSX.Element[] => {
       const { name, title } = selected;
       const onClick = () => {
         this.swap(i - 1, i);
@@ -27,6 +27,9 @@ export default class Selecteds extends React.Component<IProps, IState> {
       const glyph = <Glyphicon glyph={selected.is_dir ? 'folder-open' : 'file'} />;
       return [prevButton, <span className='selected' key={title} title={title}>{glyph}&nbsp;&nbsp;{name}</span>];
     });
+    if (selecteds.length === 0) {
+      selecteds = [[<span className='selected'>----------</span>]];
+    }
     return <div className='selecteds'>{selecteds}</div>;
   }
 
