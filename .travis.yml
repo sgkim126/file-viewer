@@ -8,7 +8,6 @@ cache:
     - "$HOME/.nvm"
     - "$HOME/.npm"
     - typings
-    - $GOPATH
 
 env:
     - COMMAND=tslint
