@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import AdvancedCommander from './advancedcommander.tsx';
+import Commander from './commander.tsx';
 import Connection from './connection.ts';
 import FileBrowser from './file-browser.tsx';
 import IBrowser from './ibrowser.ts';
@@ -157,11 +157,9 @@ export default class Main extends React.Component<IProps, IState> {
     };
 
     return <div className='full-width full-height'>
-    <Row>
-      <Col xs={12}>
-        <AdvancedCommander openDir={openDir} selecteds={this.state.selecteds} onCommand={onCommand}/>
-      </Col>
-    </Row>
+    <Row><Col xs={12}>
+      <Commander selecteds={this.state.selecteds} openDir={openDir} onCommand={onCommand} />
+    </Col></Row>
     <Row>
       <Col xs={12}>
         <Selecteds selecteds={this.state.selecteds} setSelecteds={setSelecteds} />
