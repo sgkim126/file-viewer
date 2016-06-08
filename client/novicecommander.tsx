@@ -68,6 +68,8 @@ export default class NoviceCommander extends React.Component<IProps, IState> {
     } else if (selecteds.length === 2) {
       if (!this.hasDir()) {
         buttons.push(this.intersectButton(selecteds[0], selecteds[1]));
+        buttons.push(this.subButton(selecteds[0], selecteds[1]));
+        buttons.push(this.subButton(selecteds[1], selecteds[0]));
       }
     }
 
@@ -98,6 +100,20 @@ export default class NoviceCommander extends React.Component<IProps, IState> {
     };
 
     return <Button key='intersect' onClick={onClick}>intersect</Button>;
+  }
+
+  private subButton(selected1: ISelected, selected2: ISelected): JSX.Element {
+    const onClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      const input1 = selected1.input;
+      const input2 = selected2.input;
+      const column2 = true;
+      const column3 = true;
+      const option = { input1, input2, column2, column3, };
+      this.props.onCommand('comm', option);
+    };
+
+    return <Button key={`${selected1.name} - ${selected2.name}`} onClick={onClick}>{selected1.name} - {selected2.name}</Button>;
   }
 
   private hasDir(): boolean {
