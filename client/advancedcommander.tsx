@@ -690,7 +690,7 @@ export default class AdvancedCommander extends React.Component<IProps, IState> {
       let column2Ref: HTMLInputElement;
       let column3Ref: HTMLInputElement;
       let checkOrderRef: HTMLInputElement;
-      let noCheckOrderRef: HTMLInputElement;
+      let nocheckOrderRef: HTMLInputElement;
       let outputDelimiterRef: HTMLInputElement;
 
       const title = 'comm';
@@ -714,8 +714,8 @@ export default class AdvancedCommander extends React.Component<IProps, IState> {
         if (checkOrderRef.checked) {
           option.checkOrder = true;
         }
-        if (noCheckOrderRef.checked) {
-          option.noCheckOrder = true;
+        if (nocheckOrderRef.checked) {
+          option.nocheckOrder = true;
         }
 
         const outputDelimiterValue = (findDOMNode(outputDelimiterRef) as HTMLInputElement).value;
@@ -746,7 +746,7 @@ export default class AdvancedCommander extends React.Component<IProps, IState> {
           <HelpBlock>check that the input is correctly sorted, even if all input lines are pairable</HelpBlock>
         </FormGroup>
         <FormGroup>
-          <Checkbox inputRef={(ref: HTMLInputElement) => { noCheckOrderRef = ref; }}>no-check-order</Checkbox>
+          <Checkbox inputRef={(ref: HTMLInputElement) => { nocheckOrderRef = ref; }}>no-check-order</Checkbox>
           <HelpBlock>do not check that the input is correctly sorted</HelpBlock>
         </FormGroup>
 

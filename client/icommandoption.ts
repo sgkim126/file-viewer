@@ -83,7 +83,7 @@ export interface ICommOption {
   column3?: boolean;
 
   checkOrder?: boolean;
-  noCheckOrder?: boolean;
+  nocheckOrder?: boolean;
 
   outputDelimiter?: string;
 

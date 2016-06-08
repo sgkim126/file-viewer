@@ -6,7 +6,7 @@ type CommOption struct {
 	Column3 *bool `json:"column3"`
 
 	CheckOrder   *bool `json:"noCheckOrder"`
-	NoCheckOrder *bool `json:"noCheckOrder"`
+	NocheckOrder *bool `json:"noCheckOrder"`
 
 	OutputDelimiter *string `json:"outputDelimiter"`
 
@@ -55,8 +55,8 @@ func (request CommRequest) options() []string {
 	if option.CheckOrder != nil && *option.CheckOrder {
 		options = append(options, "--check-order")
 	}
-	if option.NoCheckOrder != nil && *option.NoCheckOrder {
-		options = append(options, "--no-check-order")
+	if option.NocheckOrder != nil && *option.NocheckOrder {
+		options = append(options, "--nocheck-order")
 	}
 
 	if option.OutputDelimiter != nil {
