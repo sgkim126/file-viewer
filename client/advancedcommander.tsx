@@ -76,7 +76,9 @@ export default class AdvancedCommander extends React.Component<IProps, IState> {
         buttons.push(this.tailButton(selected));
       }
     } else if (this.props.selecteds.length === 2) {
-      buttons.push(this.commButton(this.props.selecteds[0], this.props.selecteds[1]));
+      if (!this.hasDir()) {
+        buttons.push(this.commButton(this.props.selecteds[0], this.props.selecteds[1]));
+      }
     }
 
     if (buttons.length === 0) {
