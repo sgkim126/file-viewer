@@ -1,0 +1,279 @@
+[
+  {
+    "name": "cat",
+    "desc": "Concatenate FILE(s), or standard input, to standard output.",
+    "input": "multi",
+    "flags": [
+      {
+        "name": "Number", "short": "n", "long": "number", "type": "bool",
+        "desc": "number all output lines"
+      },
+      {
+        "name": "NumberNonblank", "short": "b", "long": "number-nonblank", "type": "bool",
+        "desc": "number nonempty output lines, overrides -n"
+      },
+      {
+        "name": "ShowEnds", "short": "E", "long": "show-ends", "type": "bool",
+        "desc": "display $ at end of each line"
+      },
+      {
+        "name": "ShowTabs", "short": "T", "long": "show-tabs", "type": "bool",
+        "desc": "display TAB characters as ^I"
+      },
+      {
+        "name": "ShowNonprinting", "short": "v", "long": "show-nonprinting", "type": "bool",
+        "desc": "use ^ and M- notation, except for LFD and TAB"
+      },
+      {
+        "name": "SqueezeBlank", "short": "s", "long": "squeeze-blank", "type": "bool",
+        "desc": "suppress repeated empty output lines"
+      }
+    ]
+  },
+  {
+    "name": "tac",
+    "desc": "Write each FILE to standard output, last line first. With no FILE, or when FILE is -, read standard input.",
+    "input": "multi",
+    "flags": [
+      {
+        "name": "Separator", "short": "s", "long": "separator", "type": "string",
+        "desc": "use STRING as the separator instead of newline"
+      },
+      {
+        "name": "Before", "short": "b", "long": "before", "type": "bool",
+        "desc": "attach the separator before instead of after"
+      },
+      {
+        "name": "Regex", "short": "r", "long": "regex", "type": "bool",
+        "desc": "interpret the separator as a regular expression"
+      }
+    ]
+  },
+  {
+    "name": "head",
+    "desc": "Print the first 10 lines of each FILE to standard output. With more than one FILE, precede each with a header giving the file name.",
+    "input": "one",
+    "flags": [
+      {
+        "name": "Lines", "short": "n", "long": "lines", "type": "int",
+        "desc": "print the first K lines instead of the first 10; with the leading \"-\", print all but the last K lines of each file"
+      },
+      {
+        "name": "Bytes", "short": "c", "long": "bytes", "type": "int",
+        "desc": "print the first K bytes of each file; with the leading \"-\", print all but the last K bytes of each file"
+      }
+    ]
+  },
+  {
+    "name": "tail",
+    "desc": "Print the last 10 lines of each FILE to standard output. With more than one FILE, precede each with a header giving the file name.",
+    "input": "one",
+    "flags": [
+      {
+        "name": "Lines", "short": "n", "long": "lines", "type": "int",
+        "desc": "output the last K lines, instead of the last 10; or use -n +K to output lines starting with the Kth"
+      },
+      {
+        "name": "Bytes", "short": "c", "long": "bytes", "type": "int",
+        "desc": "output the last K bytes; alternatively, use -c +K to output bytes starting with the Kth of each file"
+      }
+    ]
+  },
+  {
+    "name": "sort",
+    "desc": "Write sorted concatenation of all FILE(s) to standard output.",
+    "input": "multi",
+    "flags": [
+      {
+        "name": "DictionaryOrder", "short": "d", "long": "dictionary-order", "type": "bool",
+        "desc": "consider only blanks and alphanumeric characters"
+      },
+      {
+        "name": "NumericSort", "short": "n", "long": "numeric-sort", "type": "bool",
+        "desc": "compare according to string numerical value"
+      },
+      {
+        "name": "GeneralNumericSort", "short": "g", "long": "general-numeric-sort", "type": "bool",
+        "desc": "compare according to general numerical value"
+      },
+      {
+        "name": "HumanNumericSort", "short": "h", "long": "human-numeric-sort", "type": "bool",
+        "desc": "compare human readable numbers (e.g., 2K 1G)"
+      },
+      {
+        "name": "MonthSort", "short": "M", "long": "month-sort", "type": "bool",
+        "desc": "compare (unknown) < \"JAN\" < ... < \"DEC\""
+      },
+      {
+        "name": "VersionSort", "short": "V", "long": "version-sort", "type": "bool",
+        "desc": "natural sort of (version) numbers within text"
+      },
+
+      {
+        "name": "RandomSort", "short": "R", "long": "random-sort", "type": "bool",
+        "desc": "sort by random hash of keys"
+      },
+      {
+        "name": "Reverse", "short": "r", "long": "reverse", "type": "bool",
+        "desc": "reverse the result of comparisons"
+      },
+      {
+        "name": "IgnoreLeadingBlanks", "short": "b", "long": "ignore-leading-blanks", "type": "bool",
+        "desc": "ignore leading blanks"
+      },
+      {
+        "name": "IgnoreCase", "short": "f", "long": "ignore-case", "type": "bool",
+        "desc": "fold lower case to upper case characters"
+      },
+      {
+        "name": "IgnoreNonprinting", "short": "i", "long": "ignore-nonprinting", "type": "bool",
+        "desc": "consider only printable characters"
+      },
+      {
+        "name": "Check", "short": "c", "long": "check", "type": "bool",
+        "desc": "check for sorted input; do not sort"
+      },
+      {
+        "name": "CheckSilent", "short": "C", "long": "check=silent", "type": "bool",
+        "desc": "like -c, but do not report first bad line"
+      },
+      {
+        "name": "Debug", "short": "debug", "long": "debug", "type": "bool",
+        "desc": "annotate the part of the line used to sort, and warn about questionable usage to stderr"
+      },
+      {
+        "name": "Merge", "short": "m", "long": "merge", "type": "bool",
+        "desc": "merge already sorted files; do not sort"
+      },
+      {
+        "name": "Stable", "short": "s", "long": "stable", "type": "bool",
+        "desc": "stabilize sort by disabling last-resort comparison"
+      },
+      {
+        "name": "Unique", "short": "u", "long": "unique", "type": "bool",
+        "desc": "with -c, check for strict ordering; without -c, output only the first of an equal run"
+      },
+      {
+        "name": "ZeroTerminated", "short": "z", "long": "zero-terminated", "type": "bool",
+        "desc": "end lines with 0 byte, not newline"
+      },
+      {
+        "name": "FieldSeparator", "short": "t", "long": "field-separator", "type": "string",
+        "desc": "use SEP instead of non-blank to blank transition"
+      },
+      {
+        "name": "Key", "short": "k", "long": "key", "type": "int",
+        "desc": "sort via a key; KEYDEF gives location and type"
+      }
+    ]
+  },
+  {
+    "name": "uniq",
+    "desc": "Filter adjacent matching lines from INPUT (or standard input), writing to OUTPUT (or standard output).\nWith no options, matching lines are merged to the first occurrence.",
+    "input": "one",
+    "flags": [
+      {
+        "name": "SkipFields", "short": "f", "long": "skip-fields", "type": "int",
+        "desc": "avoid comparing the first N fields"
+      },
+      {
+        "name": "SkipChars", "short": "s", "long": "skip-chars", "type": "int",
+        "desc": "avoid comparing the first N characters"
+      },
+      {
+        "name": "CheckChars", "short": "w", "long": "check-chars", "type": "int",
+        "desc": "compare no more than N characters in lines"
+      },
+      {
+        "name": "Count", "short": "c", "long": "count", "type": "bool",
+        "desc": "prefix lines by the number of occurrences"
+      },
+      {
+        "name": "Repeated", "short": "d", "long": "repeated", "type": "bool",
+        "desc": "only print duplicate lines"
+      },
+      {
+        "name": "IgnoreCase", "short": "i", "long": "ignore-case", "type": "bool",
+        "desc": "ignore differences in case when comparing"
+      },
+      {
+        "name": "Unique", "short": "u", "long": "unique", "type": "bool",
+        "desc": "only print unique lines"
+      },
+      {
+        "name": "ZeroTerminated", "short": "z", "long": "zero-terminated", "type": "bool",
+        "desc": "end lines with 0 byte, not newline"
+      },
+      {
+        "name": "AllRepeated", "short": "D", "long": "all-repeated", "type": "none,prepend,separate",
+        "desc": "print all duplicate lines delimit-method={none(default),prepend,separate} Delimiting is done with blank lines"
+      }
+    ]
+  },
+  {
+    "name": "comm",
+    "desc": "Compare sorted files FILE1 and FILE2 line by line.\nWith no options, produce three-column output. Column one contains lines unique to FILE1, column two contains lines unique to FILE2, and column three contains lines common to both files.",
+    "input": "two",
+    "flags": [
+      {
+        "name": "Column1", "short": "1", "long": "", "type": "bool",
+        "desc": "suppress column 1 (lines unique to FILE1)"
+      },
+      {
+        "name": "Column2", "short": "2", "long": "", "type": "bool",
+        "desc": "suppress column 2 (lines unique to FILE2)"
+      },
+      {
+        "name": "Column3", "short": "3", "long": "", "type": "bool",
+        "desc": "suppress column 3 (lines that appear in both files)"
+      },
+      {
+        "name": "OutputDelimiter", "short": "", "long": "output-delimiter", "type": "string",
+        "desc": "separate columns with STR"
+      },
+      {
+        "name": "CheckOrder", "short": "", "long": "check-order", "type": "bool",
+        "desc": "check that the input is correctly sorted, even if all input lines are pairable"
+      },
+      {
+        "name": "NocheckOrder", "short": "", "long": "nocheck-order", "type": "bool",
+        "desc": "do not check that the input is correctly sorted"
+      }
+    ]
+  },
+  {
+    "name": "cut",
+    "desc": "Print selected parts of lines from each FILE to standard output.",
+    "input": "multi",
+    "flags": [
+      {
+        "name": "Bytes", "short": "b", "long": "bytes", "type": "string",
+        "desc": "select only these bytes"
+      },
+      {
+        "name": "Characters", "short": "c", "long": "charcters", "type": "string",
+        "desc": "select only these characters"
+      },
+      {
+        "name": "Fields", "short": "f", "long": "fields", "type": "string",
+        "desc": "select only these fields;  also print any line that contains no delimiter"
+      },
+      {
+        "name": "Delimiter", "short": "d", "long": "delimiter", "type": "string",
+        "desc": "use DELIM instead of TAB for field delimiter"
+      },
+      {
+        "name": "OnlyDelimited", "short": "s", "long": "only-delimited", "type": "bool",
+        "desc": "do not print lines not containing delimiters"
+      },
+      {
+        "name": "OutputDelimiter", "short": "", "long": "output-delimiter", "type": "string",
+        "desc": "use STRING as the output delimiter the default is to use the input delimiter"
+      },
+      {
+        "name": "Complement", "short": "", "long": "complement", "type": "bool",
+        "desc": "complement the set of selected bytes, characters or fields"
+      }
+    ]
+  }
+]

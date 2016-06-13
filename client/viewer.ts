@@ -11,6 +11,9 @@ import render from './render.tsx';
   connection.then(([ connection, root ]: [ Connection, string ]) => {
     localStorage.setItem(USER_KEY, connection.token);
     window['connection'] = connection;
-    render(main, connection, root);
+    fetch('./commands.json').then((res: any) => res.json())
+    .then((config: any) => {
+      render(main, connection, root, config);
+    });
   });
 })(window, window.document);

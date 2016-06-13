@@ -13,7 +13,7 @@ run: ./server/server
 ./server/server: ./server/bindata.go $(GO_SRC) | goget
 	cd ./server/; go build
 
-./server/bindata.go: ./html/index.html ./html/viewer.js ./html/viewer.css | gobindata
+./server/bindata.go: ./html/index.html ./html/viewer.js ./html/viewer.css ./html/commands.json | gobindata
 	cd ./server/; go generate
 
 ./html/viewer.js: ./client/viewer.ts $(TS_SRC) $(STYL_SRC) | ./typings/browser.d.ts

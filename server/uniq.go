@@ -7,15 +7,15 @@ import (
 )
 
 type UniqOption struct {
-	Count          *bool   `json:"count"`
-	Repeated       *bool   `json:"repeated"`
-	AllRepeated    *string `json:"allRepeated"`
-	SkipFields     *int    `json:"skipFields"`
-	IgnoreCase     *bool   `json:"ignoreCase"`
-	SkipChars      *int    `json:"skipChars"`
-	Unique         *bool   `json:"unique"`
-	ZeroTerminated *bool   `json:"zeroTerminated"`
-	CheckChars     *int    `json:"checkChars"`
+	Count          *bool
+	Repeated       *bool
+	AllRepeated    *string
+	SkipFields     *int
+	IgnoreCase     *bool
+	SkipChars      *int
+	Unique         *bool
+	ZeroTerminated *bool
+	CheckChars     *int
 
 	Input CommandInput `json:"input"`
 }
@@ -58,11 +58,11 @@ func (request UniqRequest) options() []string {
 		switch delimitMethod {
 		case "none":
 		case "prepend":
-		case "seperate":
+		case "separate":
 		default:
 			panic(errors.New(fmt.Sprintf("\"%s\" is not a valid delmit method", delimitMethod)))
 		}
-		options = append(options, "--all-repeated", delimitMethod)
+		options = append(options, fmt.Sprintf("--all-repeated=%s", delimitMethod))
 	}
 	if option.SkipFields != nil {
 		options = append(options, "--skip-fields", strconv.Itoa(*option.SkipFields))

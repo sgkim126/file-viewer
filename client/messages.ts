@@ -1,6 +1,3 @@
-import * as Option from './icommandoption.ts';
-import ICommandOption from './icommandoption.ts';
-
 export interface IMessage {
   type: string;
   token: string;
@@ -25,47 +22,47 @@ export interface IMore extends IMessage {
 interface ICommand extends IMessage {
   type: 'command';
   command: string;
-  option: ICommandOption;
+  option: any;
 }
 
 export interface ICat extends ICommand {
   command: 'cat';
-  option: Option.ICatOption;
+  option: any;
 }
 
 export interface ITac extends ICommand {
   command: 'tac';
-  option: Option.ITacOption;
+  option: any;
 }
 
 export interface IHead extends ICommand {
   command: 'head';
-  option: Option.IHeadOption;
+  option: any;
 }
 
 export interface ITail extends ICommand {
   command: 'tail';
-  option: Option.ITailOption;
+  option: any;
 }
 
 export interface IUniq extends ICommand {
   command: 'uniq';
-  option: Option.IUniqOption;
+  option: any;
 }
 
 export interface ISort extends ICommand {
   command: 'sort';
-  option: Option.ISortOption;
+  option: any;
 }
 
 export interface IComm extends ICommand {
   command: 'comm';
-  option: Option.ICommOption;
+  option: any;
 }
 
 export interface ICut extends ICommand {
   command: 'cut';
-  option: Option.ICutOption;
+  option: any;
 }
 
 type Message = ILs | IClose | IMore | ICommand;

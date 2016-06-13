@@ -4,6 +4,7 @@ import Commander from './commander.tsx';
 import Connection from './connection.ts';
 import FileBrowser from './file-browser.tsx';
 import IBrowser from './ibrowser.ts';
+import ICommandConfig from './icommandconfig.ts';
 import ICommandOption from './icommandoption.ts';
 import IFailure from './ifailure.ts';
 import IFile from './ifile.ts';
@@ -18,6 +19,8 @@ import Results from './results.tsx';
 import { Col, Row } from 'react-bootstrap';
 
 interface IProps {
+  configs: ICommandConfig[];
+
   connection: Connection;
   seq: IterableIterator<number>;
   root: string;
@@ -158,7 +161,7 @@ export default class Main extends React.Component<IProps, IState> {
 
     return <div className='full-width full-height'>
     <Row><Col xs={12}>
-      <Commander selecteds={this.state.selecteds} openDir={openDir} onCommand={onCommand} />
+      <Commander selecteds={this.state.selecteds} openDir={openDir} onCommand={onCommand} configs={this.props.configs} />
     </Col></Row>
     <Row>
       <Col xs={12}>

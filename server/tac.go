@@ -1,9 +1,9 @@
 package main
 
 type TacOption struct {
-	Before    *bool   `json:"before"`
-	Regex     *bool   `json:"regex"`
-	Separator *string `json:"separator"`
+	Before    *bool
+	Regex     *bool
+	Separator *string
 
 	Inputs []CommandInput `json:"inputs"`
 }

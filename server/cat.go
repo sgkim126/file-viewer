@@ -1,12 +1,12 @@
 package main
 
 type CatOption struct {
-	NumberNonblank  *bool `json:"numberNonblank"`
-	ShowEnds        *bool `json:"showEnds"`
-	Number          *bool `json:"number"`
-	SqueezeBlank    *bool `json:"squeezeBlank"`
-	ShowTabs        *bool `json:"showTabs"`
-	ShowNonprinting *bool `json:"showNonprinting"`
+	NumberNonblank  *bool
+	ShowEnds        *bool
+	Number          *bool
+	SqueezeBlank    *bool
+	ShowTabs        *bool
+	ShowNonprinting *bool
 
 	Inputs []CommandInput `json:"inputs"`
 }

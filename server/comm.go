@@ -1,14 +1,14 @@
 package main
 
 type CommOption struct {
-	Column1 *bool `json:"column1"`
-	Column2 *bool `json:"column2"`
-	Column3 *bool `json:"column3"`
+	Column1 *bool
+	Column2 *bool
+	Column3 *bool
 
-	CheckOrder   *bool `json:"noCheckOrder"`
-	NocheckOrder *bool `json:"noCheckOrder"`
+	CheckOrder   *bool
+	NocheckOrder *bool
 
-	OutputDelimiter *string `json:"outputDelimiter"`
+	OutputDelimiter *string
 
 	Input1 CommandInput `json:"input1"`
 	Input2 CommandInput `json:"input2"`

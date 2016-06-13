@@ -29,20 +29,25 @@ func main() {
 	shouldNot(err)
 	js, err := Asset("../html/viewer.js")
 	shouldNot(err)
+	commands, err := Asset("../html/commands.json")
+	shouldNot(err)
 
 	DefaultPath := ""
 	CSSPath := "viewer.css"
 	JSPath := "viewer.js"
+	CommandsPath := "commands.json"
 
 	contents := make(map[string]*[]byte)
 	contents[DefaultPath] = &html
 	contents[CSSPath] = &css
 	contents[JSPath] = &js
+	contents[CommandsPath] = &commands
 
 	contentTypes := make(map[string]string)
 	contentTypes[DefaultPath] = "text/html; charset=utf-8"
 	contentTypes[CSSPath] = "text/css ; charset=utf-8"
 	contentTypes[JSPath] = "application/javascript; charset=utf-8"
+	contentTypes[CommandsPath] = "application/json; charset=utf-8"
 
 	tg := NewTokenGenerator(3)
 	cm := NewContextManager(*root)

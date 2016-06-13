@@ -5,8 +5,8 @@ import (
 )
 
 type TailOption struct {
-	Lines *int `json:"lines"`
-	Bytes *int `json:"bytes"`
+	Lines *int
+	Bytes *int
 
 	Input CommandInput `json:"input"`
 }

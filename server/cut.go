@@ -5,15 +5,15 @@ import (
 )
 
 type CutOption struct {
-	List1 *int    `json:"list1"`
-	List2 *int    `json:"list2"`
-	List  *string `json:"list"`
+	Bytes      *string
+	Characters *string
+	Fields     *string
 
-	Complement *bool `json:"complement"`
+	Complement *bool
 
-	Delimiter       *string `json:"delimiter"`
-	OnlyDelimited   *bool   `json:"onlyDelimited"`
-	OutputDelimiter *string `json:"outputDelimiter"`
+	Delimiter       *string
+	OnlyDelimited   *bool
+	OutputDelimiter *string
 
 	Inputs []CommandInput `json:"inputs"`
 }
@@ -39,25 +39,14 @@ func (request CutRequest) options() []string {
 	options := []string{}
 	option := request.Option
 
-	lists := "-"
-	if option.List1 != nil {
-		lists = fmt.Sprintf("%d%s", *option.List1, lists)
+	if option.Bytes != nil {
+		options = append(options, "-b", *option.Bytes)
 	}
-	if option.List2 != nil {
-		lists = fmt.Sprintf("%s%d", lists, *option.List2)
+	if option.Characters != nil {
+		options = append(options, "-c", *option.Characters)
 	}
-	if option.List == nil {
-		panic("you must specify a list of bytes, characters, or fields")
-	}
-	switch *option.List {
-	case "byte":
-	case "character":
-	case "field":
-	default:
-		panic("you must specify a list of bytes, characters, or fields")
-	}
-	if lists != "-" {
-		options = append(options, fmt.Sprintf("--%ss=%s", *option.List, lists))
+	if option.Fields != nil {
+		options = append(options, "-f", *option.Fields)
 	}
 
 	if option.Complement != nil && *option.Complement {
