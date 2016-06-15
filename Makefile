@@ -17,7 +17,7 @@ run: ./server/server
 	cd ./server/; go generate
 
 ./html/viewer.js: ./client/viewer.ts $(TS_SRC) $(STYL_SRC) | ./typings/browser.d.ts
-	./node_modules/.bin/webpack --entry ./$< --output-path $(@D) --output-filename $(@F)
+	./node_modules/.bin/webpack --target web --entry ./$< --output-path $(@D) --output-filename $(@F)
 
 ./typings/browser.d.ts: ./typings.json | ./node_modules/
 	./node_modules/.bin/typings install

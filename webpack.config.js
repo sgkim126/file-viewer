@@ -8,7 +8,6 @@ module.exports = {
   output: {
     path: './build'
   },
-  target: 'web',
   plugins: plugs,
   module: {
     loaders: [
