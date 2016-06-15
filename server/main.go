@@ -16,6 +16,7 @@ import (
 )
 
 //go:generate go-bindata -prefix "html/" -pkg main -o bindata.go ../html/...
+//go:generate sh -c "node ./generate.js ../html/commands.json > ./commands.go"
 
 func main() {
 	port := flag.Int("port", 12389, "port number to open server")

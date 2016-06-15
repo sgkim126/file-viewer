@@ -14,7 +14,6 @@ import (
 
 type OneInputCommandRequest interface {
 	Name() string
-	Commands(token token, cm ContextManager) string
 	input() CommandInput
 	options() []string
 	token() token
@@ -79,7 +78,7 @@ func RunCommandForOneInput(request OneInputCommandRequest, tg TokenGenerator, cm
 		panic(r)
 	}(stdoutFile.Name())
 
-	command := request.Commands(request.token(), *cm)
+	command := CommandsForOneInput(request, request.token(), *cm)
 
 	err = cmd.Run()
 	if err != nil {

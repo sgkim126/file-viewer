@@ -1,2 +1,4 @@
 /bindata.go
 /server
+/commands.go
+/generate.js

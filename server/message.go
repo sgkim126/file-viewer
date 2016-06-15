@@ -45,48 +45,7 @@ func (requestType RequestType) Request(data []byte) Request {
 		return request
 	case "command":
 		if requestType.Command != nil {
-			switch *requestType.Command {
-			case "cat":
-				var request CatRequest
-				err := json.Unmarshal(data, &request)
-				shouldNot(err)
-				return request
-			case "tac":
-				var request TacRequest
-				err := json.Unmarshal(data, &request)
-				shouldNot(err)
-				return request
-			case "head":
-				var request HeadRequest
-				err := json.Unmarshal(data, &request)
-				shouldNot(err)
-				return request
-			case "tail":
-				var request TailRequest
-				err := json.Unmarshal(data, &request)
-				shouldNot(err)
-				return request
-			case "uniq":
-				var request UniqRequest
-				err := json.Unmarshal(data, &request)
-				shouldNot(err)
-				return request
-			case "sort":
-				var request SortRequest
-				err := json.Unmarshal(data, &request)
-				shouldNot(err)
-				return request
-			case "comm":
-				var request CommRequest
-				err := json.Unmarshal(data, &request)
-				shouldNot(err)
-				return request
-			case "cut":
-				var request CutRequest
-				err := json.Unmarshal(data, &request)
-				shouldNot(err)
-				return request
-			}
+			return runCommandRequest(data, *requestType.Command)
 		}
 		panic(errors.New(fmt.Sprintf("Unhandled command: %s", string(data))))
 	default:
