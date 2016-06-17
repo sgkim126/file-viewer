@@ -63,8 +63,10 @@ export default class AdvancedCommander extends React.Component<IProps, IState> {
     }
 
     const buttons: JSX.Element[] = configs
-      .map((config: ICommandConfig) => this.button(config.name, config.desc, config.input, selecteds, config.flags))
-      .filter((button: JSX.Element) => button != null);
+      .map((config: ICommandConfig) => {
+        const flags = config.flags.filter((flag: ICommandFlag) => flag.type !== 'not-implemented');
+        return this.button(config.name, config.desc, config.input, selecteds, flags);
+      }).filter((button: JSX.Element) => button != null);
     if (buttons.length === 0) {
       buttons.push(<Button key='no-available' disabled>No available command</Button>);
     }

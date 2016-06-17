@@ -15,7 +15,8 @@ stdout.write('\n\n');
 stdout.write(runCommandRequest(commands));
 stdout.write('\n\n');
 commands.forEach((command: any) => {
-  stdout.write(optionStruct(command.name, command.flags, command.input));
+  const flags = command.flags.filter((flag: ICommandFlag) => flag.type !== 'not-implemented');
+  stdout.write(optionStruct(command.name, flags, command.input));
   stdout.write('\n\n');
   stdout.write(requestStruct(command.name));
   stdout.write('\n\n');
@@ -25,7 +26,7 @@ commands.forEach((command: any) => {
   stdout.write('\n\n');
   stdout.write(handleMethod(command.name, command.input));
   stdout.write('\n\n');
-  stdout.write(optionsMethod(command.name, command.flags));
+  stdout.write(optionsMethod(command.name, flags));
   stdout.write('\n\n');
 });
 stdout.write("\n");
