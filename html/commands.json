@@ -50,6 +50,169 @@
     ]
   },
   {
+    "name": "nl",
+    "desc": "Write each FILE to standard output, with line numbers added.",
+    "input": "multi",
+    "flags": [
+      {
+        "name": "bodyNumbering", "short": "b", "long": "body-numbering", "type": "a,t,n",
+        "desc": "use STYLE for numbering body lines\na      number all lines\nt      number only nonempty lines\nn      number no lines"
+      },
+      {
+        "name": "sectionDelimiter", "short": "d", "long": "section-delimiter", "type": "string",
+        "desc": "use CC for separating logical pages"
+      },
+      {
+        "name": "footerNumbering", "short": "f", "long": "footer-numbering", "type": "a,t,n",
+        "desc": "use STYLE for numbering footer lines\na      number all lines\nt      number only nonempty lines\nn      number no lines"
+      },
+      {
+        "name": "headNumbering", "short": "h", "long": "head-numbering", "type": "a,t,n",
+        "desc": "use STYLE for numbering header lines\na      number all lines\nt      number only nonempty lines\nn      number no lines"
+      },
+      {
+        "name": "lineIncrement", "short": "i", "long": "line-increment", "type": "int",
+        "desc": "line number increment at each line"
+      },
+      {
+        "name": "joinBlankLines", "short": "l", "long": "join-blank-lines", "type": "int",
+        "desc": "group of NUMBER empty lines counted as one"
+      },
+      {
+        "name": "numberFormat", "short": "n", "long": "number-format", "type": "ln,rn,rz",
+        "desc": "insert line numbers according to FORMAT\nln     left justified, no leading zeros\nrn     right justified, no leading zeros\nrz     right justified, leading zeros"
+      },
+      {
+        "name": "noRenumber", "short": "p", "long": "no-renumber", "type": "bool",
+        "desc": "do not reset line numbers at logical pagesdo not reset line numbers at logical pages"
+      },
+      {
+        "name": "numberSeparator", "short": "s", "long": "number-separator", "type": "string",
+        "desc": "add STRING after (possible) line number"
+      },
+      {
+        "name": "startingLineNumber", "short": "v", "long": "starting-line-number", "type": "int",
+        "desc": "first line number on each logical page"
+      },
+      {
+        "name": "numberWidth", "short": "w", "long": "number-width", "type": "int",
+        "desc": "use NUMBER columns for line numbers"
+      }
+    ]
+  },
+  {
+    "name": "od",
+    "desc": "Write an unambiguous representation, octal bytes by default, of FILE to standard output. With more than one FILE argument, concatenate them in the listed order to form the input.\n\nIf first and second call formats both apply, the second format is assumed if the last operand begins with + or (if there are 2 operands) a digit. An OFFSET operand means -j OFFSET. LABEL is the pseudo-address at first byte printed, incremented when dump is progressing. For OFFSET and LABEL, a 0x or 0X prefix indicates hexadecimal; suffixes may be . for octal and b for multiply by 512.",
+    "input": "multi",
+    "flags": [
+      {
+        "name": "addressRadix", "short": "A", "long": "address-radix", "type": "d,o,x,n",
+        "desc": "output format for file offsets. RADIX is one of [doxn], for Decimal, Octal, Hex or None"
+      },
+      {
+        "name": "skipBytes", "short": "j", "long": "skip-bytes", "type": "int",
+        "desc": "skip BYTES input bytes first"
+      },
+      {
+        "name": "readBytes", "short": "N", "long": "read-bytes", "type": "int",
+        "desc": "limit dump to BYTES input bytes"
+      },
+      {
+        "name": "strings", "short": "S", "long": "strings", "type": "int",
+        "desc": "output strings of at least BYTES graphic chars. 3 is implied when BYTES is not specified"
+      },
+      {
+        "name": "format", "short": "t", "long": "format", "type": "not-implemented",
+        "desc": "select output format or formats"
+      },
+      {
+        "name": "outputDuplicates", "short": "v", "long": "output-duplicates", "type": "bool",
+        "desc": "do not use * to mark line suppression"
+      },
+      {
+        "name": "width", "short": "W", "long": "width", "type": "int",
+        "desc": "output BYTES bytes per output line. 32 is implied when BYTES is not specified"
+      },
+      {
+        "name": "traditional", "short": "", "long": "traditional", "type": "bool",
+        "desc": "accept arguments in third form above"
+      }
+    ]
+  },
+  {
+    "name": "base64",
+    "desc": "Base64 encode or decode FILE, or standard input, to standard output.",
+    "input": "one",
+    "flags": [
+      {
+        "name": "decode", "short": "d", "long": "decode", "type": "bool",
+        "desc": "decode data"
+      },
+      {
+        "name": "ignoreGarbage", "short": "i", "long": "ignore-garbage", "type": "bool",
+        "desc": "when decoding, ignore non-alphabet characters"
+      },
+      {
+        "name": "wrap", "short": "w", "long": "wrap", "type": "int",
+        "desc": "wrap encoded lines after COLS character (default 76). Use 0 to disable line wrapping"
+      }
+    ]
+  },
+  {
+    "name": "fmt",
+    "desc": "Reformat each paragraph in the FILE(s), writing to standard output.",
+    "input": "multi",
+    "flags": [
+      {
+        "name": "crownMargin", "short": "c", "long": "crown-margin", "type": "bool",
+        "desc": "preserve indentation of first two lines"
+      },
+      {
+        "name": "prefix", "short": "p", "long": "prefix", "type": "string",
+        "desc": "reformat only lines beginning with STRING, reattaching the prefix to reformatted lines"
+      },
+      {
+        "name": "splitOnly", "short": "s", "long": "split-only", "type": "bool",
+        "desc": "split long lines, but do not refill"
+      },
+      {
+        "name": "taggedParagraph", "short": "t", "long": "tagged-paragraph", "type": "bool",
+        "desc": "indentation of first line different from second"
+      },
+      {
+        "name": "uniformSpacing", "short": "u", "long": "uniform-spacing", "type": "bool",
+        "desc": "one space between words, two after sentences"
+      },
+      {
+        "name": "width", "short": "w", "long": "width", "type": "int",
+        "desc": "maximum line width (default of 75 columns)"
+      },
+      {
+        "name": "goal", "short": "g", "long": "goal", "type": "int",
+        "desc": "goal width (default of 93% of width)"
+      }
+    ]
+  },
+  {
+    "name": "fold",
+    "desc": "Wrap input lines in each FILE (standard input by default), writing to standard output.",
+    "input": "multi",
+    "flags": [
+      {
+        "name": "bytes", "short": "b", "long": "bytes", "type": "int",
+        "desc": "count bytes rather than columns"
+      },
+      {
+        "name": "spaces", "short": "s", "long": "spaces", "type": "bool",
+        "desc": "break at spaces"
+      },
+      {
+        "name": "width", "short": "w", "long": "width", "type": "int",
+        "desc": "use WIDTH columns instead of 80"
+      }
+    ]
+  },
+  {
     "name": "head",
     "desc": "Print the first 10 lines of each FILE to standard output. With more than one FILE, precede each with a header giving the file name.",
     "input": "one",
@@ -164,6 +327,24 @@
       {
         "name": "Key", "short": "k", "long": "key", "type": "int",
         "desc": "sort via a key; KEYDEF gives location and type"
+      }
+    ]
+  },
+  {
+    "name": "shuf",
+    "desc": "Write a random permutation of the input lines to standard output.",
+    "flags": [
+      {
+        "name": "inputRange", "short": "i", "long": "input-range", "type": "string",
+        "desc": "LO-HI\ntreat each number LO through HI as an input line"
+      },
+      {
+        "name": "headCount", "short": "n", "long": "head-count", "type": "int",
+        "desc": "output at most COUNT lines"
+      },
+      {
+        "name": "zeroTerminated", "short": "z", "long": "zero-terminated", "type": "bool",
+        "desc": "end lines with 0 byte, not newline"
       }
     ]
   },
