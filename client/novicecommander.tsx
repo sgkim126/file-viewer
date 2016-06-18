@@ -9,7 +9,6 @@ import { Button, ButtonGroup, Modal } from 'react-bootstrap';
 interface IProps {
   selecteds: ISelected[];
 
-  openDir: (path: string, column: number) => void;
   onCommand: (command: string, option: ICommandOption) => void;
 }
 
@@ -62,9 +61,6 @@ export default class NoviceCommander extends React.Component<IProps, IState> {
 
     if (selecteds.length === 1) {
       const selected = this.props.selecteds[0];
-      if (selected.is_dir) {
-        buttons.push(this.openButton(selected));
-      }
     } else if (selecteds.length === 2) {
       if (!this.hasDir()) {
         buttons.push(this.intersectButton(selecteds[0], selecteds[1]));
@@ -78,14 +74,6 @@ export default class NoviceCommander extends React.Component<IProps, IState> {
     }
 
     return buttons;
-  }
-
-  private openButton(selected: ISelected): JSX.Element {
-    const onClick = (e: React.MouseEvent) => {
-      e.stopPropagation();
-      this.props.openDir(selected.input.file, selected.column + 1);
-    };
-    return <Button key='open' onClick={onClick}>open</Button>;
   }
 
   private intersectButton(selected1: ISelected, selected2: ISelected): JSX.Element {

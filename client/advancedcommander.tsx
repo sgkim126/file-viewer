@@ -12,7 +12,6 @@ interface IProps {
   configs: ICommandConfig[];
   selecteds: ISelected[];
 
-  openDir: (path: string, column: number) => void;
   onCommand: (command: string, option: ICommandOption) => void;
 }
 
@@ -71,14 +70,6 @@ export default class AdvancedCommander extends React.Component<IProps, IState> {
       buttons.push(<Button key='no-available' disabled>No available command</Button>);
     }
     return buttons;
-  }
-
-  private openButton(selected: ISelected): JSX.Element {
-    const onClick = (e: React.MouseEvent) => {
-      e.stopPropagation();
-      this.props.openDir(selected.input.file, selected.column + 1);
-    };
-    return <Button key='open' onClick={onClick}>open</Button>;
   }
 
   private button(name: string, desc: string, input: string, selecteds: ISelected[], flags: ICommandFlag[]): JSX.Element {

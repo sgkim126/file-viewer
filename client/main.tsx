@@ -159,7 +159,7 @@ export default class Main extends React.Component<IProps, IState> {
 
     return <div className='full-width full-height'>
     <Row><Col xs={12}>
-      <Commander selecteds={this.state.selecteds} openDir={openDir} onCommand={onCommand} configs={this.props.configs} />
+      <Commander selecteds={this.state.selecteds} onCommand={onCommand} configs={this.props.configs} />
     </Col></Row>
     <Row>
       <Col xs={12}>
@@ -172,7 +172,8 @@ export default class Main extends React.Component<IProps, IState> {
           ls={this.ls.bind(this)}
           root={this.props.root} rootFiles={files} columns={this.state.columns}
           results={this.state.results} resultSeq={this.state.resultSeq}
-          clearSelects={clearSelects} onSelect={onSelect} selecteds={this.state.selecteds} closeDir={closeDir} />
+          openDir={openDir} closeDir={closeDir}
+          clearSelects={clearSelects} onSelect={onSelect} selecteds={this.state.selecteds} />
       </Col>
       <Col xs={5} className='full-height'>
         <Results show={this.state.resultSeq} readMore={this.readMore.bind(this)} results={this.state.results} closeResult={closeResult} />

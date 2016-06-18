@@ -18,6 +18,7 @@ interface IProps {
 
   columns: Map<string, IFile[]>[];
   closeDir: (column: number, path: string) => void;
+  openDir: (path: string, column: number) => void;
 
   results: IResult[];
   resultSeq: number;
@@ -40,12 +41,12 @@ export default class FileBrowser extends React.Component<IProps, IState> {
   public render(): JSX.Element {
     let selectedFile = { } as any;
 
-    const { selecteds, closeDir, onSelect } = this.props;
+    const { selecteds, openDir, closeDir, onSelect } = this.props;
 
     const columns = this.props.columns.map((column: Map<string, IFile[]>, key: number) => {
       let row: JSX.Element[] = [];
       for (const [path, files] of column) {
-        row.push(<Dir key={path} column={key} path={path} files={files} onSelect={onSelect} selecteds={selecteds} closeDir={closeDir}/>);
+        row.push(<Dir key={path} column={key} path={path} files={files} onSelect={onSelect} selecteds={selecteds} openDir={openDir} closeDir={closeDir}/>);
       }
       const position = 'absolute';
       const left = ((key + 1) * 200) + 15 + 'px';
@@ -83,7 +84,7 @@ export default class FileBrowser extends React.Component<IProps, IState> {
     return <div className='file-browser' onClick={this.props.clearSelects}>
       <Col xs={9} className='file-browser-inner'>
         <div className='column'>
-          <Dir column={-1} path={this.props.root} files={this.props.rootFiles} open={true} onSelect={onSelect} foldable={false} selecteds={selecteds}/>
+          <Dir column={-1} path={this.props.root} files={this.props.rootFiles} open={true} onSelect={onSelect} foldable={false} selecteds={selecteds} openDir={openDir} />
         </div>
         {columns}
       </Col>

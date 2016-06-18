@@ -10,7 +10,6 @@ interface IProps {
   configs: ICommandConfig[];
   selecteds: ISelected[];
 
-  openDir: (path: string, columnNumber: number) => void;
   onCommand: (command: string, option: ICommandOption) => void;
 }
 interface IState {
@@ -30,14 +29,14 @@ export default class Commander extends React.Component<IProps, IState> {
       this.setState({ activeKey });
     };
 
-    const { selecteds, openDir, onCommand } = this.props;
+    const { selecteds, onCommand } = this.props;
 
     return <PanelGroup activeKey={this.state.activeKey} onSelect={handleSelect} accordion>
       <Panel header="Command" eventKey={1}>
-        <NoviceCommander openDir={openDir} selecteds={selecteds} onCommand={onCommand}/>
+        <NoviceCommander selecteds={selecteds} onCommand={onCommand}/>
       </Panel>
       <Panel header="Advanced" eventKey={2}>
-        <AdvancedCommander openDir={openDir} selecteds={selecteds} onCommand={onCommand} configs={this.props.configs} />
+        <AdvancedCommander selecteds={selecteds} onCommand={onCommand} configs={this.props.configs} />
       </Panel>
     </PanelGroup>;
   }

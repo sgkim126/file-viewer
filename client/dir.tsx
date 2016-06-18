@@ -13,6 +13,7 @@ interface IProps {
 
   closeDir?: (column: number, path: string) => void;
   onSelect: (e: React.MouseEvent, selected: ISelected) => void;
+  openDir: (path: string, column: number) => void;
 }
 
 interface IState {
@@ -75,7 +76,19 @@ export default class Dir extends React.Component<IProps, IState> {
         {files.slice((page - 1) * numberPerPage, (page) * numberPerPage).map((file: IFile) => {
           const glyph = <Glyphicon glyph={file.is_dir ? 'folder-open' : 'file'} />;
           const active = !!selecteds.find(({input}: ISelected) => input.file === this.path(file.name));
-          return <ListGroupItem active={active} key={file.name} onClick={(e) => onClick(e, file)}>{glyph}&nbsp;&nbsp;{file.name}</ListGroupItem>;
+          const openDir = (e: React.MouseEvent) => {
+            e.stopPropagation();
+            const path = this.path(file.name);
+            this.props.openDir(path, this.props.column + 1);
+          };
+
+          const buttons = [ <Button style={{width: file.is_dir ? '80%' : '100%'}} key='file-button' onClick={(e) => onClick(e, file)}>{glyph}&nbsp;&nbsp;{file.name}</Button> ];
+          if (file.is_dir) {
+            buttons.push(<Button style={{width: '20%'}}  key='open-button' onClick={openDir}><Glyphicon glyph='expand' onClick={openDir}/>&nbsp;</Button>);
+          }
+          return <ListGroupItem active={active} key={file.name}>
+            <ButtonGroup justified>{buttons}</ButtonGroup>
+          </ListGroupItem>;
         })}
         <ListGroupItem>
           <ButtonToolbar>
