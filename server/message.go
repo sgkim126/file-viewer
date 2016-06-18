@@ -72,14 +72,16 @@ type MessageError struct {
 
 type CommandError struct {
 	Seq
-	Errors  []string `json:"errors"`
-	Command string   `json:"command"`
-	Name    string   `json:"name"`
+	Errors       []string `json:"errors"`
+	Command      string   `json:"command"`
+	ShortCommand string   `json:"shortCommand"`
+	Name         string   `json:"name"`
 }
 
 type CommandResponse struct {
 	Seq
 	Command       string `json:"command"`
+	ShortCommand  string `json:"shortCommand"`
 	Name          string `json:"name"`
 	Bytes         int    `json:"bytes"`
 	Chars         int    `json:"chars"`

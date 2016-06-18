@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path"
 	"strings"
 
 	"github.com/onsi/gocleanup"
@@ -38,6 +39,26 @@ func CommandsForOneInput(request OneInputCommandRequest, token token, cm Context
 
 	panic(errors.New("Cannot make command. Invalid input"))
 }
+
+func ShortCommandsForOneInput(request OneInputCommandRequest, token token, cm ContextManager) string {
+	options := strings.Join(request.options(), " ")
+	if options != "" {
+		options = " " + options
+	}
+	input := request.input()
+	if input.File != nil {
+		return fmt.Sprintf("%s%s %s", request.Name(), options, path.Base(*input.File))
+	}
+	if input.Pipe != nil {
+		var c Context
+		c, err := cm.GetContext(token, *input.Pipe)
+		shouldNot(err)
+		return fmt.Sprintf("%s | %s%s", c.command, request.Name(), options)
+	}
+
+	panic(errors.New("Cannot make command. Invalid input"))
+}
+
 func RunCommandForOneInput(request OneInputCommandRequest, tg TokenGenerator, cm *ContextManager) Response {
 	inputPath := request.input().Path(request.token(), *cm)
 
@@ -79,6 +100,7 @@ func RunCommandForOneInput(request OneInputCommandRequest, tg TokenGenerator, cm
 	}(stdoutFile.Name())
 
 	command := CommandsForOneInput(request, request.token(), *cm)
+	shortCommand := ShortCommandsForOneInput(request, request.token(), *cm)
 
 	err = cmd.Run()
 	if err != nil {
@@ -95,12 +117,13 @@ func RunCommandForOneInput(request OneInputCommandRequest, tg TokenGenerator, cm
 			request.seq(),
 			e,
 			command,
+			shortCommand,
 			request.Name(),
 		})
 	}
 
 	seq := *request.seq().Seq
-	err = cm.AddContext(seq, request.token(), stdoutFile.Name(), command)
+	err = cm.AddContext(seq, request.token(), stdoutFile.Name(), command, shortCommand)
 	shouldNot(err)
 
 	bytes, chars, words, lines, max_line_length := wc(stdoutFile.Name())
@@ -108,6 +131,7 @@ func RunCommandForOneInput(request OneInputCommandRequest, tg TokenGenerator, cm
 	return CommandResponse{
 		request.seq(),
 		command,
+		shortCommand,
 		request.Name(),
 		bytes,
 		chars,

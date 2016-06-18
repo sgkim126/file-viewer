@@ -4,6 +4,7 @@ interface IFailure {
   errors?: string[];
 
   command?: string;
+  shortCommand?: string;
   name?: string;
 }
 

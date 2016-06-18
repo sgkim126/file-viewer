@@ -6,9 +6,10 @@ import (
 )
 
 type Context struct {
-	token   token
-	path    string
-	command string
+	token        token
+	path         string
+	command      string
+	shortCommand string
 }
 
 type ContextManager struct {
@@ -57,7 +58,7 @@ func (cm ContextManager) Root() string {
 	return cm.root
 }
 
-func (cm *ContextManager) AddContext(seq int, token token, path string, command string) error {
+func (cm *ContextManager) AddContext(seq int, token token, path string, command string, shortCommand string) error {
 	if !cm.HasToken(token) {
 		return errors.New(fmt.Sprintf("\"%s\" is not exists", token))
 	}
@@ -65,6 +66,7 @@ func (cm *ContextManager) AddContext(seq int, token token, path string, command 
 		token,
 		path,
 		command,
+		shortCommand,
 	}
 	return nil
 }

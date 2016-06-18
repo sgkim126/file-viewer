@@ -3,7 +3,7 @@ import './result.styl';
 import * as React from 'react';
 import IMoreResult from './imoreresult.ts';
 import ISuccess from './isuccess.ts';
-import { Button, Col, Glyphicon, Row, Well } from 'react-bootstrap';
+import { Button, ButtonGroup, Col, Glyphicon, Row, Well } from 'react-bootstrap';
 import { findDOMNode } from 'react-dom';
 
 interface IProps extends ISuccess {
@@ -55,7 +55,11 @@ export default class SuccessResult extends React.Component<IProps, IState> {
 
     const closeResult = () => this.props.closeResult(this.props.seq);
     return <div className={className}>
-    <Well>{this.props.command}<Button className='close-result' onClick={closeResult}><Glyphicon glyph='remove' /></Button></Well>
+    <Well>{this.props.command}
+      <ButtonGroup className='pull-right'>
+        <Button onClick={closeResult}><Glyphicon glyph='remove' /></Button>
+      </ButtonGroup>
+    </Well>
     <pre>{this.state.contents.join('\n')}</pre>
     <Form onSubmit={readMore}>
       <FormGroup>

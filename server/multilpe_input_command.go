@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path"
 	"strings"
 
 	"github.com/onsi/gocleanup"
@@ -53,6 +54,24 @@ func RunCommandForMultipleInput(request MultipleInputCommandRequest, tg TokenGen
 	}
 	command = request.Name() + command
 
+	argumentsForShortCommand := OptionsForMultipleInput(request, request.token(), *cm, func(input CommandInput) string {
+		if input.File != nil {
+			return path.Base(*input.File)
+		}
+		if input.Pipe != nil {
+			var c Context
+			c, err := cm.GetContext(request.token(), *input.Pipe)
+			shouldNot(err)
+			return fmt.Sprintf("<(%s)", c.shortCommand)
+		}
+		panic("cannot make command. Invalid input.")
+	})
+	shortCommand := strings.Join(argumentsForShortCommand, " ")
+	if shortCommand != "" {
+		shortCommand = " " + shortCommand
+	}
+	shortCommand = request.Name() + shortCommand
+
 	stdoutFile, err := ioutil.TempFile("", "file-viewer")
 	shouldNot(err)
 
@@ -98,12 +117,13 @@ func RunCommandForMultipleInput(request MultipleInputCommandRequest, tg TokenGen
 			request.seq(),
 			e,
 			command,
+			shortCommand,
 			request.Name(),
 		})
 	}
 
 	seq := *request.seq().Seq
-	err = cm.AddContext(seq, request.token(), stdoutFile.Name(), command)
+	err = cm.AddContext(seq, request.token(), stdoutFile.Name(), command, shortCommand)
 	shouldNot(err)
 
 	bytes, chars, words, lines, max_line_length := wc(stdoutFile.Name())
@@ -111,6 +131,7 @@ func RunCommandForMultipleInput(request MultipleInputCommandRequest, tg TokenGen
 	return CommandResponse{
 		request.seq(),
 		command,
+		shortCommand,
 		request.Name(),
 		bytes,
 		chars,
