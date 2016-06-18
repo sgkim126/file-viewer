@@ -55,8 +55,8 @@ export default class FileBrowser extends React.Component<IProps, IState> {
     const results = this.props.results.map((result: IResult, key: number) => {
       const { failure, success, pending } = result;
       if (success) {
-        const title = success.command;
-        const name = success.name;
+        const title = success.shortCommand;
+        const name = success.shortCommand;
         const pipe = success.seq;
         const seq = success.seq;
         const { selecteds, resultSeq, onSelect } = this.props;
@@ -71,8 +71,8 @@ export default class FileBrowser extends React.Component<IProps, IState> {
         return <PendingResultButton key={result.seq} {...props} />;
       } else if (failure) {
         const seq = failure.seq;
-        const title = failure.command;
-        const name = failure.name;
+        const title = failure.shortCommand;
+        const name = failure.shortCommand;
         const { onSelect } = this.props;
         const props = { seq, title, name, onSelect };
         return <FailureResultButton key={result.seq} {...props} />;

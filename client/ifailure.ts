@@ -5,7 +5,6 @@ interface IFailure {
 
   command?: string;
   shortCommand?: string;
-  name?: string;
 }
 
 export default IFailure;

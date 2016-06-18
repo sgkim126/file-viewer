@@ -2,7 +2,6 @@ interface ISuccess {
   seq: number;
   command: string;
   shortCommand: string;
-  name: string;
   bytes: number;
   chars: number;
   words: number;

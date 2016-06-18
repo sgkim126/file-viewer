@@ -29,6 +29,6 @@ export default class SuccessResultButton extends React.Component<IProps, IState>
     };
     const active = !!selecteds.find((selected: ISelected) => selected.seq === seq);
     const bsStyle = seq === resultSeq ? 'info' : undefined;
-    return <ListGroupItem active={active} bsStyle={bsStyle} key={seq} onClick={onClick} title={title}>{name}</ListGroupItem>;
+    return <ListGroupItem active={active} bsStyle={bsStyle} key={seq} onClick={onClick} title={title}><span className='result-button text-right'>{name}</span></ListGroupItem>;
   }
 }
