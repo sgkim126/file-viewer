@@ -74,7 +74,6 @@ export default class Main extends React.Component<IProps, IState> {
         this.setState({ results, resultSeq });
       }, (failure: IFailure) => {
         failure.name = command;
-        failure.command = command;
         const resultSeq = failure.seq;
         const results = this.state.results.map(
           (result: IResult) => result.seq === seq ? { seq: resultSeq, failure } : result

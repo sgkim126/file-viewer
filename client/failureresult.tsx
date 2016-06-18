@@ -26,8 +26,10 @@ export default class FailureResult extends React.Component<IProps, IState> {
     const error = this.props.error ? this.props.error : this.props.errors.join('\n');
     const closeResult = () => this.props.closeResult(this.props.seq);
 
+    const command = this.props.command ? this.props.command : 'Error';
+
     return <div className={className}>
-    <Well>Error<Button className='close-result' onClick={closeResult}><Glyphicon glyph='remove' /></Button></Well>
+    <Well>{command}<Button className='close-result' onClick={closeResult}><Glyphicon glyph='remove' /></Button></Well>
     <pre>{error}</pre>
     </div>;
   }
