@@ -82,7 +82,7 @@ func RunCommandForTwoInput(request TwoInputCommandRequest, tg TokenGenerator, cm
 	gocleanup.Register(func() {
 		os.Remove(stdoutFile.Name())
 	})
-	stderrFile, err := ioutil.TempFile("", "filew-viewer")
+	stderrFile, err := ioutil.TempFile("", "file-viewer")
 	shouldNot(err)
 	defer stderrFile.Close()
 	gocleanup.Register(func() {
