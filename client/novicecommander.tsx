@@ -61,6 +61,9 @@ export default class NoviceCommander extends React.Component<IProps, IState> {
 
     if (selecteds.length === 1) {
       const selected = this.props.selecteds[0];
+      if (selected.input.file != null) {
+        buttons.push(this.readButton(selected));
+      }
     } else if (selecteds.length === 2) {
       if (!this.hasDir()) {
         buttons.push(this.intersectButton(selecteds[0], selecteds[1]));
@@ -104,6 +107,17 @@ export default class NoviceCommander extends React.Component<IProps, IState> {
     };
 
     return <Button key={`${selected1.name} - ${selected2.name}`} onClick={onClick}>{selected1.name} - {selected2.name}</Button>;
+  }
+
+  private readButton(selected: ISelected): JSX.Element {
+    const onClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      const inputs = [ selected.input ];
+      const option = { inputs, };
+      this.props.onCommand('cat', option);
+    };
+
+    return <Button key='read' onClick={onClick}>read {selected.name}</Button>;
   }
 
   private hasDir(): boolean {
