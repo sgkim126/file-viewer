@@ -93,9 +93,10 @@ export default class NoviceCommander extends React.Component<IProps, IState> {
       e.stopPropagation();
       const input1 = selected1.input;
       const input2 = selected2.input;
-      const column1 = true;
-      const column2 = true;
-      const option = { input1, input2, column1, column2, };
+      const Column1 = true;
+      const Column2 = true;
+      const NocheckOrder = true;
+      const option = { input1, input2, Column1, Column2, NocheckOrder, };
       this.props.onCommand('comm', option);
     };
 
@@ -107,9 +108,10 @@ export default class NoviceCommander extends React.Component<IProps, IState> {
       e.stopPropagation();
       const input1 = selected1.input;
       const input2 = selected2.input;
-      const column2 = true;
-      const column3 = true;
-      const option = { input1, input2, column2, column3, };
+      const Column2 = true;
+      const Column3 = true;
+      const NocheckOrder = true;
+      const option = { input1, input2, Column2, Column3, NocheckOrder, };
       this.props.onCommand('comm', option);
     };
 

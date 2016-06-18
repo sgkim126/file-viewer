@@ -59,22 +59,29 @@ function imports(): string {
 }
 
 function optionsMethod(name: string, flags: ICommandFlag[]): string {
-  function boolFlag(name: string, shortFlag: string): string {
+  function boolFlag(name: string, shortFlag: string, longFlag: string): string {
+    const flag = shortFlag === '' ? `"--${longFlag}"` : `"-${shortFlag}"`;
     return `
     if option.${name} != nil && *option.${name} {
-    options = append(options, "-${shortFlag}")
+    options = append(options, ${flag})
     }`;
   }
-  function intFlag(name: string, shortFlag: string): string {
+  function intFlag(name: string, shortFlag: string, longFlag: string): string {
+    const flag = shortFlag === '' ?
+      `fmt.Sprintf("--${longFlag}=%d", *option.${name})` :
+        `"-${shortFlag}", strconv.Itoa(*option.${name})`;
     return `
     if option.${name} != nil {
-    options = append(options, "-${shortFlag}", strconv.Itoa(*option.${name}))
+    options = append(options, ${flag})
     }`;
   }
-  function stringFlag(name: string, shortFlag: string): string {
+  function stringFlag(name: string, shortFlag: string, longFlag: string): string {
+    const flag = shortFlag === '' ?
+      `fmt.Sprintf("--${longFlag}=%s", *option.${name})` :
+        `"-${shortFlag}", *option.${name}`;
     return `
     if option.${name} != nil {
-    options = append(options, "-${shortFlag}", *option.${name})
+    options = append(options, ${flag})
     }`;
   }
   function enumFlag(name: string, longFlag: string, flagType: string): string {
@@ -93,11 +100,11 @@ default:
   function flag(flag: ICommandFlag): string {
     switch (flag.type) {
         case 'bool':
-            return boolFlag(flag.name, flag.short);
+            return boolFlag(flag.name, flag.short, flag.long);
         case 'int':
-            return intFlag(flag.name, flag.short);
+            return intFlag(flag.name, flag.short, flag.long);
         case 'string':
-            return stringFlag(flag.name, flag.short);
+            return stringFlag(flag.name, flag.short, flag.long);
     }
     return enumFlag(flag.name, flag.long, flag.type);
   }
