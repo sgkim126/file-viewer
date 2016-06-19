@@ -16,7 +16,7 @@ import ISelected from './iselected.ts';
 import Message from './messages.ts';
 import Selecteds from './selecteds.tsx';
 import Results from './results.tsx';
-import { Col, Row } from 'react-bootstrap';
+import { Col, Jumbotron, Row } from 'react-bootstrap';
 
 interface IProps {
   configs: ICommandConfig[];
@@ -158,16 +158,17 @@ export default class Main extends React.Component<IProps, IState> {
     };
 
     return <div className='full-width full-height'>
-    <Row><Col xs={12}>
+    <div className='hidden-xs hidden-sm visible-md visible-lg'>
+    <Row><Col md={12} lg={12}>
       <Commander selecteds={this.state.selecteds} onCommand={onCommand} configs={this.props.configs} />
     </Col></Row>
     <Row>
-      <Col xs={12}>
+      <Col md={12} lg={12}>
         <Selecteds selecteds={this.state.selecteds} setSelecteds={setSelecteds} />
       </Col>
     </Row>
     <Row>
-      <Col xs={7} className='full-height'>
+      <Col md={6} lg={7} className='full-height'>
         <FileBrowser
           ls={this.ls.bind(this)}
           root={this.props.root} rootFiles={files} columns={this.state.columns}
@@ -175,10 +176,16 @@ export default class Main extends React.Component<IProps, IState> {
           openDir={openDir} closeDir={closeDir}
           clearSelects={clearSelects} onSelect={onSelect} selecteds={this.state.selecteds} />
       </Col>
-      <Col xs={5} className='full-height'>
+      <Col md={6} lg={5} className='full-height'>
         <Results show={this.state.resultSeq} readMore={this.readMore.bind(this)} results={this.state.results} closeResult={closeResult} />
       </Col>
     </Row>
+    </div>
+    <div class='visible-xs visible-sm hidden-md hidden-lg'>
+      <Jumbotron>
+        <h1>Screen size is too small. Screen width has to be larger than 992px.</h1>
+      </Jumbotron>
+    </div>
     </div>;
   }
 

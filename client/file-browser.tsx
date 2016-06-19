@@ -82,13 +82,13 @@ export default class FileBrowser extends React.Component<IProps, IState> {
     });
 
     return <div className='file-browser' onClick={this.props.clearSelects}>
-      <Col xs={9} className='file-browser-inner'>
+      <Col md={7} lg={9} className='file-browser-inner'>
         <div className='column'>
           <Dir column={-1} path={this.props.root} files={this.props.rootFiles} open={true} onSelect={onSelect} foldable={false} selecteds={selecteds} openDir={openDir} />
         </div>
         {columns}
       </Col>
-      <Col xs={3}><ListGroup>{results}</ListGroup></Col>
+      <Col md={5} lg={3}><ListGroup>{results}</ListGroup></Col>
     </div>;
   }
 }
