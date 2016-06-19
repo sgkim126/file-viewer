@@ -461,7 +461,7 @@
   {
     "name": "grep",
     "desc": "grep searches the named input FILEs (or standard input if no files are named, or if a single hyphen-minus (-) is given as file name) for lines containing a match to the given PATTERN. By default, grep prints the matching lines.\n\nIn addition, three variant programs egrep, fgrep and rgrep are available. egrep is the same as grep -E. fgrep is the same as grep -F. rgrep is the same as grep -r. Direct invocation as either egrep or fgrep is deprecated, but is provided to allow historical applications that rely on them to run unmodified.",
-    "input": "multi",
+    "input": "multi-dir",
     "flags": [
       {
         "name": "ExtendedRegexp", "short": "E", "long": "extended-regexp", "type": "bool",

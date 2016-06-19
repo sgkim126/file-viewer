@@ -90,10 +90,14 @@ export default class AdvancedCommander extends React.Component<IProps, IState> {
           return this.twoButton(name, desc, selecteds[0], selecteds[1], flags);
         }
         break;
-      default:
+      case 'multi':
         if (this.hasDir()) {
           return undefined;
         }
+        if (selecteds.length !== 0) {
+          return this.multiButton(name, desc, selecteds, flags);
+        }
+      default:
         if (selecteds.length !== 0) {
           return this.multiButton(name, desc, selecteds, flags);
         }
