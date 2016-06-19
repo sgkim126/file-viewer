@@ -76,9 +76,14 @@ function optionsMethod(name: string, flags: ICommandFlag[]): string {
     }`;
   }
   function stringFlag(name: string, shortFlag: string, longFlag: string): string {
-    const flag = shortFlag === '' ?
-      `fmt.Sprintf("--${longFlag}=%s", *option.${name})` :
-        `"-${shortFlag}", *option.${name}`;
+    let flag: string;
+    if (shortFlag !== '') {
+      flag = `"-${shortFlag}", *option.${name}`;
+    } else if (longFlag !== '') {
+      flag = `fmt.Sprintf("--${longFlag}=%s", *option.${name})`;
+    } else {
+      flag = `*option.${name}`;
+    }
     return `
     if option.${name} != nil {
     options = append(options, ${flag})

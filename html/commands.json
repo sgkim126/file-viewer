@@ -457,5 +457,132 @@
         "desc": "complement the set of selected bytes, characters or fields"
       }
     ]
+  },
+  {
+    "name": "grep",
+    "desc": "grep searches the named input FILEs (or standard input if no files are named, or if a single hyphen-minus (-) is given as file name) for lines containing a match to the given PATTERN. By default, grep prints the matching lines.\n\nIn addition, three variant programs egrep, fgrep and rgrep are available. egrep is the same as grep -E. fgrep is the same as grep -F. rgrep is the same as grep -r. Direct invocation as either egrep or fgrep is deprecated, but is provided to allow historical applications that rely on them to run unmodified.",
+    "input": "multi",
+    "flags": [
+      {
+        "name": "ExtendedRegexp", "short": "E", "long": "extended-regexp", "type": "bool",
+        "desc": "Interpret PATTERN as an extended regular expression (ERE, see below). (-E is specified by POSIX.)"
+      },
+      {
+        "name": "FixedStrings", "short": "F", "long": "fixed-strings", "type": "bool",
+        "desc": "Interpret PATTERN as a list of fixed strings, separated by newlines, any of which is to be matched. (-F is specified by POSIX.)"
+      },
+      {
+        "name": "BasicRegexp", "short": "G", "long": "basic-regexp", "type": "bool",
+        "desc": "Interpret PATTERN as a basic regular expression (BRE, see below). This is the default."
+      },
+      {
+        "name": "PerlRegexp", "short": "P", "long": "perl-regexp", "type": "bool",
+        "desc": "Interpret PATTERN as a Perl regular expression (PCRE, see below). This is highly experimental and grep -P may warn of unimplemented features."
+      },
+      {
+        "name": "Regexp", "short": "e", "long": "regexp", "type": "string",
+        "desc": "Use PATTERN as the pattern. This can be used to specify multiple search patterns, or to protect a pattern beginning with a hyphen (-). (-e is specified by POSIX.)"
+      },
+      {
+        "name": "IgnoreCase", "short": "i", "long": "ignore-case", "type": "bool",
+        "desc": "Ignore case distinctions in both the PATTERN and the input files. (-i is specified by POSIX.)"
+      },
+      {
+        "name": "InvertMatch", "short": "v", "long": "invert-match", "type": "bool",
+        "desc": "Invert the sense of matching, to select non-matching lines. (-v is specified by POSIX.)"
+      },
+      {
+        "name": "WordRegexp", "short": "w", "long": "word-regexp", "type": "bool",
+        "desc": "Select only those lines containing matches that form whole words. The test is that the matching substring must either be at the beginning of the line, or preceded by a non-word constituent character. Similarly, it must be either at the end of the line or followed by a non-word constituent character. Word-constituent characters are letters, digits, and the underscore."
+      },
+      {
+        "name": "LineRegexp", "short": "x", "long": "line-regexp", "type": "bool",
+        "desc": "Select only those matches that exactly match the whole line. (-x is specified by POSIX.)"
+      },
+      {
+        "name": "Count", "short": "c", "long": "count", "type": "bool",
+        "desc": "Suppress normal output; instead print a count of matching lines for each input file. With the -v, --invert-match option (see below), count non-matching lines. (-c is specified by POSIX.)"
+      },
+      {
+        "name": "FilesWithoutMatch", "short": "L", "long": "files-without-match", "type": "bool",
+        "desc": "Suppress normal output; instead print the name of each input file from which no output would normally have been printed. The scanning will stop on the first match."
+      },
+      {
+        "name": "FilesWithMatch", "short": "L", "long": "files-with-match", "type": "bool",
+        "desc": "Suppress normal output; instead print the name of each input file from which output would normally have been printed. The scanning will stop on the first match. (-l is specified by POSIX.)"
+      },
+      {
+        "name": "MaxCount", "short": "m", "long": "max-count", "type": "int",
+        "desc": "Stop reading a file after NUM matching lines. If the input is standard input from a regular file, and NUM matching lines are output, grep ensures that the standard input is positioned to just after the last matching line before exiting, regardless of the presence of trailing context lines. This enables a calling process to resume a search. When grep stops after NUM matching lines, it outputs any trailing context lines. When the -c or --count option is also used, grep does not output a count greater than NUM. When the -v or --invert-match option is also used, grep stops after outputting NUM non-matching lines."
+      },
+      {
+        "name": "OnlyMatching", "short": "o", "long": "only-matching", "type": "bool",
+        "desc": "Print only the matched (non-empty) parts of a matching line, with each such part on a separate output line."
+      },
+      {
+        "name": "Quiet", "short": "q", "long": "quiet", "type": "bool",
+        "desc": "Quiet; do not write anything to standard output. Exit immediately with zero status if any match is found, even if an error was detected. Also see the -s or --no-messages option. (-q is specified by POSIX.)"
+      },
+      {
+        "name": "NoMessages", "short": "s", "long": "no-messages", "type": "bool",
+        "desc": "Suppress error messages about nonexistent or unreadable files. Portability note: unlike GNU grep, 7th Edition Unix grep did not conform to POSIX, because it lacked -q and its -s option behaved like GNU grep's -q option. USG-style grep also lacked -q but its -s option behaved like GNU grep. Portable shell scripts should avoid both -q and -s and should redirect standard and error output to /dev/null instead. (-s is specified by POSIX.)"
+      },
+      {
+        "name": "ByteOffset", "short": "b", "long": "byte-offset", "type": "bool",
+        "desc": "Print the 0-based byte offset within the input file before each line of output. If -o (--only-matching) is specified, print the offset of the matching part itself."
+      },
+      {
+        "name": "WithFilename", "short": "H", "long": "with-filename", "type": "bool",
+        "desc": "Print the file name for each match. This is the default when there is more than one file to search."
+      },
+      {
+        "name": "NoFilename", "short": "h", "long": "no-filename", "type": "bool",
+        "desc": "Suppress the prefixing of file names on output. This is the default when there is only one file (or only standard input) to search."
+      },
+      {
+        "name": "LineNumber", "short": "n", "long": "line-number", "type": "bool",
+        "desc": "Prefix each line of output with the 1-based line number within its input file. (-n is specified by POSIX.)"
+      },
+      {
+        "name": "InitialTab", "short": "T", "long": "initial-tab", "type": "bool",
+        "desc": "Make sure that the first character of actual line content lies on a tab stop, so that the alignment of tabs looks normal. This is useful with options that prefix their output to the actual content: -H,-n, and -b. In order to improve the probability that lines from a single file will all start at the same column, this also causes the line number and byte offset (if present) to be printed in a minimum size field width."
+      },
+      {
+        "name": "UnixByteOffsets", "short": "u", "long": "unix-byte-offsets", "type": "bool",
+        "desc": "Report Unix-style byte offsets. This switch causes grep to report byte offsets as if the file were a Unix-style text file, i.e., with CR characters stripped off. This will produce results identical to running grep on a Unix machine. This option has no effect unless -b option is also used; it has no effect on platforms other than MS-DOS and MS-Windows."
+      },
+      {
+        "name": "Null", "short": "Z", "long": "null", "type": "bool",
+        "desc": "Output a zero byte (the ASCII NUL character) instead of the character that normally follows a file name. For example, grep -lZ outputs a zero byte after each file name instead of the usual newline. This option makes the output unambiguous, even in the presence of file names containing unusual characters like newlines. This option can be used with commands like find -print0, perl -0, sort -z, and xargs -0 to process arbitrary file names, even those that contain newline characters."
+      },
+      {
+        "name": "AfterContext", "short": "A", "long": "after-context", "type": "int",
+        "desc": "Print NUM lines of trailing context after matching lines. Places a line containing a group separator (--) between contiguous groups of matches. With the -o or --only-matching option, this has no effect and a warning is given."
+      },
+      {
+        "name": "BeforeContext", "short": "B", "long": "before-context", "type": "int",
+        "desc": "Print NUM lines of leading context before matching lines. Places a line containing a group separator (--) between contiguous groups of matches. With the -o or --only-matching option, this has no effect and a warning is given."
+      },
+      {
+        "name": "Context", "short": "C", "long": "context", "type": "int",
+        "desc": "Print NUM lines of output context. Places a line containing a group separator (--) between contiguous groups of matches. With the -o or --only-matching option, this has no effect and a warning is given."
+      },
+      {
+        "name": "Text", "short": "a", "long": "text", "type": "bool",
+        "desc": "Process a binary file as if it were text; this is equivalent to the --binary-files=text option."
+      },
+      {
+        "name": "Recursive", "short": "r", "long": "recursive", "type": "bool",
+        "desc": "Read all files under each directory, recursively, following symbolic links only if they are on the command line. This is equivalent to the -d recurse option."
+      },
+      {
+        "name": "DereferenceRecursive", "short": "R", "long": "dereference-recursive", "type": "bool",
+        "desc": "Read all files under each directory, recursively. Follow all symbolic links, unlike -r."
+      },
+      {
+        "name": "Pattern", "short": "", "long": "", "type": "string",
+        "desc": "pattern to search"
+      }
+    ]
   }
 ]
