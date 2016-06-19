@@ -62,7 +62,9 @@ export default class NoviceCommander extends React.Component<IProps, IState> {
     if (selecteds.length === 1) {
       const selected = this.props.selecteds[0];
       if (selected.input.file != null) {
-        buttons.push(this.readButton(selected));
+        if (!this.hasDir()) {
+          buttons.push(this.readButton(selected));
+        }
       }
     } else if (selecteds.length === 2) {
       if (!this.hasDir()) {
