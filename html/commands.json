@@ -332,6 +332,7 @@
   },
   {
     "name": "shuf",
+    "input": "one",
     "desc": "Write a random permutation of the input lines to standard output.",
     "flags": [
       {
